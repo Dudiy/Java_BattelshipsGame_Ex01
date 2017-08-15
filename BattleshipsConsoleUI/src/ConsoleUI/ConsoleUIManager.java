@@ -47,8 +47,6 @@ public class ConsoleUIManager {
             Player player1 = new Player("p1", "Player 1");
             Player player2 = new Player("p2", "Player 2");
             gamesManager.startGame(activeGame, player1, player2);
-
-
             BoardDisplayer bd =new BoardDisplayer();
 
             bd.printBoard(activeGame.getPlayer(1).getMyBoard());

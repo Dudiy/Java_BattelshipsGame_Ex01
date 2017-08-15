@@ -5,7 +5,6 @@ import GameLogic.Game.GameObjects.GameObject;
 import GameLogic.Game.GameObjects.Ship.*;
 import GameLogic.Game.GameObjects.Water;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.LinkedList;
 
 public class Board {
