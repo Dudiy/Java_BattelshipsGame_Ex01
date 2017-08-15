@@ -1,4 +1,4 @@
 package GameLogic.Game.GameObjects;
 
-public class Water {
+public class Water extends GameObject {
 }

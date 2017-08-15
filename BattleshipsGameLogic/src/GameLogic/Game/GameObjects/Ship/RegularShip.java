@@ -2,16 +2,14 @@ package GameLogic.Game.GameObjects.Ship;
 
 import GameLogic.Game.Board.BoardCoordinates;
 
-public class LShapeShip extends AbstractShip {
-    public enum eShipDirection{
-        DOWN_RIGHT,
-        UP_RIGHT,
-        RIGHT_UP,
-        RIGHT_DOWN
+public class RegularShip extends AbstractShip {
+    public RegularShip(int length, BoardCoordinates position, Enum direction, int score) {
+        super(length, position, direction, score);
     }
 
-    public LShapeShip(int length, BoardCoordinates position, Enum direction, int score) {
-        super(length, position, direction, score);
+    public enum eShipDirection {
+        COL,
+        ROW
     }
 
     @Override
