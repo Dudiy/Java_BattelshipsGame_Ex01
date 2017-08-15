@@ -1,6 +1,7 @@
 package GameLogic.Game.Board;
 
 import GameLogic.Game.GameObjects.GameObject;
+import GameLogic.Game.GameObjects.Ship.AbstractShip;
 import GameLogic.Game.GameObjects.Water;
 
 public class BoardCell {
@@ -26,6 +27,12 @@ public class BoardCell {
             throw new Exception("Cannot place a game object, cell is already occupied by a " + objectTypeInCell + " object");
         }
     }
+
+/*    private void checkSurroundingCells() {
+        // ships are only added at the beginning of the game when there are no other objects so we only need to check for ships in surrounding cells
+        BoardCoordinates positionToCheck = this.GetPosition();
+        positionToCheck.OffsetRow(-1);
+    }*/
 
     public BoardCoordinates GetPosition() {
         return position;
