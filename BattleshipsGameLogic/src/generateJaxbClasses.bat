@@ -1,1 +1,1 @@
-xjc -p generated resources/BattleShipGame.xsd
+xjc -p jaxb.generated resources/BattleShipGame.xsd
