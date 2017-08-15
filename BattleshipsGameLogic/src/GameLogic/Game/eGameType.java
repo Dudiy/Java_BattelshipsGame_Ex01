@@ -2,7 +2,7 @@ package GameLogic.Game;
 
 public enum eGameType {
     BASIC("Basic"),
-    ADVANCE("Advanced");
+    ADVANCED("Advanced");
 
     private String name;
 
