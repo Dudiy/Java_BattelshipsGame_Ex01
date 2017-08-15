@@ -36,6 +36,10 @@ public class Game {
         return ID;
     }
 
+    public Player getPlayer(int playerNum) {
+        return players[playerNum-1];
+    }
+
     public eGameState getGameState() {
         return gameState;
     }

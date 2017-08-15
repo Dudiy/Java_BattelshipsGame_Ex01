@@ -7,9 +7,11 @@ import GameLogic.Game.GameObjects.Water;
 public class BoardCell {
     private BoardCoordinates position;
     private GameObject cellValue;
+    private boolean hit = false;
+    private boolean miss = false;
 
     public BoardCell(char col, int row) {
-        position = new BoardCoordinates(col,row);
+        position = new BoardCoordinates(col, row);
         cellValue = new Water(position);
     }
 
@@ -21,9 +23,8 @@ public class BoardCell {
         // TODO check surrounding cell
         if (this.cellValue == null || this.cellValue instanceof Water) {
             this.cellValue = cellValue;
-        }
-        else{
-            String objectTypeInCell =  this.cellValue.getClass().getSimpleName();
+        } else {
+            String objectTypeInCell = this.cellValue.getClass().getSimpleName();
             throw new Exception("Cannot place a game object, cell is already occupied by a " + objectTypeInCell + " object");
         }
     }
@@ -40,5 +41,13 @@ public class BoardCell {
 
     public GameObject GetCellValue() {
         return cellValue;
+    }
+
+    public boolean isHit() {
+        return hit;
+    }
+
+    public boolean isMiss() {
+        return miss;
     }
 }

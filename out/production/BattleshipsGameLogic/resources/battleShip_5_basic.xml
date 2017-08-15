@@ -6,13 +6,13 @@
         <shipType id="shipTypeA">
             <category>REGULAR</category>
             <amount>1</amount>
-            <length>3</length>
+            <length>1</length>
             <score>10</score>
         </shipType>
         <shipType id="shipTypeB">
             <category>REGULAR</category>
             <amount>1</amount>
-            <length>2</length>
+            <length>1</length>
             <score>5</score>
         </shipType>
     </shipTypes>
@@ -20,19 +20,19 @@
         <board>
             <ship>
                 <shipTypeId>shipTypeA</shipTypeId>
-                <position x="2" y="1" />
+                <position x="1" y="1" />
                 <direction>ROW</direction>
             </ship>
             <ship>
                 <shipTypeId>shipTypeB</shipTypeId>
-                <position x="1" y="1" />
+                <position x="1" y="3" />
                 <direction>COLUMN</direction>
             </ship>
         </board>
         <board>
             <ship>
                 <shipTypeId>shipTypeA</shipTypeId>
-                <position x="1" y="2" />
+                <position x="3" y="1" />
                 <direction>ROW</direction>
             </ship>
             <ship>

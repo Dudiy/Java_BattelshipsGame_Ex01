@@ -87,6 +87,11 @@ public class Board {
         this.minesAvailable = minesAvailable;
     }
 
+    // TODO hide
+    public BoardCell[][] getBoard() {
+        return board;
+    }
+
     public int getBoardSize() {
         return boardSize;
     }

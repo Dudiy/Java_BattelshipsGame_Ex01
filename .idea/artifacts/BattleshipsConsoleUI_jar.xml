@@ -1,9 +1,10 @@
 <component name="ArtifactManager">
   <artifact name="BattleshipsConsoleUI:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/BattleShipGameEx01</output-path>
+    <output-path>$PROJECT_DIR$/out/artifacts/BattleshipsConsoleUI_jar</output-path>
     <root id="root">
       <element id="archive" name="BattleshipsConsoleUI.jar">
         <element id="module-output" name="BattleshipsConsoleUI" />
+        <element id="module-output" name="BattleshipsGameLogic" />
       </element>
     </root>
   </artifact>
