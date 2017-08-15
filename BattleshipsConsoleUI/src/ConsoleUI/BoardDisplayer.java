@@ -22,19 +22,23 @@ public class BoardDisplayer {
     private final String BOARD_LEFT_VERTICAL_ROW_SAPERATOR = "\u2560";
     private final String BOARD_RIGHT_VERTICAL_ROW_SAPERATOR = "\u2563";
     private final String BOARD_PLUS_ROW_SAPERATOR = "\u256C";
-
     // cell symbol
     private final Character HIT = '1';
     private final Character MISS = '2';
     private final Character SHIP = '3';
     private final Character WATER = '4';
     private final Character MINE = '5';
+    // indices
+    private final char startColIndex = 'A';
+    private final byte startRowIndex = 1;
+    private byte currRowIndex;
 
     private Board board;
 
     public void printBoard(Board board) {
         int currRowNum = 0;
         this.board = board;
+        printColIndice();
         printFirstRowBorder();
         for (BoardCell[] currRow : board.getBoard()) {
             printRow(currRow);
@@ -46,7 +50,18 @@ public class BoardDisplayer {
         printLastRowBorder();
     }
 
+    private void printColIndice() {
+        char localColIndex = startColIndex;
+        System.out.print("\\ ");
+        for(int i= 0; i<board.getBoardSize(); i++){
+            System.out.print(localColIndex + " ");
+            localColIndex++;
+        }
+        System.out.println();
+    }
+
     private void printFirstRowBorder() {
+        System.out.print(" ");
         System.out.print(BOARD_LEFT_UP_CORNER);
         for (int i = 0; i < board.getBoardSize() - 1; i++) {
             System.out.print(BOARD_HORIZONTAL);
@@ -57,6 +72,7 @@ public class BoardDisplayer {
     }
 
     private void printRow(BoardCell[] row) {
+        System.out.print(currRowIndex++);
         for (BoardCell cell : row) {
             System.out.print(BOARD_VERTICAL);
             System.out.print(getCellChar(cell));
@@ -65,6 +81,7 @@ public class BoardDisplayer {
     }
 
     private void printSaperatorRow() {
+        System.out.print(" ");
         System.out.print(BOARD_LEFT_VERTICAL_ROW_SAPERATOR);
         for (int i = 0; i < board.getBoardSize() - 1; i++) {
             System.out.print(BOARD_HORIZONTAL);
@@ -75,6 +92,7 @@ public class BoardDisplayer {
     }
 
     private void printLastRowBorder() {
+        System.out.print(" ");
         System.out.print(BOARD_LEFT_DOWN_CORNER);
         for (int i = 0; i < board.getBoardSize() - 1; i++) {
             System.out.print(BOARD_HORIZONTAL);

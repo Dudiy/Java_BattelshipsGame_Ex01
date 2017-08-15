@@ -23,6 +23,7 @@ public class Player {
         guessesBoard = new Board(myBoard.getBoardSize());
     }
 
+    // ======================================= getters =======================================
     public String getID() {
         return ID;
     }
@@ -31,7 +32,6 @@ public class Player {
         return name;
     }
 
-    // ======================================= getters =======================================
     public Board getMyBoard() {
         return myBoard;
     }

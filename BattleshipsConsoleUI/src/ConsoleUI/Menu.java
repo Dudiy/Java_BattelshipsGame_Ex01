@@ -6,7 +6,8 @@ public class Menu {
 
     public enum eMenuOption {
         LOAD_GAME(1, "Load game"),
-        START_GAME(2, "Start game");
+        START_GAME(2, "Start game"),
+        SHOW_GAME_STATE(3, "Show game state");
 
         private String description;
         private int ID;
