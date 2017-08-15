@@ -116,7 +116,7 @@ public class Board {
         setCellValue(currCoordinates, ship);
         // set the values of the next size-1 cells
         for (int i = 0; i < ship.getLength() - 1; i++) {
-            if (shipDirection == RegularShip.eShipDirection.COL) {
+            if (shipDirection == RegularShip.eShipDirection.COLUMN) {
                 currCoordinates.OffsetCol(1);
             } else if (shipDirection == RegularShip.eShipDirection.ROW) {
                 currCoordinates.OffsetRow(1);

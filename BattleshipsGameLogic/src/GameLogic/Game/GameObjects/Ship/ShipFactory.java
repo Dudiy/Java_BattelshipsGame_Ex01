@@ -1,5 +1,6 @@
 package GameLogic.Game.GameObjects.Ship;
 
+import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.GameSettings;
 import jaxb.generated.BattleShipGame;
 
@@ -10,22 +11,26 @@ public class ShipFactory {
         this.gameSettings = gameSettings;
     }
 
-    public AbstractShip CreateShip(BattleShipGame.Boards.Board.Ship i_Ship) throws Exception {
-        String shipCatagory = getShipCategory(i_Ship.getShipTypeId());
+    public AbstractShip createShip(BattleShipGame.Boards.Board.Ship ship) throws Exception {
+        BattleShipGame.ShipTypes.ShipType shipType = getShipType(ship.getShipTypeId());
+        String shipCatagory = shipType.getCategory();
         AbstractShip shipObject;
+        BoardCoordinates coordinates = new BoardCoordinates(ship.getPosition().getX(), ship.getPosition().getY());
 
         if (shipCatagory.equals("REGULAR")) {
-            shipObject = new RegularShip();
+            RegularShip.eShipDirection direction = RegularShip.eShipDirection.valueOf(ship.getDirection());
+            shipObject = new RegularShip(shipType.getLength(), coordinates, direction, shipType.getScore());
         } else if (shipCatagory.equals("L_SHAPE")) {
-            shipObject = new LShapeShip();
+            LShapeShip.eShipDirection direction = LShapeShip.eShipDirection.valueOf((ship.getDirection()));
+            shipObject = new LShapeShip(shipType.getLength(), coordinates, direction, shipType.getScore());
         } else {
-            throw new Exception("Ship factory error - invalid ship catagory");
+            throw new Exception("Ship factory error - invalid ship category");
         }
 
         return shipObject;
     }
 
-    private String getShipCategory(String shipTypeID){
-        return gameSettings.getShipTypes().get(shipTypeID).getCategory();
+    private BattleShipGame.ShipTypes.ShipType getShipType(String shipTypeID) {
+        return gameSettings.getShipTypes().get(shipTypeID);
     }
 }

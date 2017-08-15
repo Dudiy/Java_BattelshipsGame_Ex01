@@ -8,7 +8,7 @@ public class RegularShip extends AbstractShip {
     }
 
     public enum eShipDirection {
-        COL,
+        COLUMN,
         ROW
     }
 

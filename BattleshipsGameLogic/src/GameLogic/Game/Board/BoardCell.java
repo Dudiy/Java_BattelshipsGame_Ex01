@@ -5,10 +5,11 @@ import GameLogic.Game.GameObjects.Water;
 
 public class BoardCell {
     private BoardCoordinates position;
-    private GameObject cellValue = new Water();
+    private GameObject cellValue;
 
     public BoardCell(char col, int row) {
         position = new BoardCoordinates(col,row);
+        cellValue = new Water(position);
     }
 
     public BoardCell(BoardCoordinates position) {

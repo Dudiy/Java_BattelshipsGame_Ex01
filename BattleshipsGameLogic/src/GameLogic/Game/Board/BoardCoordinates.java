@@ -9,6 +9,12 @@ public class BoardCoordinates {
         this.row = row;
     }
 
+    public BoardCoordinates(int row, int col){
+        // number start from 1 so (1,1) == A1 => row = 1, col = A + 1 - 1
+        this.row = row;
+        this.col = (char)('A' + col - 1);
+    }
+
     // convert a string of type "A1" or "1A" to coordinates
     public static BoardCoordinates Parse(String stringToParse) throws IllegalArgumentException {
         BoardCoordinates res;
@@ -21,14 +27,14 @@ public class BoardCoordinates {
             char upperChar;
             int digit;
 
-            if (Character.isAlphabetic(firstCharInString) && Character.isDigit(secondCharInString)) {
+            if (Character.isAlphabetic(firstCharInString) && Character.isDigit(secondCharInString) && secondCharInString != '0') {
                 upperChar = Character.toUpperCase(firstCharInString);
                 digit = secondCharInString - '0';
-            } else if (Character.isDigit(firstCharInString) && Character.isAlphabetic(secondCharInString)) {
+            } else if (Character.isDigit(firstCharInString) && firstCharInString != '0' && Character.isAlphabetic(secondCharInString)) {
                 upperChar = Character.toUpperCase(secondCharInString);
                 digit = secondCharInString - '0';
             } else {
-                throw new IllegalArgumentException("Input str must be a digit and a char (in any order)");
+                throw new IllegalArgumentException(String.format("Input string must be a digit (greater than 0) and a char (in any order), for example: \"A1\" or \"1A\""));
             }
 
             res = new BoardCoordinates(upperChar, digit);
