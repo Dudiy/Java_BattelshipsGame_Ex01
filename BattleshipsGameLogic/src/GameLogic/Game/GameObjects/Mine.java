@@ -5,6 +5,6 @@ import GameLogic.Game.Board.BoardCoordinates;
 public class Mine extends GameObject {
 
     public Mine(BoardCoordinates position) {
-        super(position);
+        super("Mine", position);
     }
 }

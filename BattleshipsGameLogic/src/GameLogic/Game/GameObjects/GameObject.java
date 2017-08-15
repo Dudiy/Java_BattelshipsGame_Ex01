@@ -4,8 +4,10 @@ import GameLogic.Game.Board.BoardCoordinates;
 
 public abstract class GameObject {
     private BoardCoordinates position;
+    private String objectTypeSimpleName;
 
-    public GameObject(BoardCoordinates position) {
+    public GameObject(String objectTypeSimpleName, BoardCoordinates position) {
+        this.objectTypeSimpleName = objectTypeSimpleName;
         this.position = position;
     }
 
@@ -15,5 +17,9 @@ public abstract class GameObject {
 
     public BoardCoordinates getCoordinates(){
         return position;
+    }
+
+    public String getObjectTypeSimpleName() {
+        return objectTypeSimpleName;
     }
 }

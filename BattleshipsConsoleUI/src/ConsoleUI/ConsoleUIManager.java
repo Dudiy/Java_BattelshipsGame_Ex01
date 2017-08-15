@@ -1,6 +1,7 @@
 package ConsoleUI;
 
 import GameLogic.Game.Board.Board;
+import GameLogic.Exceptions.InvalidGameObjectPlacementException;
 import GameLogic.Game.Game;
 import GameLogic.Game.eGameState;
 import GameLogic.GamesManager;
@@ -30,9 +31,10 @@ public class ConsoleUIManager {
                 break;
             case START_GAME:
                 startGame();
-                ;
+                break;
             case SHOW_GAME_STATE:
                 showGameState();
+                break;
         }
     }
 
@@ -50,8 +52,17 @@ public class ConsoleUIManager {
             Player player1 = new Player("p1", "Player 1");
             Player player2 = new Player("p2", "Player 2");
             gamesManager.startGame(activeGame, player1, player2);
+            BoardDisplayer bd = new BoardDisplayer();
+
+            bd.printBoard(activeGame.getPlayer(1).getMyBoard());
+
             System.out.println("Game started");
             showGameState();
+        } catch (InvalidGameObjectPlacementException e) {
+            String message = String.format("\nError while initializing board.\n" +
+                    "Cannot place a given " + e.getGameObjectType() + " at position " + e.GetCoordinates() + ".\n" +
+                    "reason: " + e.getReason()) + "\n";
+            System.out.println(message);
         } catch (Exception e) {
             //TODO fix error handling
             System.out.println("Error while starting game: " + e.getMessage() + " please try again.");
@@ -64,7 +75,7 @@ public class ConsoleUIManager {
         // TODO print current player score
 
         // TODO change that board to the current player
-        BoardDisplayer boardDisplayer =new BoardDisplayer();
+        BoardDisplayer boardDisplayer = new BoardDisplayer();
         Board boardToPrint = activeGame.getPlayer(1).getMyBoard();
         boardDisplayer.printBoard(boardToPrint);
     }
