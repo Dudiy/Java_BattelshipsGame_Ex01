@@ -67,6 +67,8 @@ public class Game {
                 }
             }
 
+            // TODO check all ships are on board
+
             players[currentPlayerIndex].setMyBoard(currentBoard);
             currentPlayerIndex++;
         }
