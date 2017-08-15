@@ -36,12 +36,12 @@ public class Board {
         try {
             BoardCell cell = getBoardCellAtCoordinates(position);
             if (value instanceof AbstractShip && !allSurroundingCellsClear(cell)) {
-                throw new InvalidShipPlacementException(position);
+                throw new InvalidGameObjectPlacementException(value.getObjectTypeSimpleName(), position, "Surrounding cells are not clear.");
             } else {
                 cell.SetCellValue(value);
             }
         } catch (CellNotOnBoardException cellNotOnBoardException) {
-            throw new InvalidGameObjectPlacementException(position);
+            throw new InvalidGameObjectPlacementException(value.getObjectTypeSimpleName(), position, "cannot place object on the cell because the cell is not on the board");
         }
     }
 
@@ -131,20 +131,14 @@ public class Board {
     }
 
     // add a new ship to the board
-    public void addShipToBoard(AbstractShip ship) throws InvalidShipPlacementException {
-        try {
-            if (ship instanceof RegularShip) {
-                addRegularShipToBoard((RegularShip) ship);
-            } else if (ship instanceof LShapeShip) {
-                addLShapeShipToBoard((LShapeShip) ship);
-            } else {
-                throw new IllegalArgumentException("The ship type given is not supported");
-            }
-        } catch (Exception ex) {
-            // runtime exception
-            throw new InvalidShipPlacementException(ship.getCoordinates());
+    public void addShipToBoard(AbstractShip ship) throws Exception {
+        if (ship instanceof RegularShip) {
+            addRegularShipToBoard((RegularShip) ship);
+        } else if (ship instanceof LShapeShip) {
+            addLShapeShipToBoard((LShapeShip) ship);
+        } else {
+            throw new IllegalArgumentException("The ship type given is not supported");
         }
-
         // if we get here then there was no exception thrown => ship was added
         shipsOnBoard.add(ship);
     }

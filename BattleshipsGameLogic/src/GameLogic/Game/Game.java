@@ -1,5 +1,6 @@
 package GameLogic.Game;
 
+import GameLogic.Exceptions.InvalidGameObjectPlacementException;
 import GameLogic.Game.Board.Board;
 import GameLogic.Game.GameObjects.Ship.*;
 import GameLogic.Users.*;
@@ -61,6 +62,8 @@ public class Game {
                 try {
                     AbstractShip shipObject = shipFactory.createShip(ship);
                     currentBoard.addShipToBoard(shipObject);
+                } catch (InvalidGameObjectPlacementException e){
+                    throw e;
                 } catch (Exception e) {
                     String message = String.format("Error while initializing board of player \"" + players[currentPlayerIndex].getName() + "\", inner exception: " + e.getMessage());
                     throw new Exception(message);

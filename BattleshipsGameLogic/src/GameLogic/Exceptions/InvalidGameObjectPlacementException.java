@@ -4,18 +4,31 @@ package GameLogic.Exceptions;
 import GameLogic.Game.Board.BoardCoordinates;
 
 public class InvalidGameObjectPlacementException extends Exception {
-    BoardCoordinates coordinates;
+    private BoardCoordinates coordinates;
+    private String reason;
 
-    public InvalidGameObjectPlacementException(BoardCoordinates coordinates) {
+    private String gameObjectType;
+
+    public InvalidGameObjectPlacementException(String gameObjectType, BoardCoordinates coordinates, String reason) {
         this.coordinates = coordinates;
+        this.reason = reason;
+        this.gameObjectType = gameObjectType;
     }
 
     @Override
     public String getMessage() {
-        return String.format("Game object cannot be placed at " + coordinates);
+        return String.format("Game object cannot be placed at " + coordinates + ". " + reason);
     }
 
-    public BoardCoordinates GetCoordinates(){
+    public BoardCoordinates GetCoordinates() {
         return coordinates;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public String getGameObjectType() {
+        return gameObjectType;
     }
 }

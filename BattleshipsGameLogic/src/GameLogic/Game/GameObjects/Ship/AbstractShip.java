@@ -10,7 +10,7 @@ public abstract class AbstractShip extends GameObject {
     private int score; // TODO exercise 2
 
     public AbstractShip(int length, BoardCoordinates position, Enum direction, int score) {
-        super(position);
+        super("Ship", position);
         this.length = length;
         this.direction = direction;
         this.score = score;

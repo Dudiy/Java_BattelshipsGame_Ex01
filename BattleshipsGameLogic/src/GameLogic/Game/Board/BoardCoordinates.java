@@ -57,12 +57,12 @@ public class BoardCoordinates {
 
     // updates the value of row, does not check if the value is on the board!
     public void OffsetRow(int offset) {
-        col += offset;
+        row += offset;
     }
 
     // updates the value of col, does not check if the value is on the board!
     public void OffsetCol(int offset){
-        row += offset;
+        col += offset;
     }
 
     @Override

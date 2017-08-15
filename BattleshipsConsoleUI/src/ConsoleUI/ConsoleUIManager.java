@@ -1,5 +1,6 @@
 package ConsoleUI;
 
+import GameLogic.Exceptions.InvalidGameObjectPlacementException;
 import GameLogic.Game.Game;
 import GameLogic.Game.eGameState;
 import GameLogic.GamesManager;
@@ -48,7 +49,14 @@ public class ConsoleUIManager {
             gamesManager.startGame(activeGame, player1, player2);
             System.out.println("Game started");
             // TODO print board
-        } catch (Exception e) {
+        }
+        catch (InvalidGameObjectPlacementException e){
+            String message = String.format("\nError while initializing board.\n" +
+                    "Cannot place a given " + e.getGameObjectType() + " at position " + e.GetCoordinates() + ".\n" +
+                    "reason: " + e.getReason()) + "\n";
+            System.out.println(message);
+        }
+        catch (Exception e) {
             //TODO fix error handling
             System.out.println("Error while starting game: " + e.getMessage() + " please try again.");
         }
