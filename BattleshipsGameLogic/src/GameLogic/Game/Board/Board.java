@@ -3,6 +3,7 @@ package GameLogic.Game.Board;
 import GameLogic.Exceptions.*;
 import GameLogic.Game.GameObjects.GameObject;
 import GameLogic.Game.GameObjects.Ship.*;
+import GameLogic.Game.GameObjects.Water;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.LinkedList;
@@ -19,26 +20,67 @@ public class Board {
     }
 
     private void initBoard() {
-        board = new BoardCell[ boardSize ][ boardSize ];
+        board = new BoardCell[boardSize][boardSize];
 
         for (int row = 0; row < boardSize; row++) {
             for (int col = 0; col < boardSize; col++) {
                 //ctor of new BoardCell points to a new "Water" object by default
-                board[ row ][ col ] = new BoardCell((char) ('A' + col), row + 1);
+                board[row][col] = new BoardCell((char) ('A' + col), row + 1);
             }
         }
     }
 
     // set the value of the BoardCell at the given coordinates to be value
     // throws InvalidGameObjectPlacementException if value cannot be placed in the given coordinates on this board
-    private void setCellValue(BoardCoordinates position, GameObject value) throws InvalidGameObjectPlacementException {
+    private void setCellValue(BoardCoordinates position, GameObject value) throws Exception {
         try {
-            getBoardCellAtCoordinates(position).SetCellValue(value);
+            BoardCell cell = getBoardCellAtCoordinates(position);
+            if (value instanceof AbstractShip && !allSurroundingCellsClear(cell)) {
+                throw new InvalidShipPlacementException(position);
+            } else {
+                cell.SetCellValue(value);
+            }
         } catch (CellNotOnBoardException cellNotOnBoardException) {
             throw new InvalidGameObjectPlacementException(position);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+    }
+
+    private boolean allSurroundingCellsClear(BoardCell cell) {
+        BoardCoordinates tempPosition = cell.GetPosition();
+        boolean allClear = true;
+        //start from top left cell
+        tempPosition.OffsetRow(-1);
+        tempPosition.OffsetCol(-1);
+
+        for (int i = 0; i < 8; i++) {
+            try {
+                if (!(this.getBoardCellAtCoordinates(tempPosition).GetCellValue() instanceof Water)) {
+                    allClear = false;
+                    break;
+                }
+            } catch (CellNotOnBoardException e) {
+                // the given cell is on one of the edges, error while trying to fetch a surrounding cell not on the board
+            } finally {
+                // move 2 right
+                if (i < 2) {
+                    tempPosition.OffsetCol(1);
+                }
+                // move 2 down
+                else if (i >= 2 && i < 4) {
+                    tempPosition.OffsetRow(1);
+                }
+                // move 2 left
+                else if (i >= 4 && i < 6) {
+                    tempPosition.OffsetCol(-1);
+                }
+                // move 2 up
+                else {
+                    tempPosition.OffsetRow(-1);
+                }
+            }
+        }
+
+        return allClear;
     }
 
     public void setMinesAvailable(int minesAvailable) {
@@ -80,7 +122,7 @@ public class Board {
             int col = coordinates.GetColAsInt();
             int row = coordinates.GetRow();
 
-            res = board[ row ][ col ];
+            res = board[row][col];
         } else {
             throw new CellNotOnBoardException();
         }
@@ -108,9 +150,9 @@ public class Board {
     }
 
     // add a new RegularShip to this board
-    private void addRegularShipToBoard(RegularShip ship) throws InvalidGameObjectPlacementException {
+    private void addRegularShipToBoard(RegularShip ship) throws Exception {
         BoardCoordinates currCoordinates = ship.getCoordinates();
-        RegularShip.eShipDirection shipDirection = (RegularShip.eShipDirection)ship.getDirection();
+        RegularShip.eShipDirection shipDirection = (RegularShip.eShipDirection) ship.getDirection();
 
         // set the value of the first cell
         setCellValue(currCoordinates, ship);
