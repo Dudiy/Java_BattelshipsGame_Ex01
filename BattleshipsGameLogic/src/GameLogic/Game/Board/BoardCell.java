@@ -7,6 +7,8 @@ import GameLogic.Game.GameObjects.Water;
 public class BoardCell {
     private BoardCoordinates position;
     private GameObject cellValue;
+    private boolean hit = false;
+    private boolean miss = false;
 
     public BoardCell(char col, int row) {
         position = new BoardCoordinates(col,row);
@@ -40,5 +42,13 @@ public class BoardCell {
 
     public GameObject GetCellValue() {
         return cellValue;
+    }
+
+    public boolean isHit() {
+        return hit;
+    }
+
+    public boolean isMiss() {
+        return miss;
     }
 }
