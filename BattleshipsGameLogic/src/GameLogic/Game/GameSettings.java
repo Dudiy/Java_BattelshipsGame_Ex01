@@ -2,11 +2,12 @@ package GameLogic.Game;
 
 import javafx.fxml.LoadException;
 import jaxb.generated.BattleShipGame;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameSettings {
     private final static String JAXB_XML_GAME_PACKAGE_NAME = "GameLogic.jaxb.generated";
@@ -16,6 +17,7 @@ public class GameSettings {
     private eGameType gameType;
     private int minesPerPlayer;
     private BattleShipGame gameLoadedFromXml;
+    private Map<String,BattleShipGame.ShipTypes.ShipType> shipTypes = new HashMap<>();
 
     // private ctor, GameSettings can only be created by calling LoadGameFile
     private GameSettings() {
@@ -60,16 +62,9 @@ public class GameSettings {
             throw new Exception("Invalid game type");
         }
 
-        // validate minesPerPlayer
-        // TODO can this be 0?
-        gameSettings.minesPerPlayer = objectImported.getMine().getAmount();
-        if (gameSettings.minesPerPlayer <= 0) {
-            throw new Exception("Number of mines per player is not a non negative integer");
-        }
-
-        // validate number of boards
-        if (objectImported.getBoards().getBoard().size() != 2) {
-            throw new Exception("Invalid number of boards");
+        // set shipTypes
+        for (BattleShipGame.ShipTypes.ShipType shipType : objectImported.getShipTypes().getShipType()) {
+            gameSettings.shipTypes.put(shipType.getId(),shipType);
         }
     }
 
@@ -90,6 +85,10 @@ public class GameSettings {
 
     public int getMinesPerPlayer() {
         return minesPerPlayer;
+    }
+
+    public Map<String, BattleShipGame.ShipTypes.ShipType> getShipTypes() {
+        return shipTypes;
     }
 
     public BattleShipGame getGameLoadedFromXml() {
