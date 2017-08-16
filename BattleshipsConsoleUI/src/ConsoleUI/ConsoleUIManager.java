@@ -1,19 +1,18 @@
 package ConsoleUI;
 
 import GameLogic.Game.Board.Board;
-import GameLogic.Exceptions.InvalidGameObjectPlacementException;
+import GameLogic.Exceptions.*;
 import GameLogic.Game.Game;
 import GameLogic.Game.eGameState;
 import GameLogic.GamesManager;
 import GameLogic.Users.Player;
-import com.sun.org.apache.bcel.internal.generic.GOTO;
 import javafx.fxml.LoadException;
 
 public class ConsoleUIManager {
     GamesManager gamesManager = new GamesManager();
     // console application may have only 1 game
     Game activeGame;
-    BoardDisplayer boardDisplayer = new BoardDisplayer();
+    BoardPrinter boardPrinter = new BoardPrinter();
 
     Menu menu = new Menu();
 
@@ -53,7 +52,7 @@ public class ConsoleUIManager {
             Player player1 = new Player("p1", "Player 1");
             Player player2 = new Player("p2", "Player 2");
             gamesManager.startGame(activeGame, player1, player2);
-            BoardDisplayer bd = new BoardDisplayer();
+            BoardPrinter bd = new BoardPrinter();
 
             bd.printBoard(activeGame.getPlayer(1).getMyBoard());
 
@@ -76,8 +75,8 @@ public class ConsoleUIManager {
         // TODO print current player score
 
         // TODO change that board to the current player
-        BoardDisplayer boardDisplayer = new BoardDisplayer();
+        BoardPrinter boardPrinter = new BoardPrinter();
         Board boardToPrint = activeGame.getPlayer(1).getMyBoard();
-        boardDisplayer.printBoard(boardToPrint);
+        boardPrinter.printBoard(boardToPrint);
     }
 }
