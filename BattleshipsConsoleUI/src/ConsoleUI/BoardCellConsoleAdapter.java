@@ -18,8 +18,6 @@ public class BoardCellConsoleAdapter {
         this.boardCell = boardCell;
     }
 
-
-
     @Override
     public String toString() {
         String cellChar;
