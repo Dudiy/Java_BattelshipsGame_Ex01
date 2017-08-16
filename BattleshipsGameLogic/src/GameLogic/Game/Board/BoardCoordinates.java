@@ -1,6 +1,6 @@
 package GameLogic.Game.Board;
 
-public class BoardCoordinates {
+public class BoardCoordinates implements Cloneable {
     private char col;
     private int row;
 
@@ -9,10 +9,12 @@ public class BoardCoordinates {
         this.row = row;
     }
 
-    public BoardCoordinates(int row, int col){
-        // number start from 1 so (1,1) == A1 => row = 1, col = A + 1 - 1
-        this.row = row;
-        this.col = (char)('A' + col - 1);
+    public static BoardCoordinates convertFromXmlToBoard(int row, int col){
+        // input from xml starts from 1,1 but board starts from 0,0
+        int tempRow = row;
+        char tempCol = (char)('A' + col - 1);
+
+        return new BoardCoordinates(tempCol,tempRow);
     }
 
     // convert a string of type "A1" or "1A" to coordinates
@@ -68,5 +70,10 @@ public class BoardCoordinates {
     @Override
     public String toString() {
         return String.format("(%c,%d)", col, row);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new BoardCoordinates(this.col,this.row);
     }
 }

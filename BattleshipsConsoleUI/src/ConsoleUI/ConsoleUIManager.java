@@ -54,7 +54,7 @@ public class ConsoleUIManager {
             gamesManager.startGame(activeGame, player1, player2);
             BoardPrinter bd = new BoardPrinter();
 
-            bd.printBoard(activeGame.getPlayer(1).getMyBoard());
+            bd.printBothBoards(activeGame);
 
             System.out.println("Game started");
             showGameState();
@@ -76,7 +76,6 @@ public class ConsoleUIManager {
 
         // TODO change that board to the current player
         BoardPrinter boardPrinter = new BoardPrinter();
-        Board boardToPrint = activeGame.getPlayer(1).getMyBoard();
-        boardPrinter.printBoard(boardToPrint);
+        boardPrinter.printBothBoards(activeGame);
     }
 }

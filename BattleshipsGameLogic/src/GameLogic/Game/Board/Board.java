@@ -2,9 +2,11 @@ package GameLogic.Game.Board;
 
 import GameLogic.Exceptions.*;
 import GameLogic.Game.GameObjects.GameObject;
+import GameLogic.Game.GameObjects.IHidable;
 import GameLogic.Game.GameObjects.Ship.*;
 import GameLogic.Game.GameObjects.Water;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.util.LinkedList;
 
 public class Board {
@@ -44,8 +46,8 @@ public class Board {
         }
     }
 
-    private boolean allSurroundingCellsClear(BoardCell cell, GameObject objectBeingCheckedFor) {
-        BoardCoordinates tempPosition = cell.GetPosition();
+    private boolean allSurroundingCellsClear(BoardCell cell, GameObject objectBeingCheckedFor) throws CloneNotSupportedException {
+        BoardCoordinates tempPosition = (BoardCoordinates) cell.GetPosition().clone();
         boolean allClear = true;
         //start from top left cell
         tempPosition.OffsetRow(-1);
@@ -54,7 +56,7 @@ public class Board {
         for (int i = 0; i < 8; i++) {
             try {
                 GameObject objectAtCell = this.getBoardCellAtCoordinates(tempPosition).GetCellValue();
-                if (!(objectAtCell instanceof Water) && (objectAtCell != objectBeingCheckedFor)){
+                if (!(objectAtCell instanceof Water) && (objectAtCell != objectBeingCheckedFor)) {
                     allClear = false;
                     break;
                 }
@@ -66,11 +68,11 @@ public class Board {
                     tempPosition.OffsetCol(1);
                 }
                 // move 2 down
-                else if (i >= 2 && i < 4) {
+                else if (i < 4) {
                     tempPosition.OffsetRow(1);
                 }
                 // move 2 left
-                else if (i >= 4 && i < 6) {
+                else if (i < 6) {
                     tempPosition.OffsetCol(-1);
                 }
                 // move 2 up
@@ -150,7 +152,7 @@ public class Board {
 
     // add a new RegularShip to this board
     private void addRegularShipToBoard(RegularShip ship) throws Exception {
-        BoardCoordinates currCoordinates = ship.getCoordinates();
+        BoardCoordinates currCoordinates = ship.getPosition();
         RegularShip.eShipDirection shipDirection = (RegularShip.eShipDirection) ship.getDirection();
 
         // set the value of the first cell
@@ -181,5 +183,24 @@ public class Board {
         int row = i_Coordinates.GetRow();
 
         return ((0 <= col && col <= boardSize - 1) && (0 <= row && row <= boardSize - 1));
+    }
+
+    // create a copy of the board and hide all ships and mines (make them water)
+    // TODO throw exception or handle here? we know the board is valid
+    public Board HideAllHidables() throws Exception {
+        Board copiedBoard = new Board(boardSize);
+
+        for (BoardCell[] row : board) {
+            for (BoardCell cell : row) {
+                BoardCoordinates position = cell.GetPosition();
+                if (!cell.wasAttacked() && cell.GetCellValue() instanceof IHidable) {
+                    copiedBoard.setCellValue(cell.GetPosition(), new Water(position));
+                } else {
+                    copiedBoard.setCellValue(position, (GameObject) cell.GetCellValue().clone());
+                }
+            }
+        }
+
+        return copiedBoard;
     }
 }

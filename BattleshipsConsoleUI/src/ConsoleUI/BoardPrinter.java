@@ -2,6 +2,7 @@ package ConsoleUI;
 
 import GameLogic.Game.Board.Board;
 import GameLogic.Game.Board.BoardCell;
+import GameLogic.Game.Game;
 
 public class BoardPrinter {
     // border symbol
@@ -19,11 +20,26 @@ public class BoardPrinter {
     private final char BOARD_PLUS_ROW_SEPARATOR = '╬';
     // indices
     private final char startColIndex = 'A';
-    private byte startRowIndex = 1;
+    private final byte startRowIndex = 1;
+    private final String PADDING_FROM_LEFT = "              ";
+    private byte currRowIndex;
     private Board board;
 
-    public void printBoard(Board board) {
+    public void printBothBoards(Game game) {
+        try {
+            System.out.println("************** " + game.getActivePlayer().getName() + "'s Board (active player) **************\n");
+            printBoard(game.getActiveBoard());
+            System.out.println("\n************** " + game.getOtherPlayer().getName() + "'s Board (opponent) **************\n");
+            printBoard(game.getHiddenBoard());
+        } catch (Exception e) {
+            System.out.println("Error while trying to print boards: " + e.getMessage());
+        }
+    }
+
+    // TODO changed to private, if we need we can change it back to public
+    private void printBoard(Board board) {
         int currRowNum = 0;
+        currRowIndex = startRowIndex;
         this.board = board;
         printColIndices();
         printFirstRowBorder();
@@ -41,7 +57,7 @@ public class BoardPrinter {
         char localColIndex = startColIndex;
         int boardSize = board.getBoardSize();
 
-        System.out.print("\\ ");
+        System.out.print(PADDING_FROM_LEFT + "\\ ");
         for (int i = 0; i < boardSize; i++) {
             System.out.print(localColIndex + " ");
             localColIndex++;
@@ -51,7 +67,8 @@ public class BoardPrinter {
     }
 
     private void printRow(BoardCell[] row) {
-        System.out.print(startRowIndex++);
+        System.out.print(PADDING_FROM_LEFT);
+        System.out.print(currRowIndex++);
         for (BoardCell cell : row) {
             System.out.print(BOARD_VERTICAL);
             System.out.print(new BoardCellConsoleAdapter(cell));
@@ -62,7 +79,7 @@ public class BoardPrinter {
     private void printBorderRow(char firstCell, char connectionCell, char lastCell) {
         int boardSize = board.getBoardSize();
 
-        System.out.print(" ");
+        System.out.print(PADDING_FROM_LEFT + " ");
         System.out.print(firstCell);
         for (int i = 0; i < boardSize - 1; i++) {
             System.out.print(BOARD_HORIZONTAL);

@@ -13,7 +13,8 @@ public class Game {
     private static int IDGenerator = 1000;
     private int ID;
     private boolean gameIsSet = false;
-    private Player[] players = new Player[2];
+    private Player activePlayer;
+    private Player otherPlayer;
     private Map<String, User> spectators = new HashMap<>();
     private GameSettings gameSettings;
     private ShipFactory shipFactory;
@@ -27,34 +28,53 @@ public class Game {
     }
 
     // ======================================= setters =======================================
+
     public void setGameState(eGameState gameState) {
         this.gameState = gameState;
     }
 
     // ======================================= getters =======================================
-
     public int getID() {
         return ID;
     }
 
-    public Player getPlayer(int playerNum) {
-        return players[playerNum-1];
+    public Player getActivePlayer() {
+        return activePlayer;
+    }
+
+    public Player getOtherPlayer() {
+        return otherPlayer;
     }
 
     public eGameState getGameState() {
         return gameState;
     }
 
+    public Board getActiveBoard() {
+        return activePlayer.getBoard();
+    }
+
+    public Board getHiddenBoard() throws Exception {
+        return otherPlayer.getBoard().HideAllHidables();
+    }
+
     // ======================================= Methods =======================================
+
     public void initGame(Player player1, Player player2) throws Exception {
-        players[0] = player1;
-        players[1] = player2;
+        if (player1 == null || player2 == null) {
+            throw new Exception("Players cannot be null");
+        }
+
+        activePlayer = player1;
+        otherPlayer = player2;
         initBoards();
         gameState = eGameState.INITIALIZED;
     }
 
     private void initBoards() throws Exception {
         int currentPlayerIndex = 0;
+        Board[] initializedBoards = new Board[2];
+        Player currentPlayer = activePlayer;
 
         BattleShipGame gameLoadedFromXml = gameSettings.getGameLoadedFromXml();
 
@@ -66,21 +86,21 @@ public class Game {
                 try {
                     AbstractShip shipObject = shipFactory.createShip(ship);
                     currentBoard.addShipToBoard(shipObject);
-                } catch (InvalidGameObjectPlacementException e){
+                } catch (InvalidGameObjectPlacementException e) {
                     throw e;
                 } catch (Exception e) {
-                    String message = String.format("Error while initializing board of player \"" + players[currentPlayerIndex].getName() + "\", inner exception: " + e.getMessage());
+                    String message = String.format("Error while initializing " + currentPlayer.getName() + "'s board, inner exception: " + e.getMessage());
                     throw new Exception(message);
                 }
             }
 
             // TODO check all ships are on board
 
-            players[currentPlayerIndex].setMyBoard(currentBoard);
-            currentPlayerIndex++;
+            // the xsd file forces the input to have exactly 2 boards
+            currentPlayer.setBoard(currentBoard);
+            currentPlayer = otherPlayer;
         }
 
         gameIsSet = true;
     }
-
 }

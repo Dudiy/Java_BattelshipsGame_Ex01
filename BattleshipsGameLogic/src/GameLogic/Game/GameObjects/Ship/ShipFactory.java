@@ -15,7 +15,7 @@ public class ShipFactory {
         BattleShipGame.ShipTypes.ShipType shipType = getShipType(ship.getShipTypeId());
         String shipCatagory = shipType.getCategory();
         AbstractShip shipObject;
-        BoardCoordinates coordinates = new BoardCoordinates(ship.getPosition().getX(), ship.getPosition().getY());
+        BoardCoordinates coordinates = BoardCoordinates.convertFromXmlToBoard(ship.getPosition().getX(), ship.getPosition().getY());
 
         if (shipCatagory.equals("REGULAR")) {
             RegularShip.eShipDirection direction = RegularShip.eShipDirection.valueOf(ship.getDirection());
