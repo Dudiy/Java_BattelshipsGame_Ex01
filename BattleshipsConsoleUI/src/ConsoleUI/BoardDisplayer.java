@@ -5,7 +5,6 @@ import GameLogic.Game.Board.BoardCell;
 import GameLogic.Game.GameObjects.Mine;
 import GameLogic.Game.GameObjects.Ship.AbstractShip;
 import GameLogic.Game.GameObjects.Water;
-import com.sun.xml.internal.ws.util.StringUtils;
 
 // TODO static ?
 public class BoardDisplayer {
@@ -25,9 +24,9 @@ public class BoardDisplayer {
     // cell symbol
     private final Character HIT = '1';
     private final Character MISS = '2';
-    private final Character SHIP = '3';
-    private final Character WATER = '4';
-    private final Character MINE = '5';
+    private final Character SHIP = '\u2588';
+    private final Character WATER = '~';
+    private final Character MINE = '\u237e';
     // indices
     private final char startColIndex = 'A';
     private final byte startRowIndex = 1;
