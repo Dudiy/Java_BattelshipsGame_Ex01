@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
-Class-Path: lib\BattleshipsGameLogic.jar
+Class-Path: lib\BattleshipsConsoleUI:jar
 Main-Class: ConsoleUI.Program
 

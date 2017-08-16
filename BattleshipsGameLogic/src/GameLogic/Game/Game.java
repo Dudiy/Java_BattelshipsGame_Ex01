@@ -2,6 +2,7 @@ package GameLogic.Game;
 
 import GameLogic.Exceptions.InvalidGameObjectPlacementException;
 import GameLogic.Game.Board.Board;
+import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.GameObjects.Ship.*;
 import GameLogic.Users.*;
 import jaxb.generated.BattleShipGame;
@@ -13,7 +14,8 @@ public class Game {
     private static int IDGenerator = 1000;
     private int ID;
     private boolean gameIsSet = false;
-    private Player[] players = new Player[2];
+    private Player[] players = new Player[ 2 ];
+    private Player activePlayer;
     private Map<String, User> spectators = new HashMap<>();
     private GameSettings gameSettings;
     private ShipFactory shipFactory;
@@ -38,7 +40,7 @@ public class Game {
     }
 
     public Player getPlayer(int playerNum) {
-        return players[playerNum-1];
+        return players[ playerNum - 1 ];
     }
 
     public eGameState getGameState() {
@@ -47,10 +49,11 @@ public class Game {
 
     // ======================================= Methods =======================================
     public void initGame(Player player1, Player player2) throws Exception {
-        players[0] = player1;
-        players[1] = player2;
+        players[ 0 ] = player1;
+        players[ 1 ] = player2;
+        activePlayer = players[ 0 ];
         initBoards();
-        gameState = eGameState.INITIALIZED;
+        //gameState = eGameState.INITIALIZED;
     }
 
     private void initBoards() throws Exception {
@@ -66,21 +69,25 @@ public class Game {
                 try {
                     AbstractShip shipObject = shipFactory.createShip(ship);
                     currentBoard.addShipToBoard(shipObject);
-                } catch (InvalidGameObjectPlacementException e){
+                } catch (InvalidGameObjectPlacementException e) {
                     throw e;
                 } catch (Exception e) {
-                    String message = String.format("Error while initializing board of player \"" + players[currentPlayerIndex].getName() + "\", inner exception: " + e.getMessage());
+                    String message = String.format("Error while initializing board of player \"" + players[ currentPlayerIndex ].getName() + "\", inner exception: " + e.getMessage());
                     throw new Exception(message);
                 }
             }
 
             // TODO check all ships are on board
 
-            players[currentPlayerIndex].setMyBoard(currentBoard);
+            players[ currentPlayerIndex ].setMyBoard(currentBoard);
             currentPlayerIndex++;
         }
 
         gameIsSet = true;
     }
 
+    public eShootReturn playMove(BoardCoordinates userSelectionCell) {
+        // TODO
+        return null;
+    }
 }

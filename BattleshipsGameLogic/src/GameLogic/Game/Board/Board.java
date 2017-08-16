@@ -34,7 +34,7 @@ public class Board {
     private void setCellValue(BoardCoordinates position, GameObject value) throws Exception {
         try {
             BoardCell cell = getBoardCellAtCoordinates(position);
-            if (value instanceof AbstractShip && !allSurroundingCellsClear(cell, value)) {
+            if (value instanceof AbstractShip && !allSurroundingCellsClear(cell)) {
                 throw new InvalidGameObjectPlacementException(value.getObjectTypeSimpleName(), position, "Surrounding cells are not clear.");
             } else {
                 cell.SetCellValue(value);
@@ -44,7 +44,8 @@ public class Board {
         }
     }
 
-    private boolean allSurroundingCellsClear(BoardCell cell, GameObject objectBeingCheckedFor) {
+    // TODO bug
+    private boolean allSurroundingCellsClear(BoardCell cell) {
         BoardCoordinates tempPosition = cell.GetPosition();
         boolean allClear = true;
         //start from top left cell
@@ -53,8 +54,7 @@ public class Board {
 
         for (int i = 0; i < 8; i++) {
             try {
-                GameObject objectAtCell = this.getBoardCellAtCoordinates(tempPosition).GetCellValue();
-                if (!(objectAtCell instanceof Water) && (objectAtCell != objectBeingCheckedFor)){
+                if (!(this.getBoardCellAtCoordinates(tempPosition).GetCellValue() instanceof Water)) {
                     allClear = false;
                     break;
                 }
@@ -158,9 +158,9 @@ public class Board {
         // set the values of the next size-1 cells
         for (int i = 0; i < ship.getLength() - 1; i++) {
             if (shipDirection == RegularShip.eShipDirection.COLUMN) {
-                currCoordinates.OffsetRow(1);
-            } else if (shipDirection == RegularShip.eShipDirection.ROW) {
                 currCoordinates.OffsetCol(1);
+            } else if (shipDirection == RegularShip.eShipDirection.ROW) {
+                currCoordinates.OffsetRow(1);
             } else {
                 throw new IllegalArgumentException("The given Ship has an unknown direction value");
             }
