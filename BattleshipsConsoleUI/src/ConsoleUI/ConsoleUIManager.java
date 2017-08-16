@@ -12,7 +12,7 @@ import javafx.fxml.LoadException;
 public class ConsoleUIManager {
     GamesManager gamesManager = new GamesManager();
     // console application may have only 1 game
-    Game activeGame = null;
+    Game activeGame;
 
     Menu menu = new Menu();
 
@@ -27,35 +27,13 @@ public class ConsoleUIManager {
     private void invokeMenuItem(Menu.eMenuOption menuItemSelected) {
         switch (menuItemSelected) {
             case LOAD_GAME:
-                if(activeGame == null || activeGame.getGameState() == eGameState.INVALID ||
-                        activeGame.getGameState() == eGameState.LOADED){
-                    loadGame();
-                }
-                else{
-                    System.out.println("Selection NOT allow, because we already start the game");
-                }
+                loadGame();
                 break;
             case START_GAME:
-                if(activeGame.getGameState() == eGameState.LOADED){
-                    startGame();
-                }
-                else{
-                    System.out.println("Selection NOT allow, please load game at first");
-                }
+                startGame();
                 break;
             case SHOW_GAME_STATE:
-                if(activeGame.getGameState() != eGameState.INVALID && activeGame.getGameState() != eGameState.LOADED){
-                    startGame();
-                    if(activeGame.getGameState() == eGameState.LOADED){
-                        showGameState();
-                    }
-                    else{
-                        System.out.println("Selection NOT allow, please there isn't active game");
-                    }
-                }
-                else{
-                    System.out.println("Selection NOT allow, please load game at first");
-                }
+                showGameState();
                 break;
         }
     }

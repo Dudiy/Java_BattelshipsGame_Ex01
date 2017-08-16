@@ -3,6 +3,7 @@ package ConsoleUI;
 import java.util.Scanner;
 
 public class Menu {
+
     public enum eMenuOption {
         LOAD_GAME(1, "Load game"),
         START_GAME(2, "Start game"),

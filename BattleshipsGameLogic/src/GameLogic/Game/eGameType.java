@@ -1,6 +1,5 @@
 package GameLogic.Game;
 
-// TODO all class in logic not public ?
 public enum eGameType {
     BASIC("Basic"),
     ADVANCED("Advanced");

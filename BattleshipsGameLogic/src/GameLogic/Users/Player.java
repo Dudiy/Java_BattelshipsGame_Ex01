@@ -1,7 +1,6 @@
 package GameLogic.Users;
 
 import GameLogic.Game.Board.Board;
-import GameLogic.Game.Board.BoardCoordinates;
 
 import java.sql.Time;
 
@@ -35,10 +34,5 @@ public class Player {
 
     public Board getMyBoard() {
         return myBoard;
-    }
-
-    public eShootReturn shootCell(BoardCoordinates cellToShoot){
-        // TODO
-        return null;
     }
 }
