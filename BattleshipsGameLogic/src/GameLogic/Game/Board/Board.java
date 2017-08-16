@@ -44,6 +44,7 @@ public class Board {
         }
     }
 
+    // TODO bug
     private boolean allSurroundingCellsClear(BoardCell cell) {
         BoardCoordinates tempPosition = cell.GetPosition();
         boolean allClear = true;

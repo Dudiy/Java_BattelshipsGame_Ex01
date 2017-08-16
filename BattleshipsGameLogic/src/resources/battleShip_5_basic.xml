@@ -25,19 +25,19 @@
             </ship>
             <ship>
                 <shipTypeId>shipTypeB</shipTypeId>
-                <position x="2" y="1" />
+                <position x="2" y="5" />
                 <direction>COLUMN</direction>
             </ship>
         </board>
         <board>
             <ship>
                 <shipTypeId>shipTypeA</shipTypeId>
-                <position x="1" y="2" />
+                <position x="5" y="3" />
                 <direction>ROW</direction>
             </ship>
             <ship>
                 <shipTypeId>shipTypeB</shipTypeId>
-                <position x="3" y="3" />
+                <position x="3" y="2" />
                 <direction>COLUMN</direction>
             </ship>
         </board>
