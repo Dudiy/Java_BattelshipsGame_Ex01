@@ -13,6 +13,7 @@ public class ConsoleUIManager {
     GamesManager gamesManager = new GamesManager();
     // console application may have only 1 game
     Game activeGame;
+    BoardDisplayer boardDisplayer = new BoardDisplayer();
 
     Menu menu = new Menu();
 

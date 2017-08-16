@@ -22,8 +22,8 @@ public class BoardDisplayer {
     private final String BOARD_RIGHT_VERTICAL_ROW_SAPERATOR = "\u2563";
     private final String BOARD_PLUS_ROW_SAPERATOR = "\u256C";
     // cell symbol
-    private final Character HIT = '1';
-    private final Character MISS = '2';
+    private final Character HIT = 'X';
+    private final Character MISS = 'o';
     private final Character SHIP = '\u2588';
     private final Character WATER = '~';
     private final Character MINE = '\u237e';
