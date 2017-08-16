@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact name="BattleshipsGameLogic:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/BattleshipsGameLogic_jar</output-path>
+    <output-path>$PROJECT_DIR$/out/artifacts/BattleshipsGame/lib</output-path>
     <root id="root">
       <element id="archive" name="BattleshipsGameLogic.jar">
         <element id="module-output" name="BattleshipsGameLogic" />
