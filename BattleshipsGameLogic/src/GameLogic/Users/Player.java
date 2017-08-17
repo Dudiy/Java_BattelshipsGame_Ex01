@@ -7,7 +7,8 @@ import java.sql.Time;
 public class Player {
     private String ID;
     private String name;
-    private Board board;
+    private Board myBoard;
+    private Board opponentBoard;
     private Time avgTurnDurationnew;
     private int score = 0;
 
@@ -17,8 +18,12 @@ public class Player {
     }
 
     // ======================================= setters =======================================
-    public void setBoard(Board board) {
-        this.board = board;
+    public void setMyBoard(Board board) {
+        this.myBoard = board;
+    }
+
+    public void setOpponentBoard(Board board) {
+        this.opponentBoard = board;
     }
 
     // ======================================= getters =======================================
@@ -30,7 +35,11 @@ public class Player {
         return name;
     }
 
-    public Board getBoard() {
-        return board;
+    public Board getMyBoard() {
+        return myBoard;
+    }
+
+    public Board getOpponentBoard() {
+        return opponentBoard;
     }
 }

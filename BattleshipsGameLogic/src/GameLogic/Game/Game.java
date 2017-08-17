@@ -50,13 +50,13 @@ public class Game {
         return gameState;
     }
 
-    public Board getActiveBoard() {
-        return activePlayer.getBoard();
-    }
-
-    public Board getHiddenBoard() throws Exception {
-        return otherPlayer.getBoard().HideAllHidables();
-    }
+//    public Board getActiveBoard() {
+//        return activePlayer.getMyBoard();
+//    }
+//
+//    public Board getHiddenBoard() throws Exception {
+//        return otherPlayer.getBoard().HideAllHidables();
+//    }
 
     // ======================================= Methods =======================================
 
@@ -97,7 +97,9 @@ public class Game {
             // TODO check all ships are on board
 
             // the xsd file forces the input to have exactly 2 boards
-            currentPlayer.setBoard(currentBoard);
+            currentPlayer.setMyBoard(currentBoard);
+            // set a new blank opponent board
+            currentPlayer.setOpponentBoard(new Board(gameSettings.getBoardSize()));
             currentPlayer = otherPlayer;
         }
 

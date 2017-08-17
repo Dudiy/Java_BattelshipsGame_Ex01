@@ -1,20 +1,26 @@
 package ConsoleUI;
 
+import GameLogic.Game.eGameState;
+
+import java.util.EnumSet;
 import java.util.Scanner;
 
 public class Menu {
 
     public enum eMenuOption {
-        LOAD_GAME(1, "Load game"),
-        START_GAME(2, "Start game"),
-        SHOW_GAME_STATE(3, "Show game state");
+        LOAD_GAME(1, "Load game", EnumSet.of(eGameState.INVALID,eGameState.INITIALIZED, eGameState.LOADED)),
+        START_GAME(2, "Start game", EnumSet.of(eGameState.INITIALIZED, eGameState.LOADED)),
+        SHOW_GAME_STATE(3, "Show game state", EnumSet.of(eGameState.STARTED));
 
         private String description;
         private int ID;
+        private boolean isDisplayed = true;
+        private EnumSet<eGameState> displayedConditions;
 
-        eMenuOption(int optionID, String description) {
+        eMenuOption(int optionID, String description, EnumSet<eGameState> displayConditions) {
             this.ID = optionID;
             this.description = description;
+            this.displayedConditions = displayConditions;
         }
 
         public static eMenuOption valueOf(int optionID) {
@@ -32,16 +38,19 @@ public class Menu {
         public String toString() {
             return ID + ") " + description;
         }
+
     }
 
-    public eMenuOption display() {
+    public eMenuOption display(eGameState gameState) {
         boolean isValidSelection = false;
         int userIntSelection = 0;
         Scanner scanner = new Scanner(System.in);
         eMenuOption userSelection = null;
 
         for (eMenuOption menuOption : eMenuOption.values()) {
-            System.out.println(menuOption);
+            if (menuOption.displayedConditions.contains(gameState)) {
+                System.out.println(menuOption);
+            }
         }
 
         System.out.print("Please select one of the options above: ");

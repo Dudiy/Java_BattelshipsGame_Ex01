@@ -28,9 +28,9 @@ public class BoardPrinter {
     public void printBothBoards(Game game) {
         try {
             System.out.println("************** " + game.getActivePlayer().getName() + "'s Board (active player) **************\n");
-            printBoard(game.getActiveBoard());
+            printBoard(game.getActivePlayer().getMyBoard());
             System.out.println("\n************** " + game.getOtherPlayer().getName() + "'s Board (opponent) **************\n");
-            printBoard(game.getHiddenBoard());
+            printBoard(game.getActivePlayer().getOpponentBoard());
         } catch (Exception e) {
             System.out.println("Error while trying to print boards: " + e.getMessage());
         }

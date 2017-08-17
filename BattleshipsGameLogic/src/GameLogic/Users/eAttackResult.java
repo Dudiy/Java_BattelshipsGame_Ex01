@@ -1,4 +1,4 @@
 package GameLogic.Users;
 
-public enum eShootReturn {
+public enum eAttackResult {
 }

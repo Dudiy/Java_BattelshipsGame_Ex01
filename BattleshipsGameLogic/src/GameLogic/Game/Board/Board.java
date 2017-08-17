@@ -9,7 +9,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.LinkedList;
 
-public class Board {
+public class Board implements Cloneable {
     private BoardCell[][] board;
     private final int boardSize;
     private LinkedList<AbstractShip> shipsOnBoard = new LinkedList<>();
@@ -185,18 +185,37 @@ public class Board {
         return ((0 <= col && col <= boardSize - 1) && (0 <= row && row <= boardSize - 1));
     }
 
-    // create a copy of the board and hide all ships and mines (make them water)
-    // TODO throw exception or handle here? we know the board is valid
-    public Board HideAllHidables() throws Exception {
+//        // create a copy of the board and hide all ships and mines (make them water)
+//        // TODO throw exception or handle here? we know the board is valid
+//        public Board HideAllHidables() throws Exception {
+//            Board copiedBoard = new Board(boardSize);
+//
+//            for (BoardCell[] row : board) {
+//                for (BoardCell cell : row) {
+//                    BoardCoordinates position = cell.GetPosition();
+//                    if (!cell.wasAttacked() && cell.GetCellValue() instanceof IHidable) {
+//                        copiedBoard.setCellValue(cell.GetPosition(), new Water(position));
+//                    } else {
+//                        copiedBoard.setCellValue(position, (GameObject) cell.GetCellValue().clone());
+//                    }
+//                }
+//            }
+//
+//            return copiedBoard;
+//        }
+
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
         Board copiedBoard = new Board(boardSize);
 
         for (BoardCell[] row : board) {
             for (BoardCell cell : row) {
                 BoardCoordinates position = cell.GetPosition();
-                if (!cell.wasAttacked() && cell.GetCellValue() instanceof IHidable) {
-                    copiedBoard.setCellValue(cell.GetPosition(), new Water(position));
-                } else {
+                try {
                     copiedBoard.setCellValue(position, (GameObject) cell.GetCellValue().clone());
+                } catch (Exception e) {
+                    throw new CloneNotSupportedException("Error while cloning board");
                 }
             }
         }

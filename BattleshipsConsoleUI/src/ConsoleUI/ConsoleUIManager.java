@@ -19,7 +19,8 @@ public class ConsoleUIManager {
 
     public void run() {
         do {
-            Menu.eMenuOption menuItemSelected = menu.display();
+            Menu.eMenuOption menuItemSelected = menu.display(
+                    activeGame == null ? eGameState.INVALID : activeGame.getGameState());
             invokeMenuItem(menuItemSelected);
         } while (activeGame.getGameState() != eGameState.PLAYER_QUIT);
     }
@@ -53,11 +54,8 @@ public class ConsoleUIManager {
             Player player2 = new Player("p2", "Player 2");
             gamesManager.startGame(activeGame, player1, player2);
             BoardPrinter bd = new BoardPrinter();
-
-            bd.printBothBoards(activeGame);
-
-            System.out.println("Game started");
             showGameState();
+            System.out.println("Game started");
         } catch (InvalidGameObjectPlacementException e) {
             String message = String.format("\nError while initializing board.\n" +
                     "Cannot place a given " + e.getGameObjectType() + " at position " + e.GetCoordinates() + ".\n" +
