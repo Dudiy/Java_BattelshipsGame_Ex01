@@ -4,8 +4,9 @@ import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.GameObjects.GameObject;
 import GameLogic.Game.GameObjects.IHidable;
 import GameLogic.Users.eAttackResult;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 
-public abstract class AbstractShip extends GameObject {
+public abstract class AbstractShip extends GameObject{
     private int length;
     // TODO make the enum direction abstract
     protected Enum direction;
@@ -46,12 +47,14 @@ public abstract class AbstractShip extends GameObject {
     public eAttackResult getAttackResult() {
         eAttackResult attackResult;
 
-        if (hitsRemainingUntilSunk <= 1) {
-            hitsRemainingUntilSunk = 0;
+        hitsRemainingUntilSunk--;
+        if (hitsRemainingUntilSunk == 0) {
+            //hitsRemainingUntilSunk = 0;
             attackResult = eAttackResult.HIT_AND_SUNK_SHIP;
-        } else {
-            hitsRemainingUntilSunk--;
+        } else if(hitsRemainingUntilSunk > 0) {
             attackResult = eAttackResult.HIT_SHIP;
+        }else{
+            throw new ValueException("Hits remaining until sunk can't be negative");
         }
 
         return attackResult;

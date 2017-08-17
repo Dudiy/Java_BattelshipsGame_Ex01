@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Menu {
 
     public enum eMenuOption {
-        LOAD_GAME(1, "Load game", EnumSet.of(eGameState.INVALID,eGameState.INITIALIZED, eGameState.LOADED)),
+        LOAD_GAME(1, "Load game", EnumSet.of(eGameState.INVALID, eGameState.INITIALIZED, eGameState.LOADED)),
         START_GAME(2, "Start game", EnumSet.of(eGameState.INITIALIZED, eGameState.LOADED)),
         SHOW_GAME_STATE(3, "Show game state", EnumSet.of(eGameState.STARTED));
 
@@ -28,6 +28,7 @@ public class Menu {
             for (eMenuOption menuOption : eMenuOption.values()) {
                 if (optionID == menuOption.ID) {
                     value = menuOption;
+                    break;
                 }
             }
 
@@ -38,7 +39,6 @@ public class Menu {
         public String toString() {
             return ID + ") " + description;
         }
-
     }
 
     public eMenuOption display(eGameState gameState) {

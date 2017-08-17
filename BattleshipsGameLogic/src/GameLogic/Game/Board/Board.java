@@ -2,7 +2,6 @@ package GameLogic.Game.Board;
 
 import GameLogic.Exceptions.*;
 import GameLogic.Game.GameObjects.GameObject;
-import GameLogic.Game.GameObjects.IHidable;
 import GameLogic.Game.GameObjects.Ship.*;
 import GameLogic.Game.GameObjects.Water;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -98,7 +97,7 @@ public class Board implements Cloneable {
         return boardSize;
     }
 
-    private BoardCell getCellByOffset(BoardCell srcCell, eDirection direction, int offset) throws CellNotOnBoardException {
+    private BoardCell getCellByOffset(BoardCell srcCell, eBoardDirection direction, int offset) throws CellNotOnBoardException {
         BoardCell res;
         BoardCoordinates requiredCoordinates = srcCell.GetPosition();
 

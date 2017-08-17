@@ -9,7 +9,7 @@ public class Player {
     private String name;
     private Board myBoard;
     private Board opponentBoard;
-    private Time avgTurnDurationnew;
+    private Time avgTurnDurationNew;
     private int score = 0;
 
     public Player(String playerID, String name) {

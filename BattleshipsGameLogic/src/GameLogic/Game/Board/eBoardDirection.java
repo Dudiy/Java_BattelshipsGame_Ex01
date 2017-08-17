@@ -1,6 +1,6 @@
 package GameLogic.Game.Board;
 
-public enum eDirection {
+public enum eBoardDirection {
     LEFT,
     RIGHT,
     UP,
