@@ -52,6 +52,8 @@ public class Game {
     }
 
     public eAttackResult attack(BoardCell cell){
+//        BoardCell cellToAttack = otherPlayer.
+//        =====================Stopped here ===================
         return cell.attack();
     }
 //    public Board getActiveBoard() {
