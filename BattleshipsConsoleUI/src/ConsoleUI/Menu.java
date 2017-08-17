@@ -6,7 +6,7 @@ import java.util.EnumSet;
 import java.util.Scanner;
 
 public class Menu {
-
+    private final String MENU_SEPERATOR = "\n\n======================== Menu ========================";
     public enum eMenuOption {
         LOAD_GAME(1, "Load game", EnumSet.of(eGameState.INVALID, eGameState.INITIALIZED, eGameState.LOADED)),
         START_GAME(2, "Start game", EnumSet.of(eGameState.INITIALIZED, eGameState.LOADED)),
@@ -46,14 +46,14 @@ public class Menu {
         int userIntSelection = 0;
         Scanner scanner = new Scanner(System.in);
         eMenuOption userSelection = null;
-
+        System.out.println(MENU_SEPERATOR);
         for (eMenuOption menuOption : eMenuOption.values()) {
             if (menuOption.displayedConditions.contains(gameState)) {
                 System.out.println(menuOption);
             }
         }
 
-        System.out.print("Please select one of the options above: ");
+        System.out.print("\nPlease select one of the options above: ");
         do {
             try {
                 userIntSelection = scanner.nextInt();

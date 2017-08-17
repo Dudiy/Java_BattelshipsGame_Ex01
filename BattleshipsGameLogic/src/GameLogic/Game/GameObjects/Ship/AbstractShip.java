@@ -2,7 +2,6 @@ package GameLogic.Game.GameObjects.Ship;
 
 import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.GameObjects.GameObject;
-import GameLogic.Game.GameObjects.IHidable;
 import GameLogic.Users.eAttackResult;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 

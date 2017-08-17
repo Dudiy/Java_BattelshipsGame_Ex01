@@ -1,10 +1,13 @@
 package GameLogic.Game;
 
+import GameLogic.Exceptions.CellNotOnBoardException;
 import GameLogic.Exceptions.InvalidGameObjectPlacementException;
 import GameLogic.Game.Board.Board;
 import GameLogic.Game.Board.BoardCell;
+import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.GameObjects.Ship.*;
 import GameLogic.Users.*;
+import com.sun.org.apache.bcel.internal.generic.SWAP;
 import jaxb.generated.BattleShipGame;
 
 import java.util.HashMap;
@@ -51,11 +54,28 @@ public class Game {
         return gameState;
     }
 
-    public eAttackResult attack(BoardCell cell){
-//        BoardCell cellToAttack = otherPlayer.
-//        =====================Stopped here ===================
-        return cell.attack();
+    public eAttackResult attack(BoardCoordinates position) throws CellNotOnBoardException {
+        BoardCell cellToAttack = otherPlayer.getMyBoard().getBoardCellAtCoordinates(position);
+        eAttackResult attackResult = cellToAttack.attack();
+
+        if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED){
+            if (attackResult == eAttackResult.HIT_MINE){
+                // TODO check what happens if the active players cell was already hit
+                activePlayer.getMyBoard().getBoardCellAtCoordinates(position).attack();
+            }
+            // TODO fix - if the player hit a ship he gets another turn
+            swapPlayers();
+        }
+
+        return attackResult;
     }
+
+    private void swapPlayers() {
+        Player tempPlayerPtr = activePlayer;
+        activePlayer = otherPlayer;
+        otherPlayer = tempPlayerPtr;
+    }
+
 //    public Board getActiveBoard() {
 //        return activePlayer.getMyBoard();
 //    }

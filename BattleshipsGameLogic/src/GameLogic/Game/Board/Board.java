@@ -122,7 +122,7 @@ public class Board implements Cloneable {
     }
 
     // return a the BoardCell object on this board that is at the given coordinates
-    private BoardCell getBoardCellAtCoordinates(BoardCoordinates coordinates) throws CellNotOnBoardException {
+    public BoardCell getBoardCellAtCoordinates(BoardCoordinates coordinates) throws CellNotOnBoardException {
         BoardCell res;
         if (coordinatesAreOnBoard(coordinates)) {
             int col = coordinates.GetColAsInt();
@@ -192,7 +192,7 @@ public class Board implements Cloneable {
 //            for (BoardCell[] row : board) {
 //                for (BoardCell cell : row) {
 //                    BoardCoordinates position = cell.GetPosition();
-//                    if (!cell.wasAttacked() && cell.GetCellValue() instanceof IHidable) {
+//                    if (!cell.wasAttacked() && cell.GetCellValue() instanceof ) {
 //                        copiedBoard.setCellValue(cell.GetPosition(), new Water(position));
 //                    } else {
 //                        copiedBoard.setCellValue(position, (GameObject) cell.GetCellValue().clone());

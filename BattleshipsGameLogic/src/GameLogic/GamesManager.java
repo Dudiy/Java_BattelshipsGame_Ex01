@@ -1,9 +1,12 @@
 package GameLogic;
 
+import GameLogic.Exceptions.CellNotOnBoardException;
+import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.Game;
 import GameLogic.Game.GameSettings;
 import GameLogic.Game.eGameState;
 import GameLogic.Users.Player;
+import GameLogic.Users.eAttackResult;
 import javafx.fxml.LoadException;
 
 import java.util.HashMap;
@@ -31,5 +34,10 @@ public class GamesManager implements IGamesLogic {
     public void startGame(Game gameToStart, Player player1, Player player2) throws Exception {
         gameToStart.initGame(player1, player2);
         gameToStart.setGameState(eGameState.STARTED);
+    }
+
+    @Override
+    public eAttackResult makeMove(Game game, BoardCoordinates cellToAttack) throws CellNotOnBoardException {
+        return game.attack(cellToAttack);
     }
 }
