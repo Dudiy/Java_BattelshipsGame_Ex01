@@ -42,4 +42,8 @@ public class Player {
     public Board getOpponentBoard() {
         return opponentBoard;
     }
+
+    public int getScore() {
+        return score;
+    }
 }

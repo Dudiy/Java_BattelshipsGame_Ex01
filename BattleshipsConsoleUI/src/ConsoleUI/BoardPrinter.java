@@ -50,6 +50,7 @@ public class BoardPrinter {
                 printSeparatorRow();
             }
         }
+
         printLastRowBorder();
     }
 

@@ -1,21 +1,24 @@
 package ConsoleUI;
 
-import GameLogic.Game.Board.Board;
 import GameLogic.Exceptions.*;
+import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.Game;
 import GameLogic.Game.eGameState;
 import GameLogic.GamesManager;
 import GameLogic.Users.Player;
+import GameLogic.Users.eAttackResult;
 import javafx.fxml.LoadException;
+
+import java.util.Scanner;
 
 public class ConsoleUIManager {
     GamesManager gamesManager = new GamesManager();
     // console application may have only 1 game
     Game activeGame;
     BoardPrinter boardPrinter = new BoardPrinter();
+    Scanner scanner = new Scanner(System.in);
 
     Menu menu = new Menu();
-
 
     public void run() {
         do {
@@ -67,13 +70,42 @@ public class ConsoleUIManager {
         }
     }
 
+    private void makeMove() {
+        boolean moveSuccesfull = false;
+        BoardCoordinates cellToAttack = getPositionFromUser();
+
+        while (!moveSuccesfull) {
+            try {
+                if (gamesManager.makeMove(activeGame, cellToAttack) != eAttackResult.CELL_ALREADY_ATTACKED){
+                    moveSuccesfull = true;
+                }
+            } catch (CellNotOnBoardException e) {
+                System.out.println("The cell selected is not on the board, try again");
+            }
+        }
+    }
+
     private void showGameState() {
         System.out.println("Game state:");
-        // TODO print current player
-        // TODO print current player score
-
-        // TODO change that board to the current player
-        BoardPrinter boardPrinter = new BoardPrinter();
+        System.out.println("Current player: " + activeGame.getActivePlayer().getName());
+        System.out.println("Score: " + activeGame.getActivePlayer().getScore());
         boardPrinter.printBothBoards(activeGame);
+    }
+
+    public BoardCoordinates getPositionFromUser() {
+        BoardCoordinates userSelection = null;
+        boolean isValidSelection = false;
+
+        while (!isValidSelection) {
+            try {
+                System.out.print("Please select cell to attack (format = \"A1\": ");
+                userSelection = BoardCoordinates.Parse(scanner.nextLine());
+                isValidSelection = true;
+            } catch (Exception e) {
+                System.out.println("Invalid input please try again (Format = \"A1\"");
+            }
+        }
+
+        return userSelection;
     }
 }
