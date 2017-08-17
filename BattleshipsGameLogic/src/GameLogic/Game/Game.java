@@ -2,6 +2,7 @@ package GameLogic.Game;
 
 import GameLogic.Exceptions.InvalidGameObjectPlacementException;
 import GameLogic.Game.Board.Board;
+import GameLogic.Game.Board.BoardCell;
 import GameLogic.Game.GameObjects.Ship.*;
 import GameLogic.Users.*;
 import jaxb.generated.BattleShipGame;
@@ -50,6 +51,9 @@ public class Game {
         return gameState;
     }
 
+    public eAttackResult attack(BoardCell cell){
+        return cell.attack();
+    }
 //    public Board getActiveBoard() {
 //        return activePlayer.getMyBoard();
 //    }

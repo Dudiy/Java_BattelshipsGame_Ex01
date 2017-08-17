@@ -3,6 +3,7 @@ package GameLogic.Game.Board;
 import GameLogic.Game.GameObjects.GameObject;
 import GameLogic.Game.GameObjects.Ship.AbstractShip;
 import GameLogic.Game.GameObjects.Water;
+import GameLogic.Users.eAttackResult;
 
 public class BoardCell {
     private BoardCoordinates position;
@@ -53,5 +54,9 @@ public class BoardCell {
 
     public boolean wasAttacked() {
         return cellValue.isHit();
+    }
+
+    public eAttackResult attack() {
+        return cellValue.Attack();
     }
 }

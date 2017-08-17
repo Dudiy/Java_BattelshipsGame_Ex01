@@ -1,18 +1,28 @@
 package GameLogic.Game.GameObjects;
 
 import GameLogic.Game.Board.BoardCoordinates;
+import GameLogic.Users.eAttackResult;
 
-public abstract class GameObject implements Cloneable{
+public abstract class GameObject implements Cloneable {
     private BoardCoordinates position;
     private String objectTypeSimpleName;
-    private boolean Hit = false;
+    private boolean hit = false;
 
     public boolean isHit() {
-        return Hit;
+        return hit;
     }
 
-    public void Attack(){
-        Hit = true;
+    public final eAttackResult Attack() {
+        eAttackResult attackResult;
+
+        if (hit) {
+            attackResult = eAttackResult.CELL_ALREADY_ATTACKED;
+        } else {
+            hit = true;
+            attackResult = getAttackResult();
+        }
+
+        return attackResult;
     }
 
     public GameObject(String objectTypeSimpleName, BoardCoordinates position) {
@@ -24,13 +34,15 @@ public abstract class GameObject implements Cloneable{
         this.position = position;
     }
 
-    public BoardCoordinates getPosition(){
+    public BoardCoordinates getPosition() {
         return position;
     }
 
     public String getObjectTypeSimpleName() {
         return objectTypeSimpleName;
     }
+
+    public abstract eAttackResult getAttackResult();
 
     @Override
     public abstract Object clone() throws CloneNotSupportedException;
