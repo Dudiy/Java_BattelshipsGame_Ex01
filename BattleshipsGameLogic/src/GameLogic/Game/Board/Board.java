@@ -50,7 +50,7 @@ public class Board implements Cloneable {
         boolean allClear = true;
         //start from top left cell
         tempPosition.OffsetRow(-1);
-        tempPosition.OffsetCol(-1);
+        tempPosition.offsetCol(-1);
 
         for (int i = 0; i < 8; i++) {
             try {
@@ -64,7 +64,7 @@ public class Board implements Cloneable {
             } finally {
                 // move 2 right
                 if (i < 2) {
-                    tempPosition.OffsetCol(1);
+                    tempPosition.offsetCol(1);
                 }
                 // move 2 down
                 else if (i < 4) {
@@ -72,7 +72,7 @@ public class Board implements Cloneable {
                 }
                 // move 2 left
                 else if (i < 6) {
-                    tempPosition.OffsetCol(-1);
+                    tempPosition.offsetCol(-1);
                 }
                 // move 2 up
                 else {
@@ -109,10 +109,10 @@ public class Board implements Cloneable {
                 requiredCoordinates.OffsetRow(-offset);
                 break;
             case RIGHT:
-                requiredCoordinates.OffsetCol(offset);
+                requiredCoordinates.offsetCol(offset);
                 break;
             case LEFT:
-                requiredCoordinates.OffsetCol(-offset);
+                requiredCoordinates.offsetCol(-offset);
                 break;
             default:
                 throw new IllegalArgumentException("Invalid direction entered");
@@ -125,8 +125,8 @@ public class Board implements Cloneable {
     public BoardCell getBoardCellAtCoordinates(BoardCoordinates coordinates) throws CellNotOnBoardException {
         BoardCell res;
         if (coordinatesAreOnBoard(coordinates)) {
-            int col = coordinates.GetColAsInt();
-            int row = coordinates.GetRow();
+            int col = coordinates.getColAsInt();
+            int row = coordinates.getRow();
 
             res = board[row][col];
         } else {
@@ -161,7 +161,7 @@ public class Board implements Cloneable {
             if (shipDirection == RegularShip.eShipDirection.COLUMN) {
                 currCoordinates.OffsetRow(1);
             } else if (shipDirection == RegularShip.eShipDirection.ROW) {
-                currCoordinates.OffsetCol(1);
+                currCoordinates.offsetCol(1);
             } else {
                 throw new IllegalArgumentException("The given Ship has an unknown direction value");
             }
@@ -178,8 +178,8 @@ public class Board implements Cloneable {
 
     // check if the given coordinates are on this board
     private boolean coordinatesAreOnBoard(BoardCoordinates i_Coordinates) {
-        int col = i_Coordinates.GetColAsInt();
-        int row = i_Coordinates.GetRow();
+        int col = i_Coordinates.getColAsInt();
+        int row = i_Coordinates.getRow();
 
         return ((0 <= col && col <= boardSize - 1) && (0 <= row && row <= boardSize - 1));
     }

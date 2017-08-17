@@ -22,8 +22,8 @@ public class ConsoleUIManager {
 
     public void run() {
         do {
-            Menu.eMenuOption menuItemSelected = menu.display(
-                    activeGame == null ? eGameState.INVALID : activeGame.getGameState());
+            eGameState gameState = activeGame == null ? eGameState.INVALID : activeGame.getGameState();
+            Menu.eMenuOption menuItemSelected = menu.display(gameState);
             invokeMenuItem(menuItemSelected);
         } while (activeGame.getGameState() != eGameState.PLAYER_QUIT);
     }
@@ -38,6 +38,15 @@ public class ConsoleUIManager {
                 break;
             case SHOW_GAME_STATE:
                 showGameState();
+                break;
+            case MAKE_MOVE:
+                makeMove();
+                break;
+            case SHOW_STATISTICS:
+                showStatistics();
+                break;
+            case END_GAME:
+                endGame();
                 break;
         }
     }
@@ -70,26 +79,55 @@ public class ConsoleUIManager {
         }
     }
 
-    private void makeMove() {
-        boolean moveSuccesfull = false;
-        BoardCoordinates cellToAttack = getPositionFromUser();
-
-        while (!moveSuccesfull) {
-            try {
-                if (gamesManager.makeMove(activeGame, cellToAttack) != eAttackResult.CELL_ALREADY_ATTACKED){
-                    moveSuccesfull = true;
-                }
-            } catch (CellNotOnBoardException e) {
-                System.out.println("The cell selected is not on the board, try again");
-            }
-        }
-    }
-
     private void showGameState() {
         System.out.println("Game state:");
         System.out.println("Current player: " + activeGame.getActivePlayer().getName());
         System.out.println("Score: " + activeGame.getActivePlayer().getScore());
         boardPrinter.printBothBoards(activeGame);
+    }
+
+    private void makeMove() {
+        showGameState();
+        boolean moveEnd = false;
+        BoardCoordinates cellToAttack;
+
+        while (!moveEnd) {
+            try {
+                cellToAttack = getPositionFromUser();
+                eAttackResult attackResult = gamesManager.makeMove(activeGame, cellToAttack);
+                moveEnd = attackResult.contain(eAttackResult.MOVE_ENDED);
+                printMessageAttack(attackResult);
+//                if (gamesManager.makeMove(activeGame, cellToAttack) != eAttackResult.CELL_ALREADY_ATTACKED) {
+//                    moveEnd = true;
+//                }
+            } catch (CellNotOnBoardException e) {
+                System.out.println("The cell selected is not on the board, try again");
+            }
+        }
+        showGameState();
+    }
+
+    private void printMessageAttack(eAttackResult attackResult) {
+        if (attackResult.contain(eAttackResult.MOVE_ENDED)) {
+            if(attackResult == eAttackResult.HIT_MINE){
+                System.out.println("You hit a mine :( ");
+            }
+            System.out.println("Move end");
+        } else if (attackResult.contain(eAttackResult.GET_ANOTHER_MOVE)) {
+            if(attackResult == eAttackResult.HIT_SHIP){
+                System.out.println("you hit a ship !");
+                System.out.println("You get another move ! :) ");
+
+            }
+            else if(attackResult == eAttackResult.HIT_AND_SUNK_SHIP){
+                System.out.println("Congratulations you hit a whole ship !");
+                System.out.println("You get another move ! :) ");
+            }
+            else if(attackResult == eAttackResult.CELL_ALREADY_ATTACKED){
+                System.out.println("You already try to attack that cell.");
+                System.out.println("Please try again");
+            }
+        }
     }
 
     public BoardCoordinates getPositionFromUser() {
@@ -98,14 +136,22 @@ public class ConsoleUIManager {
 
         while (!isValidSelection) {
             try {
-                System.out.print("Please select cell to attack (format = \"A1\": ");
+                System.out.print("Please select cell to attack (format = \"A1\"): ");
                 userSelection = BoardCoordinates.Parse(scanner.nextLine());
                 isValidSelection = true;
             } catch (Exception e) {
-                System.out.println("Invalid input please try again (Format = \"A1\"");
+                System.out.println("Invalid input please try again (Format = \"A1\")");
             }
         }
-
         return userSelection;
+    }
+
+    private void showStatistics() {
+        // TODO
+    }
+
+    private void endGame() {
+        // TODO
+
     }
 }

@@ -10,7 +10,10 @@ public class Menu {
     public enum eMenuOption {
         LOAD_GAME(1, "Load game", EnumSet.of(eGameState.INVALID, eGameState.INITIALIZED, eGameState.LOADED)),
         START_GAME(2, "Start game", EnumSet.of(eGameState.INITIALIZED, eGameState.LOADED)),
-        SHOW_GAME_STATE(3, "Show game state", EnumSet.of(eGameState.STARTED));
+        SHOW_GAME_STATE(3, "Show game state", EnumSet.of(eGameState.STARTED)),
+        MAKE_MOVE(4, "Make a move", EnumSet.of(eGameState.STARTED)),
+        SHOW_STATISTICS(5, "Show statistics", EnumSet.of(eGameState.STARTED)),
+        END_GAME(6, "End game", EnumSet.of(eGameState.STARTED));
 
         private String description;
         private int ID;
@@ -42,16 +45,25 @@ public class Menu {
     }
 
     public eMenuOption display(eGameState gameState) {
-        boolean isValidSelection = false;
-        int userIntSelection = 0;
-        Scanner scanner = new Scanner(System.in);
-        eMenuOption userSelection = null;
+        printMenu(gameState);
+        eMenuOption userSelection = getUserSelection();
+        return userSelection;
+    }
+
+    private void printMenu(eGameState gameState) {
         System.out.println(MENU_SEPERATOR);
         for (eMenuOption menuOption : eMenuOption.values()) {
             if (menuOption.displayedConditions.contains(gameState)) {
                 System.out.println(menuOption);
             }
         }
+    }
+
+    private eMenuOption getUserSelection() {
+        eMenuOption userSelection = null;
+        boolean isValidSelection = false;
+        int userIntSelection = 0;
+        Scanner scanner = new Scanner(System.in);
 
         System.out.print("\nPlease select one of the options above: ");
         do {

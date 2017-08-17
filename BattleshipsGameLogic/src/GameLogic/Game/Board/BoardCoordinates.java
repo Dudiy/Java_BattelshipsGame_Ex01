@@ -45,15 +45,15 @@ public class BoardCoordinates implements Cloneable {
         return res;
     }
 
-    public char GetCol() {
+    public char getCol() {
         return col;
     }
 
-    public int GetColAsInt() {
+    public int getColAsInt() {
         return col - 'A';
     }
 
-    public int GetRow() {
+    public int getRow() {
         return row - 1;
     }
 
@@ -63,7 +63,7 @@ public class BoardCoordinates implements Cloneable {
     }
 
     // updates the value of col, does not check if the value is on the board!
-    public void OffsetCol(int offset){
+    public void offsetCol(int offset){
         col += offset;
     }
 

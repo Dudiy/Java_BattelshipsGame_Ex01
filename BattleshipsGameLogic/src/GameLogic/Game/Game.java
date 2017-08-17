@@ -7,7 +7,6 @@ import GameLogic.Game.Board.BoardCell;
 import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.GameObjects.Ship.*;
 import GameLogic.Users.*;
-import com.sun.org.apache.bcel.internal.generic.SWAP;
 import jaxb.generated.BattleShipGame;
 
 import java.util.HashMap;
@@ -55,19 +54,42 @@ public class Game {
     }
 
     public eAttackResult attack(BoardCoordinates position) throws CellNotOnBoardException {
+        // TODO player/board attack
         BoardCell cellToAttack = otherPlayer.getMyBoard().getBoardCellAtCoordinates(position);
         eAttackResult attackResult = cellToAttack.attack();
-
-        if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED){
-            if (attackResult == eAttackResult.HIT_MINE){
-                // TODO check what happens if the active players cell was already hit
+        // TODO "hit" to cell, not ship
+        switch(attackResult){
+            case HIT_SHIP :
+                //attackResult = eAttackResult.GET_ANOTHER_MOVE;
+                break;
+            case HIT_AND_SUNK_SHIP:
+                //attackResult = eAttackResult.GET_ANOTHER_MOVE;
+                break;
+            case HIT_MINE:
                 activePlayer.getMyBoard().getBoardCellAtCoordinates(position).attack();
-            }
-            // TODO fix - if the player hit a ship he gets another turn
-            swapPlayers();
+                swapPlayers();
+                //attackResult = eAttackResult.MOVE_ENDED;
+                break;
+            case HIT_WATER:
+                swapPlayers();
+                //attackResult = eAttackResult.MOVE_ENDED;
+                break;
+            case CELL_ALREADY_ATTACKED:
+                //attackResult = eAttackResult.GET_ANOTHER_MOVE;
+                break;
         }
 
         return attackResult;
+
+//        if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED){
+//            if (attackResult == eAttackResult.HIT_MINE){
+//                // TODO check what happens if the active players cell was already hit
+//                activePlayer.getMyBoard().getBoardCellAtCoordinates(position).attack();
+//            }
+//            // TODO fix - if the player hit a ship he gets another turn
+//            swapPlayers();
+//        }
+
     }
 
     private void swapPlayers() {
