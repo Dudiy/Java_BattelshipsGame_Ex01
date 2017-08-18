@@ -9,11 +9,13 @@ public class Mine extends GameObject {
         super("Mine", position);
     }
 
+    // ======================================= getters =======================================
     @Override
     public eAttackResult getAttackResult() {
         return eAttackResult.HIT_MINE;
     }
 
+    // ======================================= methods =======================================
     @Override
     public Object clone() throws CloneNotSupportedException {
         return new Mine(this.getPosition());

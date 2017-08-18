@@ -29,6 +29,28 @@ public class GameSettings {
         this.gameLoadedFromXml = null;
     }
 
+    // ======================================= getters =======================================
+    public int getBoardSize() {
+        return boardSize;
+    }
+
+    public int getMinesPerPlayer() {
+        return minesPerPlayer;
+    }
+
+    public eGameType getGameType() {
+        return gameType;
+    }
+
+    public BattleShipGame getGameLoadedFromXml() {
+        return gameLoadedFromXml;
+    }
+
+    public Map<String, BattleShipGame.ShipTypes.ShipType> getShipTypes() {
+        return shipTypes;
+    }
+
+    // ======================================= file methods =======================================
     // creates a new GameSettings object from xml file, with validation
     public static GameSettings LoadGameFile(String gameFilePath) throws LoadException {
         boolean test = new File("/resources/battleShip_5_basic.xml").exists();
@@ -86,26 +108,5 @@ public class GameSettings {
         else{
             numShipsPerBoard.put(shipType, numShipsPerBoard.get(shipType) - 1);
         }
-    }
-
-    // Getters
-    public int getBoardSize() {
-        return boardSize;
-    }
-
-    public eGameType getGameType() {
-        return gameType;
-    }
-
-    public int getMinesPerPlayer() {
-        return minesPerPlayer;
-    }
-
-    public Map<String, BattleShipGame.ShipTypes.ShipType> getShipTypes() {
-        return shipTypes;
-    }
-
-    public BattleShipGame getGameLoadedFromXml() {
-        return gameLoadedFromXml;
     }
 }

@@ -8,7 +8,20 @@ public class BoardCoordinates implements Cloneable {
         this.col = col;
         this.row = row;
     }
+    // ======================================= setters =======================================
 
+    // ======================================= getters =======================================
+    public char getCol() {
+        return col;
+    }
+
+    public int getColAsInt() {
+        return col - 'A';
+    }
+
+    public int getRow() {
+        return row - 1;
+    }
     public static BoardCoordinates convertFromXmlToBoard(int row, int col){
         // input from xml starts from 1,1 but board starts from 0,0
         int tempRow = row;
@@ -17,6 +30,7 @@ public class BoardCoordinates implements Cloneable {
         return new BoardCoordinates(tempCol,tempRow);
     }
 
+    // ======================================= methods =======================================
     // convert a string of type "A1" or "1A" to coordinates
     public static BoardCoordinates Parse(String stringToParse) throws IllegalArgumentException {
         BoardCoordinates res;
@@ -43,18 +57,6 @@ public class BoardCoordinates implements Cloneable {
         }
 
         return res;
-    }
-
-    public char getCol() {
-        return col;
-    }
-
-    public int getColAsInt() {
-        return col - 'A';
-    }
-
-    public int getRow() {
-        return row - 1;
     }
 
     // updates the value of row, does not check if the value is on the board!

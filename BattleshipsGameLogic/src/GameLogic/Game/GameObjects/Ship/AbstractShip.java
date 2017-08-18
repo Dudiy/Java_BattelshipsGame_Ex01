@@ -11,16 +11,6 @@ public abstract class AbstractShip extends GameObject{
     protected Enum direction;
     private int score; // TODO exercise 2
     private int hitsRemainingUntilSunk;
-//    private boolean isSunken = false;
-
-//    public boolean isSunken() {
-//
-//        return isSunken;
-//    }
-
-//    public void setSunken(boolean sunken) {
-//        isSunken = sunken;
-//    }
 
     public AbstractShip(int length, BoardCoordinates position, Enum direction, int score) {
         super("Ship", position);
@@ -29,7 +19,10 @@ public abstract class AbstractShip extends GameObject{
         this.direction = direction;
         this.score = score;
     }
+    // ======================================= setters =======================================
+    public abstract void setDirection(String direction);
 
+    // ======================================= getters =======================================
     public int getLength() {
         return length;
     }
@@ -38,10 +31,9 @@ public abstract class AbstractShip extends GameObject{
         return score;
     }
 
-    public abstract void setDirection(String direction);
-
     public abstract Enum getDirection();
 
+    // ======================================= methods =======================================
     @Override
     public eAttackResult getAttackResult() {
         eAttackResult attackResult;
@@ -59,3 +51,14 @@ public abstract class AbstractShip extends GameObject{
         return attackResult;
     }
 }
+
+//    private boolean isSunken = false;
+
+//    public boolean isSunken() {
+//
+//        return isSunken;
+//    }
+
+//    public void setSunken(boolean sunken) {
+//        isSunken = sunken;
+//    }

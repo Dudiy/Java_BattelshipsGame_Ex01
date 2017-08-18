@@ -29,7 +29,7 @@ public class Board implements Cloneable {
             }
         }
     }
-
+    // ======================================= setters =======================================
     // set the value of the BoardCell at the given coordinates to be value
     // throws InvalidGameObjectPlacementException if value cannot be placed in the given coordinates on this board
     private void setCellValue(BoardCoordinates position, GameObject value) throws Exception {
@@ -45,49 +45,11 @@ public class Board implements Cloneable {
         }
     }
 
-    private boolean allSurroundingCellsClear(BoardCell cell, GameObject objectBeingCheckedFor) throws CloneNotSupportedException {
-        BoardCoordinates tempPosition = (BoardCoordinates) cell.GetPosition().clone();
-        boolean allClear = true;
-        //start from top left cell
-        tempPosition.OffsetRow(-1);
-        tempPosition.offsetCol(-1);
-
-        for (int i = 0; i < 8; i++) {
-            try {
-                GameObject objectAtCell = this.getBoardCellAtCoordinates(tempPosition).GetCellValue();
-                if (!(objectAtCell instanceof Water) && (objectAtCell != objectBeingCheckedFor)) {
-                    allClear = false;
-                    break;
-                }
-            } catch (CellNotOnBoardException e) {
-                // the given cell is on one of the edges, error while trying to fetch a surrounding cell not on the board
-            } finally {
-                // move 2 right
-                if (i < 2) {
-                    tempPosition.offsetCol(1);
-                }
-                // move 2 down
-                else if (i < 4) {
-                    tempPosition.OffsetRow(1);
-                }
-                // move 2 left
-                else if (i < 6) {
-                    tempPosition.offsetCol(-1);
-                }
-                // move 2 up
-                else {
-                    tempPosition.OffsetRow(-1);
-                }
-            }
-        }
-
-        return allClear;
-    }
-
     public void setMinesAvailable(int minesAvailable) {
         this.minesAvailable = minesAvailable;
     }
 
+    // ======================================= getters =======================================
     // TODO hide
     public BoardCell[][] getBoard() {
         return board;
@@ -134,6 +96,46 @@ public class Board implements Cloneable {
         }
 
         return res;
+    }
+
+    // ======================================= methods =======================================
+    private boolean allSurroundingCellsClear(BoardCell cell, GameObject objectBeingCheckedFor) throws CloneNotSupportedException {
+        BoardCoordinates tempPosition = (BoardCoordinates) cell.GetPosition().clone();
+        boolean allClear = true;
+        //start from top left cell
+        tempPosition.OffsetRow(-1);
+        tempPosition.offsetCol(-1);
+
+        for (int i = 0; i < 8; i++) {
+            try {
+                GameObject objectAtCell = this.getBoardCellAtCoordinates(tempPosition).GetCellValue();
+                if (!(objectAtCell instanceof Water) && (objectAtCell != objectBeingCheckedFor)) {
+                    allClear = false;
+                    break;
+                }
+            } catch (CellNotOnBoardException e) {
+                // the given cell is on one of the edges, error while trying to fetch a surrounding cell not on the board
+            } finally {
+                // move 2 right
+                if (i < 2) {
+                    tempPosition.offsetCol(1);
+                }
+                // move 2 down
+                else if (i < 4) {
+                    tempPosition.OffsetRow(1);
+                }
+                // move 2 left
+                else if (i < 6) {
+                    tempPosition.offsetCol(-1);
+                }
+                // move 2 up
+                else {
+                    tempPosition.OffsetRow(-1);
+                }
+            }
+        }
+
+        return allClear;
     }
 
     // add a new ship to the board
@@ -184,26 +186,6 @@ public class Board implements Cloneable {
         return ((0 <= col && col <= boardSize - 1) && (0 <= row && row <= boardSize - 1));
     }
 
-//        // create a copy of the board and hide all ships and mines (make them water)
-//        // TODO throw exception or handle here? we know the board is valid
-//        public Board HideAllHidables() throws Exception {
-//            Board copiedBoard = new Board(boardSize);
-//
-//            for (BoardCell[] row : board) {
-//                for (BoardCell cell : row) {
-//                    BoardCoordinates position = cell.GetPosition();
-//                    if (!cell.wasAttacked() && cell.GetCellValue() instanceof ) {
-//                        copiedBoard.setCellValue(cell.GetPosition(), new Water(position));
-//                    } else {
-//                        copiedBoard.setCellValue(position, (GameObject) cell.GetCellValue().clone());
-//                    }
-//                }
-//            }
-//
-//            return copiedBoard;
-//        }
-
-
     @Override
     protected Object clone() throws CloneNotSupportedException {
         Board copiedBoard = new Board(boardSize);
@@ -222,3 +204,24 @@ public class Board implements Cloneable {
         return copiedBoard;
     }
 }
+
+
+
+//        // create a copy of the board and hide all ships and mines (make them water)
+//        // TODO throw exception or handle here? we know the board is valid
+//        public Board HideAllHidables() throws Exception {
+//            Board copiedBoard = new Board(boardSize);
+//
+//            for (BoardCell[] row : board) {
+//                for (BoardCell cell : row) {
+//                    BoardCoordinates position = cell.GetPosition();
+//                    if (!cell.wasAttacked() && cell.GetCellValue() instanceof ) {
+//                        copiedBoard.setCellValue(cell.GetPosition(), new Water(position));
+//                    } else {
+//                        copiedBoard.setCellValue(position, (GameObject) cell.GetCellValue().clone());
+//                    }
+//                }
+//            }
+//
+//            return copiedBoard;
+//        }

@@ -14,17 +14,19 @@ public class LShapeShip extends AbstractShip {
     public LShapeShip(int length, BoardCoordinates position, Enum direction, int score) {
         super(length, position, direction, score);
     }
+    // ======================================= setters =======================================
 
     @Override
     public void setDirection(String direction) {
         this.direction = eShipDirection.valueOf(direction);
     }
-
+    // ======================================= getters =======================================
     @Override
     public Enum getDirection() {
         return (eShipDirection)direction;
     }
 
+    // ======================================= methods =======================================
     @Override
     public Object clone() throws CloneNotSupportedException {
         return new LShapeShip(this.getLength(),this.getPosition(),this.getDirection(),this.getScore());
