@@ -65,10 +65,9 @@ public class Game {
     }
 
     private void initBoards() throws Exception {
-        int currentPlayerIndex = 0;
-        Board[] initializedBoards = new Board[2];
+        //int currentPlayerIndex = 0;
+        //Board[] initializedBoards = new Board[2];
         Player currentPlayer = activePlayer;
-
         BattleShipGame gameLoadedFromXml = gameSettings.getGameLoadedFromXml();
 
         for (BattleShipGame.Boards.Board board : gameLoadedFromXml.getBoards().getBoard()) {

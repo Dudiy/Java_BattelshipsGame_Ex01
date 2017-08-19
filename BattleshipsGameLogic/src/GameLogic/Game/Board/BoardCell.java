@@ -43,6 +43,7 @@ public class BoardCell {
     }
 
     // ======================================= methods =======================================
+    // TODO board attack
     public eAttackResult attack() {
         eAttackResult attackResult;
         if (!wasAttacked) {

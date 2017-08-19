@@ -53,7 +53,7 @@ public class GameSettings {
     // ======================================= file methods =======================================
     // creates a new GameSettings object from xml file, with validation
     public static GameSettings LoadGameFile(String gameFilePath) throws LoadException {
-        boolean test = new File("/resources/battleShip_5_basic.xml").exists();
+        //boolean test = new File("/resources/battleShip_5_basic.xml").exists();
         GameSettings gameSettings = new GameSettings();
         InputStream inputStream = GameSettings.class.getResourceAsStream(gameFilePath);
         try {
