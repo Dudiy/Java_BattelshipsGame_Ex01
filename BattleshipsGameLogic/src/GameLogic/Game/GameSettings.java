@@ -6,7 +6,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,18 +56,19 @@ public class GameSettings {
 
     // ======================================= file methods =======================================
     // creates a new GameSettings object from xml file, with validation
-    public static GameSettings LoadGameFile(String gameFilePath) throws LoadException {
-        //boolean test = new File("/resources/battleShip_5_basic.xml").exists();
+    // assume: file exist, file is XML
+    public static GameSettings loadGameFile(String gameFilePath) throws LoadException {
         GameSettings gameSettings = new GameSettings();
-        InputStream inputStream = GameSettings.class.getResourceAsStream(gameFilePath);
         try {
-            gameSettings.gameLoadedFromXml = deserializeFrom(inputStream);
+            InputStream fileInputStream = new FileInputStream(gameFilePath);
+            gameSettings.gameLoadedFromXml = deserializeFrom(fileInputStream);
             validateGameSettings(gameSettings);
         } catch (JAXBException e) {
-            throw new LoadException("error loading xml file - JAXB error");
+            throw new LoadException("Error loading xml file - JAXB error");
         } catch (Exception e) {
             throw new LoadException(e.getMessage());
         }
+        //InputStream inputStream = GameSettings.class.getResourceAsStream(file.toPath().toString());
 
         return gameSettings;
     }

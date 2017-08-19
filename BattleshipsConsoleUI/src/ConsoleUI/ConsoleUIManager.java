@@ -7,6 +7,7 @@ import GameLogic.Game.eGameState;
 import GameLogic.GamesManager;
 import GameLogic.Users.Player;
 import GameLogic.Game.eAttackResult;
+import com.sun.corba.se.impl.oa.NullServantImpl;
 import javafx.fxml.LoadException;
 
 
@@ -31,6 +32,7 @@ import org.xml.sax.SAXParseException;
 //        }
 //    }
 
+import java.nio.file.Files;
 import java.util.Scanner;
 
 public class ConsoleUIManager {
@@ -74,12 +76,13 @@ public class ConsoleUIManager {
                 break;
         }
     }
-
+    // ======================================= Load Game =======================================
     private void loadGame() {
         try {
             // TODO get path from user(uncomment)
             //String path = getFilePathFromUser();
-            String path = "/resources/battleShip_5_basic.xml";
+            //C:\Or\Semester C\Java\Projects\Git\Java_BattelshipsGame_Ex01\BattleshipsGameLogic\src\resources\battleShip_5_basic.xml
+            String path  = "/resources/battleShip_5_basic.xml";
             if (path != null) {
                 activeGame = gamesManager.loadGameFile(path);
                 System.out.println("Game loaded");
@@ -93,27 +96,59 @@ public class ConsoleUIManager {
         Scanner scanner = new Scanner(System.in);
         String path;
         Boolean endOfInput = false;
+        File file;
 
         do {
             System.out.println("Please enter a XML path file(Or 0 to return to main menu):");
             path = scanner.nextLine();
-            if (path.endsWith(".xml")) {
-                endOfInput = true;
-            } else if (path.equals("0")) {
+            if (path.equals("0")) {
                 path = null;
                 endOfInput = true;
+            } else {
+                file = openFileFromPath(path);
+                if (file != null) {
+                    if (checkFileType(file, "text/xml")) {
+                        endOfInput = true;
+                    } else {
+                        System.out.println("Error: file type mismatch");
+                    }
+                } else {
+                    System.out.println("Error: file doesn't exist");
+                }
             }
         } while (!endOfInput);
 
         return path;
     }
 
+    private File openFileFromPath(String filePath) {
+        File file = new File(filePath);
+        if (!file.exists() || file.isDirectory()) {
+            file = null;
+        }
+        return file;
+    }
+
+    public Boolean checkFileType(final File file, final String fileTypeToCompare) {
+        String fileType;
+        boolean sameType = false;
+        try {
+            fileType = Files.probeContentType(file.toPath());
+            if (fileType.equals(fileTypeToCompare)) {
+                sameType = true;
+            }
+        } catch (IOException ioException) {
+            System.out.println("Error: Unable to determine file type for " + file.getName());
+        }
+        return sameType;
+    }
+
+    // ======================================= Start Game =======================================
     private void startGame() {
         try {
             Player player1 = new Player("p1", "Player 1");
             Player player2 = new Player("p2", "Player 2");
             gamesManager.startGame(activeGame, player1, player2);
-            BoardPrinter bd = new BoardPrinter();
             showGameState();
             System.out.println("Game started");
         } catch (InvalidGameObjectPlacementException e) {
@@ -127,6 +162,7 @@ public class ConsoleUIManager {
         }
     }
 
+    // ======================================= Show Game State =======================================
     private void showGameState() {
         System.out.println("Game state:");
         System.out.println("Current player: " + activeGame.getActivePlayer().getName());
@@ -134,11 +170,12 @@ public class ConsoleUIManager {
         boardPrinter.printBothBoards(activeGame);
     }
 
+    // ======================================= Make Move =======================================
     private void makeMove() {
         showGameState();
         BoardCoordinates positionToAttack;
         eAttackResult attackResult = null;
-        do {
+        do{
             try {
                 positionToAttack = getPositionFromUser();
                 attackResult = gamesManager.makeMove(activeGame, positionToAttack);
@@ -167,10 +204,12 @@ public class ConsoleUIManager {
         return userSelection;
     }
 
+    // ======================================= Show Statistics =======================================
     private void showStatistics() {
         // TODO
     }
 
+    // ======================================= End Game =======================================
     private void endGame() {
         // TODO
     }

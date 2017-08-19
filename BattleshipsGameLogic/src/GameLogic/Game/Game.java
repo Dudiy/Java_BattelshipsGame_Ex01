@@ -78,7 +78,6 @@ public class Game {
         for (BattleShipGame.Boards.Board board : gameLoadedFromXml.getBoards().getBoard()) {
 //            initializedBoards[currentBoardIndex] = addAllShipsToBoard(currentPlayer, board);
             Board currentBoard = addAllShipsToBoard(getActivePlayer(), board);
-            // TODO check all ships are on board
             // the xsd file forces the input to have exactly 2 boards
 
             players[currentBoardIndex].setMyBoard(currentBoard);
@@ -99,6 +98,7 @@ public class Game {
 
     private Board addAllShipsToBoard(Player currentPlayer, BattleShipGame.Boards.Board board) throws Exception {
         Board currentBoard = new Board(gameSettings.getBoardSize());
+
         currentBoard.setMinesAvailable(gameSettings.getMinesPerPlayer());
 
         for (BattleShipGame.Boards.Board.Ship ship : board.getShip()) {
@@ -116,10 +116,12 @@ public class Game {
     }
 
     public eAttackResult attack(BoardCoordinates position) throws CellNotOnBoardException {
+
         eAttackResult attackResult = getActivePlayer().attack(position);
 
-        if (attackResult.moveEnded()){
-            swapPlayers();
+        if(attackResult.moveEnded()){
+                swapPlayers();
+
         }
 
         return attackResult;
