@@ -82,7 +82,7 @@ public class ConsoleUIManager {
             // TODO get path from user(uncomment)
             //String path = getFilePathFromUser();
             //C:\Or\Semester C\Java\Projects\Git\Java_BattelshipsGame_Ex01\BattleshipsGameLogic\src\resources\battleShip_5_basic.xml
-            String path  = "/resources/battleShip_5_basic.xml";
+            String path  = "C:\\Or\\Semester C\\Java\\Projects\\Git\\Java_BattelshipsGame_Ex01\\BattleshipsGameLogic\\src\\resources\\battleShip_5_basic.xml";
             if (path != null) {
                 activeGame = gamesManager.loadGameFile(path);
                 System.out.println("Game loaded");

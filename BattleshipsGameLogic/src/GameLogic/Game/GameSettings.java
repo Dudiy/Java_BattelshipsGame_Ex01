@@ -12,7 +12,10 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GameSettings {
     private final static String JAXB_XML_GAME_PACKAGE_NAME = "jaxb.generated";
@@ -50,8 +53,17 @@ public class GameSettings {
         return gameLoadedFromXml;
     }
 
+    // TODO del ?
     public Map<String, BattleShipGame.ShipTypes.ShipType> getShipTypes() {
         return shipTypes;
+    }
+
+    public Map<String, Integer> getShipTypesAmount() {
+        Map<String, Integer> shipTypesAmount = new HashMap<>();
+        for(Map.Entry<String,BattleShipGame.ShipTypes.ShipType> shipType : shipTypes.entrySet()){
+            shipTypesAmount.put(shipType.getKey(), shipType.getValue().getAmount());
+        }
+        return shipTypesAmount;
     }
 
     // ======================================= file methods =======================================
