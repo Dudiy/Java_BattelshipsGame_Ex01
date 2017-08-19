@@ -5,7 +5,7 @@ import GameLogic.Game.eAttackResult;
 
 public class Water extends GameObject {
     public Water(BoardCoordinates position) {
-        super("Water", position);
+        super("Water", position, VISIBLE);
     }
 
     // ======================================= getters =======================================

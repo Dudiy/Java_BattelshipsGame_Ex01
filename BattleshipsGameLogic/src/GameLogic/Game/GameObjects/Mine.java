@@ -6,7 +6,7 @@ import GameLogic.Game.eAttackResult;
 public class Mine extends GameObject {
 
     public Mine(BoardCoordinates position) {
-        super("Mine", position);
+        super("Mine", position, !VISIBLE);
     }
 
     // ======================================= getters =======================================

@@ -79,8 +79,8 @@ public class ConsoleUIManager {
         try {
             // TODO get path from user(uncomment)
             //String path = getFilePathFromUser();
-            String path  = "/resources/battleShip_5_basic.xml";
-            if(path !=null){
+            String path = "/resources/battleShip_5_basic.xml";
+            if (path != null) {
                 activeGame = gamesManager.loadGameFile(path);
                 System.out.println("Game loaded");
             }
@@ -97,10 +97,9 @@ public class ConsoleUIManager {
         do {
             System.out.println("Please enter a XML path file(Or 0 to return to main menu):");
             path = scanner.nextLine();
-            if(path.endsWith(".xml")){
+            if (path.endsWith(".xml")) {
                 endOfInput = true;
-            }
-            else if(path.equals("0")){
+            } else if (path.equals("0")) {
                 path = null;
                 endOfInput = true;
             }
@@ -139,7 +138,7 @@ public class ConsoleUIManager {
         showGameState();
         BoardCoordinates positionToAttack;
         eAttackResult attackResult = null;
-        do{
+        do {
             try {
                 positionToAttack = getPositionFromUser();
                 attackResult = gamesManager.makeMove(activeGame, positionToAttack);
@@ -148,7 +147,7 @@ public class ConsoleUIManager {
                 System.out.println("The cell selected is not on the board, try again");
             }
         } while (!attackResult.moveEnded());
-
+        pressAnyKeyToContinue();
         showGameState();
     }
 
@@ -174,6 +173,15 @@ public class ConsoleUIManager {
 
     private void endGame() {
         // TODO
+    }
 
+    private void pressAnyKeyToContinue() {
+        System.out.println("/n--- Press any key to continue ---/n");
+        scanner.reset();
+        try {
+            System.in.read();
+        } catch (IOException e) {
+            System.out.println("IO Error caught, resuming as if key was pressed");
+        }
     }
 }

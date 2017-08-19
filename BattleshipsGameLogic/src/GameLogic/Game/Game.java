@@ -15,8 +15,10 @@ public class Game {
     private static int IDGenerator = 1000;
     private int ID;
     private boolean gameIsSet = false;
-    private Player activePlayer;
-    private Player otherPlayer;
+    private Player[] players = new Player[2];
+    private int activePlayerIndex;
+    //    private Player activePlayer;
+//    private Player otherPlayer;
     private Map<String, User> spectators = new HashMap<>();
     private GameSettings gameSettings;
     private ShipFactory shipFactory;
@@ -40,11 +42,11 @@ public class Game {
     }
 
     public Player getActivePlayer() {
-        return activePlayer;
+        return players[activePlayerIndex];
     }
 
     public Player getOtherPlayer() {
-        return otherPlayer;
+        return players[(activePlayerIndex + 1) % 2];
     }
 
     public eGameState getGameState() {
@@ -58,32 +60,44 @@ public class Game {
             throw new Exception("Players cannot be null");
         }
 
-        activePlayer = player1;
-        otherPlayer = player2;
+        activePlayerIndex = 0;
+        players[0] = player1;
+        players[1] = player2;
+//        activePlayer = player1;
+//        otherPlayer = player2;
         initBoards();
         gameState = eGameState.INITIALIZED;
     }
 
     private void initBoards() throws Exception {
-        //int currentPlayerIndex = 0;
-        //Board[] initializedBoards = new Board[2];
-        Player currentPlayer = activePlayer;
+        int currentBoardIndex = 0;
+//        Board[] initializedBoards = new Board[2];
+//        Player currentPlayer = activePlayer;
         BattleShipGame gameLoadedFromXml = gameSettings.getGameLoadedFromXml();
 
         for (BattleShipGame.Boards.Board board : gameLoadedFromXml.getBoards().getBoard()) {
-            Board currentBoard = initBoardWithGameObject(currentPlayer, board);
+//            initializedBoards[currentBoardIndex] = addAllShipsToBoard(currentPlayer, board);
+            Board currentBoard = addAllShipsToBoard(getActivePlayer(), board);
             // TODO check all ships are on board
             // the xsd file forces the input to have exactly 2 boards
-            currentPlayer.setMyBoard(currentBoard);
+
+            players[currentBoardIndex].setMyBoard(currentBoard);
+            players[(currentBoardIndex + 1) % 2].setOpponentBoard(currentBoard);
+            currentBoardIndex++;
             // set a new blank opponent board
-            currentPlayer.setOpponentBoard(new Board(gameSettings.getBoardSize()));
-            currentPlayer = otherPlayer;
+//            currentPlayer.setOpponentBoard(new Board(gameSettings.getBoardSize()));
+//            currentPlayer = otherPlayer;
         }
+
+//        activePlayer.setMyBoard(initializedBoards[0]);
+//        activePlayer.setOpponentBoard(initializedBoards[1]);
+//        otherPlayer.setMyBoard(initializedBoards[0]);
+//        otherPlayer.setOpponentBoard(initializedBoards[1]);
 
         gameIsSet = true;
     }
 
-    private Board initBoardWithGameObject(Player currentPlayer, BattleShipGame.Boards.Board board) throws Exception{
+    private Board addAllShipsToBoard(Player currentPlayer, BattleShipGame.Boards.Board board) throws Exception {
         Board currentBoard = new Board(gameSettings.getBoardSize());
         currentBoard.setMinesAvailable(gameSettings.getMinesPerPlayer());
 
@@ -102,58 +116,16 @@ public class Game {
     }
 
     public eAttackResult attack(BoardCoordinates position) throws CellNotOnBoardException {
-        // TODO player/board attack
-//        BoardCell cellToAttack = otherPlayer.getMyBoard().getBoardCellAtCoordinates(position);
-        eAttackResult attackResult = otherPlayer.getMyBoard().attack(position);
-        // TODO "hit" to cell, not ship
-        switch(attackResult){
-            case HIT_SHIP :
-//                activePlayer.getOpponentBoard().
-                break;
-            case HIT_AND_SUNK_SHIP:
-                //attackResult = eAttackResult.GET_ANOTHER_MOVE;
-                break;
-            case HIT_MINE:
-                activePlayer.getMyBoard().getBoardCellAtCoordinates(position).attack();
-                swapPlayers();
-                //attackResult = eAttackResult.MOVE_ENDED;
-                break;
-            case HIT_WATER:
-                swapPlayers();
-                //attackResult = eAttackResult.MOVE_ENDED;
-                break;
-            case CELL_ALREADY_ATTACKED:
-                //attackResult = eAttackResult.GET_ANOTHER_MOVE;
-                break;
+        eAttackResult attackResult = getActivePlayer().attack(position);
+
+        if (attackResult.moveEnded()){
+            swapPlayers();
         }
 
         return attackResult;
     }
 
     private void swapPlayers() {
-        Player tempPlayerPtr = activePlayer;
-        activePlayer = otherPlayer;
-        otherPlayer = tempPlayerPtr;
+        activePlayerIndex = (activePlayerIndex + 1) % 2;
     }
 }
-
-
-
-
-
-//    public Board getActiveBoard() {
-//        return activePlayer.getMyBoard();
-//    }
-//
-//    public Board getHiddenBoard() throws Exception {
-//        return otherPlayer.getBoard().HideAllHidables();
-//    }
-
-//        if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED){
-//            if (attackResult == eAttackResult.HIT_MINE){
-//                // TODO check what happens if the active players cell was already hit
-//                activePlayer.getMyBoard().getBoardCellAtCoordinates(position).attack();
-//            }
-//            // TODO fix - if the player hit a ship he gets another turn
-//            swapPlayers();
-//        }

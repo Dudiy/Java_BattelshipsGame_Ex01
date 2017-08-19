@@ -1,6 +1,10 @@
 package GameLogic.Users;
 
+import GameLogic.Exceptions.CellNotOnBoardException;
 import GameLogic.Game.Board.Board;
+import GameLogic.Game.Board.BoardCoordinates;
+import GameLogic.Game.GameObjects.Ship.AbstractShip;
+import GameLogic.Game.eAttackResult;
 
 import java.sql.Time;
 
@@ -45,5 +49,21 @@ public class Player {
 
     public int getScore() {
         return score;
+    }
+
+    // ======================================= Methods =======================================
+    public eAttackResult attack(BoardCoordinates position) throws CellNotOnBoardException {
+        eAttackResult attackResult = opponentBoard.attack(position);
+
+        if (attackResult.isScoreIncrementer()){
+            score++;
+        }
+
+        if (attackResult == eAttackResult.HIT_MINE){
+            // if hit a mine attack my own board
+            myBoard.attack(position);
+        }
+
+        return attackResult;
     }
 }

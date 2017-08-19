@@ -31,6 +31,10 @@ public enum eAttackResult {
         return this == HIT_MINE || this == HIT_WATER;
     }
 
+    public boolean isScoreIncrementer(){
+        return this == HIT_MINE || this == HIT_SHIP || this == HIT_AND_SUNK_SHIP;
+    }
+
     @Override
     public String toString() {
         return this.description;

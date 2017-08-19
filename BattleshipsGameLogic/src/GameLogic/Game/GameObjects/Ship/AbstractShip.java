@@ -13,7 +13,7 @@ public abstract class AbstractShip extends GameObject{
     private int hitsRemainingUntilSunk;
 
     public AbstractShip(int length, BoardCoordinates position, Enum direction, int score) {
-        super("Ship", position);
+        super("Ship", position, !VISIBLE);
         this.length = length;
         this.hitsRemainingUntilSunk = length;
         this.direction = direction;

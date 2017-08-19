@@ -2,6 +2,7 @@ package GameLogic.Game.Board;
 
 import GameLogic.Exceptions.*;
 import GameLogic.Game.GameObjects.GameObject;
+import GameLogic.Game.GameObjects.Mine;
 import GameLogic.Game.GameObjects.Ship.*;
 import GameLogic.Game.GameObjects.Water;
 import GameLogic.Game.eAttackResult;
@@ -34,7 +35,7 @@ public class Board implements Cloneable {
     // ======================================= setters =======================================
     // set the value of the BoardCell at the given coordinates to be value
     // throws InvalidGameObjectPlacementException if value cannot be placed in the given coordinates on this board
-    private void setCellValue(BoardCoordinates position, GameObject value) throws Exception {
+    private void setCellValue(BoardCoordinates position, GameObject value) throws InvalidGameObjectPlacementException, CloneNotSupportedException {
         try {
             BoardCell cell = getBoardCellAtCoordinates(position);
             if (value instanceof AbstractShip && !allSurroundingCellsClear(cell, value)) {
@@ -153,6 +154,20 @@ public class Board implements Cloneable {
         shipsOnBoard.add(ship);
     }
 
+    public void addMineToBoard(BoardCoordinates position) throws CellNotOnBoardException, InvalidGameObjectPlacementException {
+        if (minesAvailable > 0) {
+            BoardCell boardCell = getBoardCellAtCoordinates(position);
+            if (boardCell.wasAttacked()) {
+                throw new InvalidGameObjectPlacementException(Mine.getObjectTypeSimpleName(), position, "Cannot place mine on a cell that was attacked");
+            } else if (boardCell.GetCellValue() instanceof Water) {
+                boardCell.SetCellValue(new Mine(position));
+                minesAvailable--;
+            }
+        } else {
+            throw new InvalidGameObjectPlacementException(Mine.getObjectTypeSimpleName(), position, "No mines available");
+        }
+    }
+
     // add a new RegularShip to this board
     private void addRegularShipToBoard(RegularShip ship) throws Exception {
         BoardCoordinates currCoordinates = ship.getPosition();
@@ -210,23 +225,3 @@ public class Board implements Cloneable {
         return getBoardCellAtCoordinates(coordinatesToAttack).attack();
     }
 }
-
-
-//        // create a copy of the board and hide all ships and mines (make them water)
-//        // TODO throw exception or handle here? we know the board is valid
-//        public Board HideAllHidables() throws Exception {
-//            Board copiedBoard = new Board(boardSize);
-//
-//            for (BoardCell[] row : board) {
-//                for (BoardCell cell : row) {
-//                    BoardCoordinates position = cell.GetPosition();
-//                    if (!cell.wasAttacked() && cell.GetCellValue() instanceof ) {
-//                        copiedBoard.setCellValue(cell.GetPosition(), new Water(position));
-//                    } else {
-//                        copiedBoard.setCellValue(position, (GameObject) cell.GetCellValue().clone());
-//                    }
-//                }
-//            }
-//
-//            return copiedBoard;
-//        }

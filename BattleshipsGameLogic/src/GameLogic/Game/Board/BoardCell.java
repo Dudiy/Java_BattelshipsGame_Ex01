@@ -1,5 +1,6 @@
 package GameLogic.Game.Board;
 
+import GameLogic.Exceptions.InvalidGameObjectPlacementException;
 import GameLogic.Game.GameObjects.GameObject;
 import GameLogic.Game.GameObjects.Water;
 import GameLogic.Game.eAttackResult;
@@ -19,13 +20,14 @@ public class BoardCell {
     }
 
     // ======================================= setters =======================================
-    public void SetCellValue(GameObject cellValue) throws Exception {
+    public void SetCellValue(GameObject cellValue) throws InvalidGameObjectPlacementException {
         // TODO check surrounding cell
         if (this.cellValue == null || this.cellValue instanceof Water) {
             this.cellValue = cellValue;
         } else {
             String objectTypeInCell = this.cellValue.getClass().getSimpleName();
-            throw new Exception("Cannot place a game object, cell is already occupied by a " + objectTypeInCell + " object");
+            throw new InvalidGameObjectPlacementException(cellValue.getClass().getSimpleName(), position,
+                    "Cannot place a game object, cell is already occupied by a " + objectTypeInCell + " object");
         }
     }
 
@@ -48,6 +50,7 @@ public class BoardCell {
         eAttackResult attackResult;
         if (!wasAttacked) {
             attackResult = cellValue.attack();
+            wasAttacked = true;
         } else {
             attackResult = eAttackResult.CELL_ALREADY_ATTACKED;
         }
