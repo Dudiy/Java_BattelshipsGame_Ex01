@@ -72,19 +72,18 @@ public class Game {
 
         for (BattleShipGame.Boards.Board board : gameLoadedFromXml.getBoards().getBoard()) {
             Board currentBoard = initBoardWithGameObject(currentPlayer, board);
-            // TODO check all ships are on board
             // the xsd file forces the input to have exactly 2 boards
             currentPlayer.setMyBoard(currentBoard);
             // set a new blank opponent board
             currentPlayer.setOpponentBoard(new Board(gameSettings.getBoardSize()));
             currentPlayer = otherPlayer;
         }
-
         gameIsSet = true;
     }
 
-    private Board initBoardWithGameObject(Player currentPlayer, BattleShipGame.Boards.Board board) throws Exception{
+    private Board initBoardWithGameObject(Player currentPlayer, BattleShipGame.Boards.Board board) throws Exception {
         Board currentBoard = new Board(gameSettings.getBoardSize());
+
         currentBoard.setMinesAvailable(gameSettings.getMinesPerPlayer());
 
         for (BattleShipGame.Boards.Board.Ship ship : board.getShip()) {
@@ -106,8 +105,8 @@ public class Game {
 //        BoardCell cellToAttack = otherPlayer.getMyBoard().getBoardCellAtCoordinates(position);
         eAttackResult attackResult = otherPlayer.getMyBoard().attack(position);
         // TODO "hit" to cell, not ship
-        switch(attackResult){
-            case HIT_SHIP :
+        switch (attackResult) {
+            case HIT_SHIP:
 //                activePlayer.getOpponentBoard().
                 break;
             case HIT_AND_SUNK_SHIP:
@@ -136,9 +135,6 @@ public class Game {
         otherPlayer = tempPlayerPtr;
     }
 }
-
-
-
 
 
 //    public Board getActiveBoard() {

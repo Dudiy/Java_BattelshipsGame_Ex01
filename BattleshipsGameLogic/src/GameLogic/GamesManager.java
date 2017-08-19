@@ -22,7 +22,7 @@ public class GamesManager implements IGamesLogic {
 
     @Override
     public Game loadGameFile(String path) throws LoadException {
-        GameSettings gameSettings = GameSettings.LoadGameFile(path);
+        GameSettings gameSettings = GameSettings.loadGameFile(path);
         Game newGame = new Game(gameSettings);
         allGames.put(newGame.getID(), newGame);
 
