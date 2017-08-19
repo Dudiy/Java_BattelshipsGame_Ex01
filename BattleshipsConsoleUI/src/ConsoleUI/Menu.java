@@ -1,12 +1,17 @@
 package ConsoleUI;
 
 import GameLogic.Game.eGameState;
+import GameLogic.Users.Player;
 
 import java.util.EnumSet;
 import java.util.Scanner;
 
 public class Menu {
-    private final String MENU_SEPERATOR = "\n\n======================== Menu ========================";
+    private final String MENU_TOP = "\n╔═══════════════════════ Menu ═══════════════════════╗";
+    private final String MENU_BOTTOM = "╚════════════════════════════════════════════════════╝";
+    private final String MENU_VERTICAL = "║";
+    private final int menuWidth = MENU_BOTTOM.length();
+
     public enum eMenuOption {
         LOAD_GAME(1, "Load game", EnumSet.of(eGameState.INVALID, eGameState.INITIALIZED, eGameState.LOADED)),
         START_GAME(2, "Start game", EnumSet.of(eGameState.INITIALIZED, eGameState.LOADED)),
@@ -51,12 +56,18 @@ public class Menu {
     }
 
     private void printMenu(eGameState gameState) {
-        System.out.println(MENU_SEPERATOR);
+        System.out.println(MENU_TOP);
         for (eMenuOption menuOption : eMenuOption.values()) {
             if (menuOption.displayedConditions.contains(gameState)) {
-                System.out.println(menuOption);
+                System.out.print(MENU_VERTICAL);
+                System.out.print(menuOption);
+                for (int i = 0; i < menuWidth - menuOption.toString().length() - 2; i++) {
+                    System.out.print(" ");
+                }
+                System.out.println(MENU_VERTICAL);
             }
         }
+        System.out.println(MENU_BOTTOM);
     }
 
     private eMenuOption getUserSelection() {

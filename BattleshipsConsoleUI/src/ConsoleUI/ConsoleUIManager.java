@@ -33,6 +33,7 @@ import org.xml.sax.SAXParseException;
 //    }
 
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 public class ConsoleUIManager {
@@ -76,13 +77,14 @@ public class ConsoleUIManager {
                 break;
         }
     }
+
     // ======================================= Load Game =======================================
     private void loadGame() {
         try {
             // TODO get path from user(uncomment)
             //String path = getFilePathFromUser();
             //C:\Or\Semester C\Java\Projects\Git\Java_BattelshipsGame_Ex01\BattleshipsGameLogic\src\resources\battleShip_5_basic.xml
-            String path  = "/resources/battleShip_5_basic.xml";
+            String path = "C:/battleShip_5_basic.xml";
             if (path != null) {
                 activeGame = gamesManager.loadGameFile(path);
                 System.out.println("Game loaded");
@@ -167,23 +169,27 @@ public class ConsoleUIManager {
         System.out.println("Game state:");
         System.out.println("Current player: " + activeGame.getActivePlayer().getName());
         System.out.println("Score: " + activeGame.getActivePlayer().getScore());
-        boardPrinter.printBothBoards(activeGame);
+//        boardPrinter.printBothBoards(activeGame);
+        boardPrinter.printBoardsNew(activeGame.getActivePlayer());
     }
 
     // ======================================= Make Move =======================================
     private void makeMove() {
-        showGameState();
         BoardCoordinates positionToAttack;
         eAttackResult attackResult = null;
-        do{
+        boolean moveSuccessful = false;
+        do {
             try {
+                showGameState();
                 positionToAttack = getPositionFromUser();
                 attackResult = gamesManager.makeMove(activeGame, positionToAttack);
                 System.out.println("Attack result: " + attackResult);
+                moveSuccessful = true;
             } catch (CellNotOnBoardException e) {
                 System.out.println("The cell selected is not on the board, try again");
             }
-        } while (!attackResult.moveEnded());
+        } while (!moveSuccessful);
+//    } while (!attackResult.moveEnded());
         pressAnyKeyToContinue();
         showGameState();
     }

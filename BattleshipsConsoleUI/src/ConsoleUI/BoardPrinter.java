@@ -1,12 +1,11 @@
 package ConsoleUI;
 
-import GameLogic.Game.Board.Board;
 import GameLogic.Game.Board.BoardCell;
-import GameLogic.Game.Game;
 import GameLogic.Game.GameObjects.GameObject;
 import GameLogic.Game.GameObjects.Mine;
 import GameLogic.Game.GameObjects.Ship.AbstractShip;
 import GameLogic.Game.GameObjects.Water;
+import GameLogic.Users.Player;
 
 public class BoardPrinter {
     private static final boolean HIDE_NON_VISIBLE = true;
@@ -26,7 +25,7 @@ public class BoardPrinter {
     // indices
     private final char startColIndex = 'A';
     private final byte startRowIndex = 1;
-    private final String PADDING_FROM_LEFT = "              ";
+    private final String PADDING_FROM_LEFT = "\t\t";
     // cell char values
     private final String HIT = "X";
     private final String MISS = "º";
@@ -35,75 +34,109 @@ public class BoardPrinter {
     private final String MINE = "░";
 
     private byte currRowIndex;
-    private Board board;
     private boolean hideNonVisible;
+    private final String BOARDS_SEPARATOR = "\t\t|\t\t";
+    private int boardSize;
 
-
-    public void printBothBoards(Game game) {
-        try {
-            System.out.println("************** " + game.getActivePlayer().getName() + "'s Board (active player) **************\n");
-            printBoard(game.getActivePlayer().getMyBoard(), !HIDE_NON_VISIBLE);
-            System.out.println("\n************** " + game.getOtherPlayer().getName() + "'s Board (opponent) **************\n");
-            printBoard(game.getActivePlayer().getOpponentBoard(), HIDE_NON_VISIBLE);
-        } catch (Exception e) {
-            System.out.println("Error while trying to print boards: " + e.getMessage());
-        }
-    }
-
-    // TODO changed to private, if we need we can change it back to public
-    private void printBoard(Board board, boolean hideNonVisible) {
-        this.hideNonVisible = hideNonVisible;
-        int currRowNum = 0;
+    public void printBoardsNew(Player activePlayer) {
+        this.boardSize = activePlayer.getMyBoard().getBoardSize();
         currRowIndex = startRowIndex;
-        this.board = board;
+
+        printBoardTitles();
         printColIndices();
         printFirstRowBorder();
-        for (BoardCell[] currRow : board.getBoard()) {
-            printRow(currRow);
-            currRowNum++;
-            if (currRowNum != board.getBoardSize()) {
+        //print the body of the board
+        for (int i = 0; i < boardSize; i++) {
+            printRow(activePlayer.getMyBoard().getBoard()[i],
+                    activePlayer.getOpponentBoard().getBoard()[i]);
+            if (i < boardSize - 1) {
                 printSeparatorRow();
             }
+
+            currRowIndex++;
         }
 
         printLastRowBorder();
     }
 
-    private void printColIndices() {
-        char localColIndex = startColIndex;
-        int boardSize = board.getBoardSize();
+    private void printBoardTitles() {
+        String myBoardStr = "My Board";
+        String opponentsBoardStr = "opponents's board";
+        int numOfSpacesAfterMyBoardStr = (boardSize * 2) + 2 - myBoardStr.length();
 
-        System.out.print(PADDING_FROM_LEFT + "\\ ");
-        for (int i = 0; i < boardSize; i++) {
-            System.out.print(localColIndex + " ");
-            localColIndex++;
+        System.out.println("Current boards state:");
+        System.out.print(PADDING_FROM_LEFT);
+        System.out.print(myBoardStr);
+        for (int i = 0; i < numOfSpacesAfterMyBoardStr; i++) {
+            System.out.print(" ");
+        }
+        System.out.print(BOARDS_SEPARATOR);
+        System.out.println(opponentsBoardStr);
+        System.out.println();
+    }
+
+    private void printColIndices() {
+        char localColIndex;
+
+        System.out.print(PADDING_FROM_LEFT);
+        for (int i = 0; i < 2; i++) {
+            System.out.print("\\ ");
+            localColIndex = startColIndex;
+            for (int j = 0; j < boardSize; j++) {
+                System.out.print(localColIndex + " ");
+                localColIndex++;
+            }
+            if (i == 0) {
+                System.out.print(BOARDS_SEPARATOR);
+            }
         }
 
         System.out.println();
     }
 
-    private void printRow(BoardCell[] row) {
+    private void printRow(BoardCell[] myRow, BoardCell[] opponentsRow) {
         System.out.print(PADDING_FROM_LEFT);
-        System.out.print(currRowIndex++);
-        for (BoardCell cell : row) {
+        BoardCell[] currRow = myRow;
+        for (int i = 0; i < 2; i++) {
+            hideNonVisible = i != 0;
+            // add another space in case there are more than 9 rows
+            if (currRowIndex > 10) {
+                System.out.print("\b");
+            }
+            System.out.print(currRowIndex);
+
+            for (BoardCell cell : currRow) {
+                System.out.print(BOARD_VERTICAL);
+                System.out.print(getCellChar(cell));
+            }
             System.out.print(BOARD_VERTICAL);
-            System.out.print(getCellChar(cell));
+
+            if (i == 0) {
+                System.out.print(BOARDS_SEPARATOR);
+                currRow = opponentsRow;
+            }
         }
-        System.out.println(BOARD_VERTICAL);
+
+        System.out.println();
     }
 
     private void printBorderRow(char firstCell, char connectionCell, char lastCell) {
-        int boardSize = board.getBoardSize();
-
-        System.out.print(PADDING_FROM_LEFT + " ");
-        System.out.print(firstCell);
-        for (int i = 0; i < boardSize - 1; i++) {
+        System.out.print(PADDING_FROM_LEFT);
+        for (int i = 0; i < 2; i++) {
+            System.out.print(" " + firstCell);
+            for (int j = 0; j < boardSize - 1; j++) {
+                System.out.print(BOARD_HORIZONTAL);
+                System.out.print(connectionCell);
+            }
             System.out.print(BOARD_HORIZONTAL);
-            System.out.print(connectionCell);
+            System.out.print(lastCell);
+
+            if (i == 0) {
+                System.out.print(BOARDS_SEPARATOR);
+            }
         }
 
-        System.out.print(BOARD_HORIZONTAL);
-        System.out.println(lastCell);
+        System.out.println();
     }
 
     private void printFirstRowBorder() {
@@ -118,7 +151,7 @@ public class BoardPrinter {
         printBorderRow(BOARD_BOTTOM_LEFT_CORNER, BOARD_HORIZONTAL_LAST_LINE, BOARD_BOTTOM_RIGHT_CORNER);
     }
 
-    private String getCellChar(BoardCell boardCell){
+    private String getCellChar(BoardCell boardCell) {
         GameObject cellValue = boardCell.GetCellValue();
         String cellChar;
 
