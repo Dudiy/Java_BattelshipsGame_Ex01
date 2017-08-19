@@ -1,14 +1,13 @@
 package GameLogic.Game.Board;
 
 import GameLogic.Game.GameObjects.GameObject;
-import GameLogic.Game.GameObjects.Ship.AbstractShip;
 import GameLogic.Game.GameObjects.Water;
-import GameLogic.Users.eAttackResult;
+import GameLogic.Game.eAttackResult;
 
 public class BoardCell {
     private BoardCoordinates position;
     private GameObject cellValue;
-    private boolean hit = false;
+    private boolean wasAttacked = false;
 
     public BoardCell(char col, int row) {
         position = new BoardCoordinates(col, row);
@@ -40,15 +39,15 @@ public class BoardCell {
     }
 
     public boolean wasAttacked() {
-        return hit;
+        return wasAttacked;
     }
 
     // ======================================= methods =======================================
     // TODO board attack
     public eAttackResult attack() {
         eAttackResult attackResult;
-        if (!hit) {
-            attackResult = cellValue.Attack();
+        if (!wasAttacked) {
+            attackResult = cellValue.attack();
         } else {
             attackResult = eAttackResult.CELL_ALREADY_ATTACKED;
         }

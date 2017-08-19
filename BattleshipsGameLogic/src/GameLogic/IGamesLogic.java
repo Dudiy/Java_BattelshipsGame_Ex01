@@ -4,7 +4,7 @@ import GameLogic.Exceptions.CellNotOnBoardException;
 import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.Game;
 import GameLogic.Users.Player;
-import GameLogic.Users.eAttackResult;
+import GameLogic.Game.eAttackResult;
 import javafx.fxml.LoadException;
 
 public interface IGamesLogic {

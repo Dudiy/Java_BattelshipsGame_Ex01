@@ -1,7 +1,7 @@
 package GameLogic.Game.GameObjects;
 
 import GameLogic.Game.Board.BoardCoordinates;
-import GameLogic.Users.eAttackResult;
+import GameLogic.Game.eAttackResult;
 
 public class Water extends GameObject {
     public Water(BoardCoordinates position) {

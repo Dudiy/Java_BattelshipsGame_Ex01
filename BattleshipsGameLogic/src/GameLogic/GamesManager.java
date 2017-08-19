@@ -6,7 +6,7 @@ import GameLogic.Game.Game;
 import GameLogic.Game.GameSettings;
 import GameLogic.Game.eGameState;
 import GameLogic.Users.Player;
-import GameLogic.Users.eAttackResult;
+import GameLogic.Game.eAttackResult;
 import javafx.fxml.LoadException;
 
 import java.util.HashMap;

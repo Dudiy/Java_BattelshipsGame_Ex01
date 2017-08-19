@@ -1,7 +1,7 @@
 package GameLogic.Game.GameObjects;
 
 import GameLogic.Game.Board.BoardCoordinates;
-import GameLogic.Users.eAttackResult;
+import GameLogic.Game.eAttackResult;
 
 public abstract class GameObject implements Cloneable {
     private BoardCoordinates position;
@@ -27,9 +27,10 @@ public abstract class GameObject implements Cloneable {
     }
 
     // ======================================= methods =======================================
-    public final eAttackResult Attack() {
+    public final eAttackResult attack() {
         return getAttackResult();
     }
+
     public abstract eAttackResult getAttackResult();
 
     @Override
@@ -43,7 +44,7 @@ public abstract class GameObject implements Cloneable {
 //    }
 
 //
-//    public final eAttackResult Attack() {
+//    public final eAttackResult attack() {
 //        return getAttackResult();
 ////        eAttackResult attackResult;
 ////        if (hit) {
