@@ -78,8 +78,8 @@ public class ConsoleUIManager {
     private void loadGame() {
         try {
             // TODO get path from user(uncomment)
-            String path = getFilePathFromUser();
-            //String path  = "/resources/battleShip_5_basic.xml";
+            //String path = getFilePathFromUser();
+            String path  = "/resources/battleShip_5_basic.xml";
             if(path !=null){
                 activeGame = gamesManager.loadGameFile(path);
                 System.out.println("Game loaded");
@@ -137,65 +137,19 @@ public class ConsoleUIManager {
 
     private void makeMove() {
         showGameState();
-//        boolean moveEnded = false;
         BoardCoordinates positionToAttack;
         eAttackResult attackResult = null;
-//        while (!moveEnded) {
         do{
             try {
                 positionToAttack = getPositionFromUser();
                 attackResult = gamesManager.makeMove(activeGame, positionToAttack);
-//                moveEnded = attackResult.contain(eAttackResult.MOVE_ENDED);
                 System.out.println("Attack result: " + attackResult);
-//                printAttackResult(attackResult);
-//                if (gamesManager.makeMove(activeGame, cellToAttack) != eAttackResult.CELL_ALREADY_ATTACKED) {
-//                    moveEnd = true;
-//                }
             } catch (CellNotOnBoardException e) {
                 System.out.println("The cell selected is not on the board, try again");
             }
         } while (!attackResult.moveEnded());
-        showGameState();
-    }
 
-    private void printAttackResult(eAttackResult attackResult) {
-//        if (attackResult.contain(eAttackResult.MOVE_ENDED)) {
-//            if(attackResult == eAttackResult.HIT_MINE){
-//                System.out.println("You hit a mine :( ");
-//            }
-//            System.out.println("Move end");
-//        } else if (attackResult.contain(eAttackResult.GET_ANOTHER_MOVE)) {
-//            if(attackResult == eAttackResult.HIT_SHIP){
-//                System.out.println("you hit a ship !");
-//                System.out.println("You get another move ! :) ");
-//
-//            }
-//            else if(attackResult == eAttackResult.HIT_AND_SUNK_SHIP){
-//                System.out.println("Congratulations you hit a whole ship !");
-//                System.out.println("You get another move ! :) ");
-//            }
-//            else if(attackResult == eAttackResult.CELL_ALREADY_ATTACKED){
-//                System.out.println("You already try to attack that cell.");
-//                System.out.println("Please try again");
-//            }
-//        }
-        if (attackResult.moveEnded()) {
-            if (attackResult == eAttackResult.HIT_MINE) {
-                System.out.println("You hit a mine :( ");
-            }
-            System.out.println("Move ended");
-        } else {
-            if (attackResult == eAttackResult.HIT_SHIP) {
-                System.out.println("you hit a ship !");
-                System.out.println("You get another move ! :) ");
-            } else if (attackResult == eAttackResult.HIT_AND_SUNK_SHIP) {
-                System.out.println("Congratulations you just sunk a ship !");
-                System.out.println("You get another move ! :) ");
-            } else if (attackResult == eAttackResult.CELL_ALREADY_ATTACKED) {
-                System.out.println("You have already tried to attack that cell.");
-                System.out.println("Try again");
-            }
-        }
+        showGameState();
     }
 
     public BoardCoordinates getPositionFromUser() {
@@ -222,5 +176,4 @@ public class ConsoleUIManager {
         // TODO
 
     }
-
 }
