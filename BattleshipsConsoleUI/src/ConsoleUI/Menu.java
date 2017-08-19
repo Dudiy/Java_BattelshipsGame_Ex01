@@ -2,58 +2,23 @@ package ConsoleUI;
 
 import GameLogic.Game.eGameState;
 
-import java.util.EnumSet;
 import java.util.Scanner;
 
 public class Menu {
     private final String MENU_SEPERATOR = "\n\n======================== Menu ========================";
-    public enum eMenuOption {
-        LOAD_GAME(1, "Load game", EnumSet.of(eGameState.INVALID, eGameState.INITIALIZED, eGameState.LOADED)),
-        START_GAME(2, "Start game", EnumSet.of(eGameState.INITIALIZED, eGameState.LOADED)),
-        SHOW_GAME_STATE(3, "Show game state", EnumSet.of(eGameState.STARTED)),
-        MAKE_MOVE(4, "Make a move", EnumSet.of(eGameState.STARTED)),
-        SHOW_STATISTICS(5, "Show statistics", EnumSet.of(eGameState.STARTED)),
-        END_GAME(6, "End game", EnumSet.of(eGameState.STARTED));
-
-        private String description;
-        private int ID;
-        private boolean isDisplayed = true;
-        private EnumSet<eGameState> displayedConditions;
-
-        eMenuOption(int optionID, String description, EnumSet<eGameState> displayConditions) {
-            this.ID = optionID;
-            this.description = description;
-            this.displayedConditions = displayConditions;
-        }
-
-        public static eMenuOption valueOf(int optionID) {
-            eMenuOption value = null;
-            for (eMenuOption menuOption : eMenuOption.values()) {
-                if (optionID == menuOption.ID) {
-                    value = menuOption;
-                    break;
-                }
-            }
-
-            return value;
-        }
-
-        @Override
-        public String toString() {
-            return ID + ") " + description;
-        }
-    }
+    private eGameState gameState;
 
     public eMenuOption display(eGameState gameState) {
-        printMenu(gameState);
+        this.gameState = gameState;
+        printMenu();
         eMenuOption userSelection = getUserSelection();
         return userSelection;
     }
 
-    private void printMenu(eGameState gameState) {
+    private void printMenu() {
         System.out.println(MENU_SEPERATOR);
         for (eMenuOption menuOption : eMenuOption.values()) {
-            if (menuOption.displayedConditions.contains(gameState)) {
+            if (menuOption.sameGameState(gameState)) {
                 System.out.println(menuOption);
             }
         }
@@ -70,8 +35,8 @@ public class Menu {
             try {
                 userIntSelection = scanner.nextInt();
                 userSelection = eMenuOption.valueOf(userIntSelection);
-                if (userSelection != null) {
-                    isValidSelection = true;
+                if (userSelection != null && userSelection.sameGameState(gameState)) {
+                        isValidSelection = true;
                 } else {
                     System.out.print("Invalid selection please select one of the options above: ");
                 }

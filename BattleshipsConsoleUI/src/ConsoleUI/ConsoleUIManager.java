@@ -9,28 +9,8 @@ import GameLogic.Users.Player;
 import GameLogic.Game.eAttackResult;
 import com.sun.corba.se.impl.oa.NullServantImpl;
 import javafx.fxml.LoadException;
-
-
 import java.io.File;
 import java.io.IOException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-//public class CheckValidXML {
-//    public static void main(String[] args) {
-//
-//
-//        File xmlFile = new File("XML File Location");
-//        if (xmlFile.exists()) {
-//            if (isValidXMLFile(xmlFile.getAbsolutePath().toString())) {
-//                System.out.println("Valid XML");
-//            }
-//        }
-//    }
 
 import java.nio.file.Files;
 import java.util.Scanner;
@@ -48,13 +28,13 @@ public class ConsoleUIManager {
         eGameState gameState;
         do {
             gameState = activeGame == null ? eGameState.INVALID : activeGame.getGameState();
-            Menu.eMenuOption menuItemSelected = menu.display(gameState);
+            eMenuOption menuItemSelected = menu.display(gameState);
             invokeMenuItem(menuItemSelected);
             gameState = activeGame == null ? eGameState.INVALID : activeGame.getGameState();
         } while (gameState != eGameState.PLAYER_QUIT);
     }
 
-    private void invokeMenuItem(Menu.eMenuOption menuItemSelected) {
+    private void invokeMenuItem(eMenuOption menuItemSelected) {
         switch (menuItemSelected) {
             case LOAD_GAME:
                 loadGame();
