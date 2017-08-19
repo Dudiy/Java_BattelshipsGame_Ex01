@@ -3,7 +3,6 @@ package GameLogic.Game;
 import GameLogic.Exceptions.CellNotOnBoardException;
 import GameLogic.Exceptions.InvalidGameObjectPlacementException;
 import GameLogic.Game.Board.Board;
-import GameLogic.Game.Board.BoardCell;
 import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.GameObjects.Ship.*;
 import GameLogic.Users.*;
@@ -105,12 +104,12 @@ public class Game {
 
     public eAttackResult attack(BoardCoordinates position) throws CellNotOnBoardException {
         // TODO player/board attack
-        BoardCell cellToAttack = otherPlayer.getMyBoard().getBoardCellAtCoordinates(position);
-        eAttackResult attackResult = cellToAttack.attack();
+//        BoardCell cellToAttack = otherPlayer.getMyBoard().getBoardCellAtCoordinates(position);
+        eAttackResult attackResult = otherPlayer.getMyBoard().attack(position);
         // TODO "hit" to cell, not ship
         switch(attackResult){
             case HIT_SHIP :
-                //attackResult = eAttackResult.GET_ANOTHER_MOVE;
+//                activePlayer.getOpponentBoard().
                 break;
             case HIT_AND_SUNK_SHIP:
                 //attackResult = eAttackResult.GET_ANOTHER_MOVE;

@@ -2,7 +2,7 @@ package GameLogic.Game.GameObjects.Ship;
 
 import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.GameObjects.GameObject;
-import GameLogic.Users.eAttackResult;
+import GameLogic.Game.eAttackResult;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 
 public abstract class AbstractShip extends GameObject{

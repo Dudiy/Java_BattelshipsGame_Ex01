@@ -4,6 +4,7 @@ import GameLogic.Exceptions.*;
 import GameLogic.Game.GameObjects.GameObject;
 import GameLogic.Game.GameObjects.Ship.*;
 import GameLogic.Game.GameObjects.Water;
+import GameLogic.Game.eAttackResult;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.LinkedList;
@@ -29,6 +30,7 @@ public class Board implements Cloneable {
             }
         }
     }
+
     // ======================================= setters =======================================
     // set the value of the BoardCell at the given coordinates to be value
     // throws InvalidGameObjectPlacementException if value cannot be placed in the given coordinates on this board
@@ -203,8 +205,11 @@ public class Board implements Cloneable {
 
         return copiedBoard;
     }
-}
 
+    public eAttackResult attack(BoardCoordinates coordinatesToAttack) throws CellNotOnBoardException {
+        return getBoardCellAtCoordinates(coordinatesToAttack).attack();
+    }
+}
 
 
 //        // create a copy of the board and hide all ships and mines (make them water)
