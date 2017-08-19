@@ -221,7 +221,7 @@ public class ConsoleUIManager {
     }
 
     private void pressAnyKeyToContinue() {
-        System.out.println("/n--- Press any key to continue ---/n");
+        System.out.println("\n--- Press any key to continue ---\n");
         scanner.reset();
         try {
             System.in.read();
