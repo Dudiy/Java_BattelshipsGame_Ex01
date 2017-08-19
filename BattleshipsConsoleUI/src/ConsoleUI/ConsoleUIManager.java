@@ -9,6 +9,28 @@ import GameLogic.Users.Player;
 import GameLogic.Users.eAttackResult;
 import javafx.fxml.LoadException;
 
+
+import java.io.File;
+import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+//public class CheckValidXML {
+//    public static void main(String[] args) {
+//
+//
+//        File xmlFile = new File("XML File Location");
+//        if (xmlFile.exists()) {
+//            if (isValidXMLFile(xmlFile.getAbsolutePath().toString())) {
+//                System.out.println("Valid XML");
+//            }
+//        }
+//    }
+
 import java.util.Scanner;
 
 public class ConsoleUIManager {
@@ -21,11 +43,13 @@ public class ConsoleUIManager {
     Menu menu = new Menu();
 
     public void run() {
+        eGameState gameState;
         do {
-            eGameState gameState = activeGame == null ? eGameState.INVALID : activeGame.getGameState();
+            gameState = activeGame == null ? eGameState.INVALID : activeGame.getGameState();
             Menu.eMenuOption menuItemSelected = menu.display(gameState);
             invokeMenuItem(menuItemSelected);
-        } while (activeGame.getGameState() != eGameState.PLAYER_QUIT);
+            gameState = activeGame == null ? eGameState.INVALID : activeGame.getGameState();
+        } while (gameState != eGameState.PLAYER_QUIT);
     }
 
     private void invokeMenuItem(Menu.eMenuOption menuItemSelected) {
@@ -53,11 +77,36 @@ public class ConsoleUIManager {
 
     private void loadGame() {
         try {
-            activeGame = gamesManager.loadGameFile("/resources/battleShip_5_basic.xml");
-            System.out.println("Game loaded");
+            // TODO get path from user(uncomment)
+            String path = getFilePathFromUser();
+            //String path  = "/resources/battleShip_5_basic.xml";
+            if(path !=null){
+                activeGame = gamesManager.loadGameFile(path);
+                System.out.println("Game loaded");
+            }
         } catch (LoadException e) {
             System.out.println("Error while loading game: " + e.getMessage() + " please try again.");
         }
+    }
+
+    public String getFilePathFromUser() {
+        Scanner scanner = new Scanner(System.in);
+        String path;
+        Boolean endOfInput = false;
+
+        do {
+            System.out.println("Please enter a XML path file(Or 0 to return to main menu):");
+            path = scanner.nextLine();
+            if(path.endsWith(".xml")){
+                endOfInput = true;
+            }
+            else if(path.equals("0")){
+                path = null;
+                endOfInput = true;
+            }
+        } while (!endOfInput);
+
+        return path;
     }
 
     private void startGame() {
@@ -109,21 +158,19 @@ public class ConsoleUIManager {
 
     private void printMessageAttack(eAttackResult attackResult) {
         if (attackResult.contain(eAttackResult.MOVE_ENDED)) {
-            if(attackResult == eAttackResult.HIT_MINE){
+            if (attackResult == eAttackResult.HIT_MINE) {
                 System.out.println("You hit a mine :( ");
             }
             System.out.println("Move end");
         } else if (attackResult.contain(eAttackResult.GET_ANOTHER_MOVE)) {
-            if(attackResult == eAttackResult.HIT_SHIP){
+            if (attackResult == eAttackResult.HIT_SHIP) {
                 System.out.println("you hit a ship !");
                 System.out.println("You get another move ! :) ");
 
-            }
-            else if(attackResult == eAttackResult.HIT_AND_SUNK_SHIP){
+            } else if (attackResult == eAttackResult.HIT_AND_SUNK_SHIP) {
                 System.out.println("Congratulations you hit a whole ship !");
                 System.out.println("You get another move ! :) ");
-            }
-            else if(attackResult == eAttackResult.CELL_ALREADY_ATTACKED){
+            } else if (attackResult == eAttackResult.CELL_ALREADY_ATTACKED) {
                 System.out.println("You already try to attack that cell.");
                 System.out.println("Please try again");
             }
@@ -154,4 +201,5 @@ public class ConsoleUIManager {
         // TODO
 
     }
+
 }
