@@ -4,7 +4,9 @@ import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.GameSettings;
 import jaxb.generated.BattleShipGame;
 
-public class ShipFactory {
+import java.io.Serializable;
+
+public class ShipFactory implements Serializable {
     private GameSettings gameSettings;
 
     public ShipFactory(GameSettings gameSettings) {

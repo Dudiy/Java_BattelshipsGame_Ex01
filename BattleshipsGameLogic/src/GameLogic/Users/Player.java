@@ -10,9 +10,10 @@ import GameLogic.Game.GameObjects.Mine;
 import GameLogic.Game.GameObjects.Water;
 import GameLogic.Game.eAttackResult;
 
+import java.io.Serializable;
 import java.time.Duration;
 
-public class Player {
+public class Player implements Serializable {
     private String ID;
     private String name;
     private Board myBoard;

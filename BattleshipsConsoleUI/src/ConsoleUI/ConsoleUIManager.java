@@ -61,11 +61,17 @@ public class ConsoleUIManager {
             case SHOW_STATISTICS:
                 showStatistics();
                 break;
+            case END_GAME:
+                endGame();
+                break;
             case PLANT_MINE:
                 plantMine();
                 break;
-            case END_GAME:
-                endGame();
+            case SAVE_GAME:
+                saveGame();
+                break;
+            case LOAD_SAVED_GAME:
+                loadSavedGame();
                 break;
             case EXIT:
                 exit();
@@ -259,6 +265,21 @@ public class ConsoleUIManager {
         System.out.println(String.format("\t\tAverage turn duration: %d:%02d", avgDuration.toMinutes(), avgDuration.getSeconds() % 60));
     }
 
+    // ======================================= End Game =======================================
+    private void endGame() {
+        eGameState gameStateBeforeEndGame = activeGame.getGameState();
+        gamesManager.endGame(activeGame);
+        if(gameStateBeforeEndGame.isGameStart()){
+            System.out.println("The winner is: " + activeGame.getWinnerPlayer().getName() + "!!! :)");
+            System.out.println("Game ended.");
+            System.out.println("Players boards:");
+            printPlayerBoard(activeGame.getActivePlayer());
+            printPlayerBoard(activeGame.getOtherPlayer());
+        }
+        // it get the user to the first step of the application
+        activeGame = null;
+    }
+
     // ======================================= Plant mine =======================================
 
     private void plantMine() {
@@ -283,42 +304,53 @@ public class ConsoleUIManager {
         pressAnyKeyToContinue();
     }
 
-    // ======================================= End Game =======================================
-    private void endGame() {
-        eGameState gameStateBeforeEndGame = activeGame.getGameState();
-        gamesManager.endGame(activeGame);
-        if(gameStateBeforeEndGame.isGameStart()){
-            System.out.println("The winner is: " + activeGame.getWinnerPlayer().getName() + "!!! :)");
-            System.out.println("Game ended.");
-            System.out.println("Players boards:");
-            printPlayerBoard(activeGame.getActivePlayer());
-            printPlayerBoard(activeGame.getOtherPlayer());
+    // ======================================= Save game =======================================
+    private void saveGame() {
+        // TODO check validation name
+        String fileName = "aa.dat";
+        // TODO IOException ?
+        try {
+            gamesManager.saveGameToFile(activeGame, fileName);
+            System.out.println("Game saved !");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        // it get the user to the first step of the application
-        activeGame = null;
+    }
+
+    // ======================================= Load saved game=======================================
+    private void loadSavedGame() {
+        // TODO check validation name
+        String fileName = "aa.dat";
+        // TODO IOException ?
+        try {
+            activeGame = gamesManager.loadSavedGameFromFile(fileName);
+            System.out.println("Saved game loaded !");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     // ======================================= Exit =======================================
     private void exit() {
         if (activeGame != null) {
-            saveActiveGameToFile();
+//            saveActiveGameToFile();
             endGame();
         }
         exit = true;
         System.out.println("Game will close. Goodbye !");
     }
-
-    private void saveActiveGameToFile() {
-        try {
-            FileOutputStream fileOutputStreamOfGame = new FileOutputStream(new File("./game.xml"));
-            XMLEncoder xmlEncoder = new XMLEncoder(fileOutputStreamOfGame);
-            xmlEncoder.writeObject(activeGame);
-            xmlEncoder.close();
-            fileOutputStreamOfGame.close();
-        } catch (Exception e) {
-
-        }
-    }
+//
+//    private void saveActiveGameToFile() {
+//        try {
+//            FileOutputStream fileOutputStreamOfGame = new FileOutputStream(new File("./game.xml"));
+//            XMLEncoder xmlEncoder = new XMLEncoder(fileOutputStreamOfGame);
+//            xmlEncoder.writeObject(activeGame);
+//            xmlEncoder.close();
+//            fileOutputStreamOfGame.close();
+//        } catch (Exception e) {
+//
+//        }
+//    }
 
     // ======================================= Other methods =======================================
     private void pressAnyKeyToContinue() {

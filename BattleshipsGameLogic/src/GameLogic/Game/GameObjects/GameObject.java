@@ -3,7 +3,9 @@ package GameLogic.Game.GameObjects;
 import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.eAttackResult;
 
-public abstract class GameObject implements Cloneable {
+import java.io.Serializable;
+
+public abstract class GameObject implements Cloneable,Serializable {
     protected static final boolean VISIBLE = true;
     private BoardCoordinates position;
     private static String objectTypeSimpleName;

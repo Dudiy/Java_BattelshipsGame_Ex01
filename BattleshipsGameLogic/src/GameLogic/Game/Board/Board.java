@@ -8,9 +8,10 @@ import GameLogic.Game.GameObjects.Water;
 import GameLogic.Game.eAttackResult;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public class Board implements Cloneable {
+public class Board implements Cloneable, Serializable {
     private BoardCell[][] board;
     private final int boardSize;
     private LinkedList<AbstractShip> shipsOnBoard = new LinkedList<>();

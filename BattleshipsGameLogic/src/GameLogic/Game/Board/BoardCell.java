@@ -5,7 +5,9 @@ import GameLogic.Game.GameObjects.GameObject;
 import GameLogic.Game.GameObjects.Water;
 import GameLogic.Game.eAttackResult;
 
-public class BoardCell {
+import java.io.Serializable;
+
+public class BoardCell implements Serializable {
     private BoardCoordinates position;
     private GameObject cellValue;
     private boolean wasAttacked = false;

@@ -1,6 +1,8 @@
 package GameLogic.Game;
 
-public enum eGameType {
+import java.io.Serializable;
+
+public enum eGameType implements Serializable {
     BASIC("Basic"),
     ADVANCED("Advanced");
 

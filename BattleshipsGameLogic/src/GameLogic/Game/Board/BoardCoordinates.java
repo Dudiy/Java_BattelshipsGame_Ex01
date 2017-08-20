@@ -1,6 +1,8 @@
 package GameLogic.Game.Board;
 
-public class BoardCoordinates {
+import java.io.Serializable;
+
+public class BoardCoordinates implements Serializable {
     private char col;
     private int row;
 

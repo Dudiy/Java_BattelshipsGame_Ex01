@@ -19,8 +19,9 @@ public class GamesManager implements IGamesLogic {
     private Map<String, Player> allPlayers = new HashMap<>();
     private Map<Integer, Game> allGames = new HashMap<>();
 
-    public void addPlayer(Player newPlayer) {
-        allPlayers.put(newPlayer.getID(), newPlayer);
+    public void addPlayers(Player[] players) {
+        allPlayers.put(players[0].getID(), players[0]);
+        allPlayers.put(players[1].getID(), players[1]);
     }
 
     @Override
@@ -48,13 +49,28 @@ public class GamesManager implements IGamesLogic {
         return game.getTotalGameDuration();
     }
 
-    @Override
-    public void endGame(Game game) {
-        game.endGame();
-    }
 
     @Override
     public void plantMine(Game game, BoardCoordinates cell) throws CellNotOnBoardException, InvalidGameObjectPlacementException, NoMinesAvailableException {
         game.plantMineOnActivePlayersBoard(cell);
+    }
+
+    @Override
+    public void saveGameToFile(Game game, String fileName) throws Exception {
+        Game.saveToFile(game, fileName);
+    }
+
+    @Override
+    public Game loadSavedGameFromFile(String fileName) throws Exception {
+        Game game =Game.loadFromFile(fileName);
+        allGames.put(game.getID(), game);
+        addPlayers(game.getPlayers());
+        game.setGameState(eGameState.STARTED);
+        return game;
+    }
+
+    @Override
+    public void endGame(Game game) {
+        game.endGame();
     }
 }

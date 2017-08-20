@@ -5,10 +5,7 @@ import jaxb.generated.BattleShipGame;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -17,16 +14,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class GameSettings {
+public class GameSettings implements Serializable{
     private final static String JAXB_XML_GAME_PACKAGE_NAME = "jaxb.generated";
     private static final int MIN_BOARD_SIZE = 5;
     private static final int MAX_BOARD_SIZE = 20;
     private int boardSize;
     private int minesPerPlayer;
     private eGameType gameType;
-    private BattleShipGame gameLoadedFromXml;
-    private Map<String,BattleShipGame.ShipTypes.ShipType> shipTypes = new HashMap<>();
-    private Map<BattleShipGame.ShipTypes.ShipType, Integer> numShipsPerBoard = new HashMap<>();
+    private transient BattleShipGame gameLoadedFromXml;
+    private transient Map<String,BattleShipGame.ShipTypes.ShipType> shipTypes = new HashMap<>();
+    private transient Map<BattleShipGame.ShipTypes.ShipType, Integer> numShipsPerBoard = new HashMap<>();
 
     // private ctor, GameSettings can only be created by calling LoadGameFile
     private GameSettings() {
