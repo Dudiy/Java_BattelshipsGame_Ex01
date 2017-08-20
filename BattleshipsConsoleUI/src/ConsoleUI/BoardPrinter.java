@@ -34,15 +34,14 @@ public class BoardPrinter {
     private final String WATER = "~";
     private final String MINE = "Ω";
 
+    private final String BOARDS_SEPARATOR = "          |          ";
     private byte currRowIndex;
     private boolean hideNonVisible;
-    private final String BOARDS_SEPARATOR = "          |          ";
     private int boardSize;
 
     public void printBoards(Player activePlayer) {
         this.boardSize = activePlayer.getMyBoard().getBoardSize();
         currRowIndex = startRowIndex;
-
         printBoardTitles();
         printColIndices();
         printFirstRowBorder();
@@ -56,7 +55,6 @@ public class BoardPrinter {
 
             currRowIndex++;
         }
-
         printLastRowBorder();
     }
 
@@ -77,10 +75,11 @@ public class BoardPrinter {
     }
 
     private void printColIndices() {
+        final int numberOfBoards = 2;
         char localColIndex;
 
         System.out.print(PADDING_FROM_LEFT);
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < numberOfBoards; i++) {
             System.out.print("\\ ");
             localColIndex = startColIndex;
             for (int j = 0; j < boardSize; j++) {
@@ -91,13 +90,13 @@ public class BoardPrinter {
                 System.out.print(BOARDS_SEPARATOR);
             }
         }
-
         System.out.println();
     }
 
     private void printRow(BoardCell[] myRow, BoardCell[] opponentsRow) {
         System.out.print(PADDING_FROM_LEFT);
         BoardCell[] currRow = myRow;
+
         for (int i = 0; i < 2; i++) {
             hideNonVisible = i != 0;
             // add another space in case there are more than 9 rows
@@ -117,7 +116,6 @@ public class BoardPrinter {
                 currRow = opponentsRow;
             }
         }
-
         System.out.println();
     }
 
@@ -136,7 +134,6 @@ public class BoardPrinter {
                 System.out.print(BOARDS_SEPARATOR);
             }
         }
-
         System.out.println();
     }
 
