@@ -7,8 +7,9 @@ import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.GameObjects.Ship.*;
 import GameLogic.Users.*;
 import jaxb.generated.BattleShipGame;
-import sun.swing.BakedArrayList;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 public class Game {
@@ -18,6 +19,7 @@ public class Game {
     private Player[] players = new Player[2];
     private int activePlayerIndex;
     private int movesCounter = 0;
+    private Instant gameStartTime;
     private Map<String, User> spectators = new HashMap<>();
     private GameSettings gameSettings;
     private ShipFactory shipFactory;
@@ -31,17 +33,22 @@ public class Game {
     }
 
     // ======================================= setters =======================================
+
     public void setGameState(eGameState gameState) {
         this.gameState = gameState;
     }
-
     // ======================================= getters =======================================
+
     public int getID() {
         return ID;
     }
 
     public Player getActivePlayer() {
         return players[activePlayerIndex];
+    }
+
+    public int getMovesCounter() {
+        return movesCounter;
     }
 
     public Player getOtherPlayer() {
@@ -64,6 +71,11 @@ public class Game {
         players[1] = player2;
         initBoards();
         gameState = eGameState.INITIALIZED;
+        gameStartTime = Instant.now();
+    }
+
+    public Duration getTotalGameDuration(){
+        return Duration.between(gameStartTime,Instant.now());
     }
 
     private void initBoards() throws Exception {
@@ -84,6 +96,7 @@ public class Game {
         Board currentBoard = new Board(gameSettings.getBoardSize());
         Map<String, Integer> shipTypesAmount = gameSettings.getShipTypesAmount();
         currentBoard.setMinesAvailable(gameSettings.getMinesPerPlayer());
+
         for (BattleShipGame.Boards.Board.Ship ship : board.getShip()) {
             try {
                 AbstractShip shipObject = shipFactory.createShip(ship);
@@ -97,33 +110,38 @@ public class Game {
                 throw new Exception(message);
             }
         }
-        if(!allRequiredShipAdded(shipTypesAmount)){
+
+        if (!allRequiredShipsAdded(shipTypesAmount)) {
             throw new InputMismatchException("Error: not all the required ship was added.");
         }
+
         return currentBoard;
     }
 
-    private boolean allRequiredShipAdded(Map<String, Integer> shipTypes) {
-        Boolean allShipAdded = true;
-        for(Map.Entry<String, Integer> shipType : shipTypes.entrySet()){
-            if(shipType.getValue() != 0){
-                allShipAdded = false;
+    private boolean allRequiredShipsAdded(Map<String, Integer> shipTypes) {
+        Boolean allShipsAdded = true;
+
+        for (Map.Entry<String, Integer> shipType : shipTypes.entrySet()) {
+            if (shipType.getValue() != 0) {
+                allShipsAdded = false;
                 break;
             }
         }
-        return allShipAdded;
+
+        return allShipsAdded;
     }
 
 
     public eAttackResult attack(BoardCoordinates position) throws CellNotOnBoardException {
         eAttackResult attackResult = getActivePlayer().attack(position);
 
-        if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED){
-            movesCounter++;
-        }
+        // TODO check when we need to increment the move counter? every time players swap or every attack?
+//        if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED) {
+//        }
 
         if (attackResult.moveEnded()) {
             swapPlayers();
+            movesCounter++;
         }
 
         return attackResult;

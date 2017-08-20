@@ -22,8 +22,8 @@ public class GameSettings {
     private static final int MIN_BOARD_SIZE = 5;
     private static final int MAX_BOARD_SIZE = 20;
     private int boardSize;
-    private eGameType gameType;
     private int minesPerPlayer;
+    private eGameType gameType;
     private BattleShipGame gameLoadedFromXml;
     private Map<String,BattleShipGame.ShipTypes.ShipType> shipTypes = new HashMap<>();
     private Map<BattleShipGame.ShipTypes.ShipType, Integer> numShipsPerBoard = new HashMap<>();
@@ -60,9 +60,11 @@ public class GameSettings {
 
     public Map<String, Integer> getShipTypesAmount() {
         Map<String, Integer> shipTypesAmount = new HashMap<>();
+
         for(Map.Entry<String,BattleShipGame.ShipTypes.ShipType> shipType : shipTypes.entrySet()){
             shipTypesAmount.put(shipType.getKey(), shipType.getValue().getAmount());
         }
+
         return shipTypesAmount;
     }
 

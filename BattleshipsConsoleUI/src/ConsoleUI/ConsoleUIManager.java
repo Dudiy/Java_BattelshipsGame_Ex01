@@ -9,10 +9,13 @@ import GameLogic.Users.Player;
 import GameLogic.Game.eAttackResult;
 import com.sun.corba.se.impl.oa.NullServantImpl;
 import javafx.fxml.LoadException;
+
 import java.io.File;
 import java.io.IOException;
 
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Scanner;
 
 public class ConsoleUIManager {
@@ -154,21 +157,29 @@ public class ConsoleUIManager {
 
     // ======================================= Make Move =======================================
     private void makeMove() {
+        Instant startTime = Instant.now();
         BoardCoordinates positionToAttack;
         eAttackResult attackResult = null;
         boolean moveSuccessful = false;
+        boolean printGameState = true;
         do {
             try {
-                showGameState();
+                if (printGameState && attackResult != eAttackResult.CELL_ALREADY_ATTACKED) {
+                    showGameState();
+                }
                 positionToAttack = getPositionFromUser();
                 attackResult = gamesManager.makeMove(activeGame, positionToAttack);
                 System.out.println("Attack result: " + attackResult);
                 moveSuccessful = true;
             } catch (CellNotOnBoardException e) {
                 System.out.println("The cell selected is not on the board, try again");
+                printGameState = false;
             }
-        } while (!moveSuccessful);
+        } while (!moveSuccessful || attackResult == eAttackResult.CELL_ALREADY_ATTACKED);
 //    } while (!attackResult.moveEnded());
+        Duration turnTime = Duration.between(startTime, Instant.now());
+        activeGame.getActivePlayer().addTurnDurationToTotal(turnTime);
+        System.out.println(String.format("Total duration for this turn was: %d:%02d", turnTime.toMinutes(), turnTime.getSeconds() % 60));
         pressAnyKeyToContinue();
         showGameState();
     }
@@ -191,7 +202,23 @@ public class ConsoleUIManager {
 
     // ======================================= Show Statistics =======================================
     private void showStatistics() {
-        // TODO
+        System.out.println("Showing game statistics:");
+        // total turns played
+        System.out.println("Total turns played: " + activeGame.getMovesCounter());
+        // total game duration
+        Duration gameDuration = gamesManager.getGameDuration(activeGame);
+        String durationStr = String.format("%d:%02d", gameDuration.toMinutes(), gameDuration.getSeconds() % 60);
+        System.out.println("Total game time: " + durationStr);
+        // player info
+        showPlayerStatistics(activeGame.getActivePlayer());
+        showPlayerStatistics(activeGame.getOtherPlayer());
+
+    }
+
+    private void showPlayerStatistics(Player player) {
+        System.out.println("Showing player statistics for " + player.getName());
+        System.out.println("Current score: " + player.getScore());
+        System.out.println("Times missed: " + player.getTimesMissed());
     }
 
     // ======================================= End Game =======================================
@@ -200,7 +227,7 @@ public class ConsoleUIManager {
     }
 
     private void pressAnyKeyToContinue() {
-        System.out.println("\n--- Press any key to continue ---\n");
+        System.out.println("\n--- Press enter to continue ---\n");
         scanner.reset();
         try {
             System.in.read();

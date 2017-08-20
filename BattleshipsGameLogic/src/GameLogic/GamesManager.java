@@ -9,6 +9,7 @@ import GameLogic.Users.Player;
 import GameLogic.Game.eAttackResult;
 import javafx.fxml.LoadException;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,5 +39,10 @@ public class GamesManager implements IGamesLogic {
     @Override
     public eAttackResult makeMove(Game game, BoardCoordinates cellToAttack) throws CellNotOnBoardException {
         return game.attack(cellToAttack);
+    }
+
+    @Override
+    public Duration getGameDuration(Game game) {
+        return game.getTotalGameDuration();
     }
 }

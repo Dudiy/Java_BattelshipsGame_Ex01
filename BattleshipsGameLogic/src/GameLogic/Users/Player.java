@@ -7,14 +7,18 @@ import GameLogic.Game.GameObjects.Ship.AbstractShip;
 import GameLogic.Game.eAttackResult;
 
 import java.sql.Time;
+import java.time.Duration;
 
 public class Player {
     private String ID;
     private String name;
     private Board myBoard;
     private Board opponentBoard;
-    private Time avgTurnDurationNew;
     private int score = 0;
+    private int timesMissed = 0;
+    // duration of a turn is from the time the user selects make move until he enters the cell to attack
+    private Duration totalTurnsDuration;
+    private int numTurnsPlayed;
 
     public Player(String playerID, String name) {
         this.ID = playerID;
@@ -22,6 +26,7 @@ public class Player {
     }
 
     // ======================================= setters =======================================
+
     public void setMyBoard(Board board) {
         this.myBoard = board;
     }
@@ -31,6 +36,7 @@ public class Player {
     }
 
     // ======================================= getters =======================================
+
     public String getID() {
         return ID;
     }
@@ -51,15 +57,27 @@ public class Player {
         return score;
     }
 
+    public int getTimesMissed() {
+        return timesMissed;
+    }
+
+    public void addTurnDurationToTotal(Duration turnDuration){
+        totalTurnsDuration = totalTurnsDuration.plus(turnDuration);
+    }
+
     // ======================================= Methods =======================================
     public eAttackResult attack(BoardCoordinates position) throws CellNotOnBoardException {
         eAttackResult attackResult = opponentBoard.attack(position);
 
-        if (attackResult.isScoreIncrementer()){
+        if (attackResult == eAttackResult.HIT_WATER) {
+            timesMissed++;
+        }
+
+        if (attackResult.isScoreIncrementer()) {
             score++;
         }
 
-        if (attackResult == eAttackResult.HIT_MINE){
+        if (attackResult == eAttackResult.HIT_MINE) {
             // if hit a mine attack my own board
             myBoard.attack(position);
         }
