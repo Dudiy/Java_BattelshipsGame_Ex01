@@ -7,7 +7,6 @@ import GameLogic.Game.eGameState;
 import GameLogic.GamesManager;
 import GameLogic.Users.Player;
 import GameLogic.Game.eAttackResult;
-import com.sun.corba.se.impl.oa.NullServantImpl;
 import javafx.fxml.LoadException;
 
 import java.io.File;
@@ -158,14 +157,13 @@ public class ConsoleUIManager {
     // ======================================= Show Game State =======================================
     private void showGameState() {
         System.out.println("Game state:");
-        System.out.println("Current player:");
         printPlayerBoard(activeGame.getActivePlayer());
     }
 
     private void printPlayerBoard(Player player) {
-        System.out.println("Player: " + player.getName());
+        System.out.println("Current player: " + player.getName());
         System.out.println("Score: " + activeGame.getActivePlayer().getScore());
-        boardPrinter.printBoardsNew(player);
+        boardPrinter.printBoards(player);
     }
 
     // ======================================= Make Move =======================================
