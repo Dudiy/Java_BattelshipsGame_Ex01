@@ -55,6 +55,7 @@ public class Menu {
             }
         } while (!isValidSelection);
 
+        System.out.println();
         return userSelection;
     }
 }
