@@ -2,8 +2,6 @@ package ConsoleUI;
 
 import GameLogic.Game.eGameState;
 import GameLogic.Users.Player;
-
-import java.util.EnumSet;
 import java.util.Scanner;
 
 public class Menu {
@@ -11,8 +9,8 @@ public class Menu {
     private final String MENU_BOTTOM = "╚════════════════════════════════════════════════════╝";
     private final String MENU_VERTICAL = "║";
     private final int menuWidth = MENU_BOTTOM.length();
-
-    public enum eMenuOption {
+    private eGameState gameState;
+    /*public enum eMenuOption {
         LOAD_GAME(1, "Load game", EnumSet.of(eGameState.INVALID, eGameState.INITIALIZED, eGameState.LOADED)),
         START_GAME(2, "Start game", EnumSet.of(eGameState.INITIALIZED, eGameState.LOADED)),
         SHOW_GAME_STATE(3, "Show game state", EnumSet.of(eGameState.STARTED)),
@@ -47,18 +45,19 @@ public class Menu {
         public String toString() {
             return ID + ") " + description;
         }
-    }
+    }*/
 
     public eMenuOption display(eGameState gameState) {
-        printMenu(gameState);
+        this.gameState = gameState;
+        printMenu();
         eMenuOption userSelection = getUserSelection();
         return userSelection;
     }
 
-    private void printMenu(eGameState gameState) {
+    private void printMenu() {
         System.out.println(MENU_TOP);
         for (eMenuOption menuOption : eMenuOption.values()) {
-            if (menuOption.displayedConditions.contains(gameState)) {
+            if (menuOption.sameGameState(gameState)) {
                 System.out.print(MENU_VERTICAL);
                 System.out.print(menuOption);
                 for (int i = 0; i < menuWidth - menuOption.toString().length() - 2; i++) {
@@ -81,8 +80,8 @@ public class Menu {
             try {
                 userIntSelection = scanner.nextInt();
                 userSelection = eMenuOption.valueOf(userIntSelection);
-                if (userSelection != null) {
-                    isValidSelection = true;
+                if (userSelection != null && userSelection.sameGameState(gameState)) {
+                        isValidSelection = true;
                 } else {
                     System.out.print("Invalid selection please select one of the options above: ");
                 }

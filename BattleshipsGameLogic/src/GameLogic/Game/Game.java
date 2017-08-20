@@ -7,9 +7,9 @@ import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.GameObjects.Ship.*;
 import GameLogic.Users.*;
 import jaxb.generated.BattleShipGame;
+import sun.swing.BakedArrayList;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Game {
     private static int IDGenerator = 1000;
@@ -82,12 +82,14 @@ public class Game {
 
     private Board addAllShipsToBoard(Player currentPlayer, BattleShipGame.Boards.Board board) throws Exception {
         Board currentBoard = new Board(gameSettings.getBoardSize());
-
+        Map<String, Integer> shipTypesAmount = gameSettings.getShipTypesAmount();
         currentBoard.setMinesAvailable(gameSettings.getMinesPerPlayer());
         for (BattleShipGame.Boards.Board.Ship ship : board.getShip()) {
             try {
                 AbstractShip shipObject = shipFactory.createShip(ship);
                 currentBoard.addShipToBoard(shipObject);
+                int currShipTypeAmount = shipTypesAmount.get(ship.getShipTypeId()) - 1;
+                shipTypesAmount.put(ship.getShipTypeId(), currShipTypeAmount);
             } catch (InvalidGameObjectPlacementException e) {
                 throw e;
             } catch (Exception e) {
@@ -95,8 +97,23 @@ public class Game {
                 throw new Exception(message);
             }
         }
+        if(!allRequiredShipAdded(shipTypesAmount)){
+            throw new InputMismatchException("Error: not all the required ship was added.");
+        }
         return currentBoard;
     }
+
+    private boolean allRequiredShipAdded(Map<String, Integer> shipTypes) {
+        Boolean allShipAdded = true;
+        for(Map.Entry<String, Integer> shipType : shipTypes.entrySet()){
+            if(shipType.getValue() != 0){
+                allShipAdded = false;
+                break;
+            }
+        }
+        return allShipAdded;
+    }
+
 
     public eAttackResult attack(BoardCoordinates position) throws CellNotOnBoardException {
         eAttackResult attackResult = getActivePlayer().attack(position);
@@ -115,4 +132,6 @@ public class Game {
     private void swapPlayers() {
         activePlayerIndex = (activePlayerIndex + 1) % 2;
     }
+
+
 }
