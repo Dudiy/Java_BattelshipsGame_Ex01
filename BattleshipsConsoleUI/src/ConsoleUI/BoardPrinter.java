@@ -26,7 +26,7 @@ public class BoardPrinter {
     // indices
     private final char startColIndex = 'A';
     private final byte startRowIndex = 1;
-    private final String PADDING_FROM_LEFT = "          ";
+    private final String PADDING_FROM_LEFT = "    ";
     // cell char values
     private final String HIT = "X";
     private final String MISS = "º";
@@ -39,7 +39,7 @@ public class BoardPrinter {
     private final String BOARDS_SEPARATOR = "          |          ";
     private int boardSize;
 
-    public void printBoardsNew(Player activePlayer) {
+    public void printBoards(Player activePlayer) {
         this.boardSize = activePlayer.getMyBoard().getBoardSize();
         currRowIndex = startRowIndex;
 
@@ -65,7 +65,7 @@ public class BoardPrinter {
         String opponentsBoardStr = "opponents's board";
         int numOfSpacesAfterMyBoardStr = (boardSize * 2) + 2 - myBoardStr.length();
 
-        System.out.println("Current boards state:");
+        System.out.println("Current boards state:\n");
         System.out.print(PADDING_FROM_LEFT);
         System.out.print(myBoardStr);
         for (int i = 0; i < numOfSpacesAfterMyBoardStr; i++) {
