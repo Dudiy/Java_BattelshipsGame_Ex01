@@ -14,6 +14,14 @@ public enum eGameState {
         this.name = name;
     }
 
+    public boolean isGameStart(){
+        boolean gameStart = false;
+        if(this != INVALID && this != LOADED && this != INITIALIZED){
+            gameStart =  true;
+        }
+        return gameStart;
+    }
+
     @Override
     public String toString() {
         return name;
