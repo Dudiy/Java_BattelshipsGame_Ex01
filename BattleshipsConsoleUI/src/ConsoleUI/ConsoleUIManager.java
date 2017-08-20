@@ -30,6 +30,8 @@ public class ConsoleUIManager {
 
     public void run() {
         eGameState gameState;
+        printWelcomeScreen();
+
         do {
             gameState = activeGame == null ? eGameState.INVALID : activeGame.getGameState();
             // TODO ?
@@ -174,13 +176,13 @@ public class ConsoleUIManager {
     // ======================================= Show Game State =======================================
     private void showGameState() {
         System.out.println("Game state:");
-        printPlayerBoard(activeGame.getActivePlayer());
+        printPlayerBoard(activeGame.getActivePlayer(), !BoardPrinter.PRINT_SINGLE_BOARD);
     }
 
-    private void printPlayerBoard(Player player) {
+    private void printPlayerBoard(Player player, boolean printBothBoards) {
         System.out.println("Current player: " + player.getName());
         System.out.println("Score: " + activeGame.getActivePlayer().getScore());
-        boardPrinter.printBoards(player);
+        boardPrinter.printBoards(player, printBothBoards);
     }
 
     // ======================================= Make Move =======================================
@@ -287,12 +289,12 @@ public class ConsoleUIManager {
     private void endGame() {
         eGameState gameStateBeforeEndGame = activeGame.getGameState();
         gamesManager.endGame(activeGame);
-        if(gameStateBeforeEndGame.isGameStart()){
+        if (gameStateBeforeEndGame.isGameStart()) {
             System.out.println("The winner is: " + activeGame.getWinnerPlayer().getName() + "!!! :)");
             System.out.println("Game ended.");
             System.out.println("Players boards:");
-            printPlayerBoard(activeGame.getActivePlayer());
-            printPlayerBoard(activeGame.getOtherPlayer());
+            printPlayerBoard(activeGame.getActivePlayer(), BoardPrinter.PRINT_SINGLE_BOARD);
+            printPlayerBoard(activeGame.getOtherPlayer(), BoardPrinter.PRINT_SINGLE_BOARD);
         }
         // it get the user to the first step of the application
         activeGame = null;
@@ -309,7 +311,7 @@ public class ConsoleUIManager {
     }
 
     private void saveActiveGameToFile() {
-        try {
+/*        try {
             FileOutputStream fileOutputStreamOfGame = new FileOutputStream(new File("./game.xml"));
             XMLEncoder xmlEncoder = new XMLEncoder(fileOutputStreamOfGame);
             xmlEncoder.writeObject(activeGame);
@@ -317,6 +319,12 @@ public class ConsoleUIManager {
             fileOutputStreamOfGame.close();
         } catch (Exception e) {
 
+        }*/
+        try {
+            gamesManager.writeToFile();
+        } catch (IOException e) {
+            // TODO hanle exception
+            e.printStackTrace();
         }
     }
 
@@ -329,5 +337,21 @@ public class ConsoleUIManager {
         } catch (IOException e) {
             System.out.println("IO Error caught, resuming as if key was pressed");
         }
+    }
+
+    public void printWelcomeScreen(){
+        System.out.println(" ~~~~~ WELCOME TO THE MOST AMAZING BATTLESHIP GAME OF ALL! ~~~~~\n\n");
+        System.out.println("                      ,:',:`,:'");
+        System.out.println("                   __||_||_||_||__");
+        System.out.println("              ____[\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"]____");
+        System.out.println("              \\ \" '''''''''''''''''''' |");
+        System.out.println("       ~~~~~~^~^~^^~^~^~^~^~^~^~^~~^~^~^^~~^~^");
+/*
+                   ,:',:`,:'
+                __||_||_||_||__
+           ____["""""""""""""""]____
+           \ " '''''''''''''''''''' |
+    ~~~~~~^~^~^^~^~^~^~^~^~^~^~~^~^~^^~~^~^
+*/
     }
 }

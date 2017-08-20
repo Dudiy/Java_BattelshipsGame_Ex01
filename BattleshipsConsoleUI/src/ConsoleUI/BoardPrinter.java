@@ -38,12 +38,20 @@ public class BoardPrinter {
     private boolean hideNonVisible;
     private final String BOARDS_SEPARATOR = "          |          ";
     private int boardSize;
+    public static final boolean PRINT_SINGLE_BOARD = true;
+    private int numBoardsToPrint;
 
-    public void printBoards(Player activePlayer) {
+    public void printBoards(Player activePlayer, boolean printSingleBoard) {
         this.boardSize = activePlayer.getMyBoard().getBoardSize();
+        numBoardsToPrint = printSingleBoard ? 1 : 2;
         currRowIndex = startRowIndex;
 
-        printBoardTitles();
+        if (printSingleBoard) {
+            System.out.println("Current board state:\n");
+        } else {
+            printBoardTitles();
+        }
+
         printColIndices();
         printFirstRowBorder();
         //print the body of the board
@@ -80,14 +88,14 @@ public class BoardPrinter {
         char localColIndex;
 
         System.out.print(PADDING_FROM_LEFT);
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < numBoardsToPrint; i++) {
             System.out.print("\\ ");
             localColIndex = startColIndex;
             for (int j = 0; j < boardSize; j++) {
                 System.out.print(localColIndex + " ");
                 localColIndex++;
             }
-            if (i == 0) {
+            if (i == 0 && numBoardsToPrint == 2) {
                 System.out.print(BOARDS_SEPARATOR);
             }
         }
@@ -98,7 +106,7 @@ public class BoardPrinter {
     private void printRow(BoardCell[] myRow, BoardCell[] opponentsRow) {
         System.out.print(PADDING_FROM_LEFT);
         BoardCell[] currRow = myRow;
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < numBoardsToPrint; i++) {
             hideNonVisible = i != 0;
             // add another space in case there are more than 9 rows
             if (currRowIndex >= 10) {
@@ -112,7 +120,7 @@ public class BoardPrinter {
             }
             System.out.print(BOARD_VERTICAL);
 
-            if (i == 0) {
+            if (i == 0 && numBoardsToPrint == 2) {
                 System.out.print(BOARDS_SEPARATOR);
                 currRow = opponentsRow;
             }
@@ -123,7 +131,7 @@ public class BoardPrinter {
 
     private void printBorderRow(char firstCell, char connectionCell, char lastCell) {
         System.out.print(PADDING_FROM_LEFT);
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < numBoardsToPrint; i++) {
             System.out.print(" " + firstCell);
             for (int j = 0; j < boardSize - 1; j++) {
                 System.out.print(BOARD_HORIZONTAL);
@@ -132,7 +140,7 @@ public class BoardPrinter {
             System.out.print(BOARD_HORIZONTAL);
             System.out.print(lastCell);
 
-            if (i == 0) {
+            if (i == 0 && numBoardsToPrint == 2) {
                 System.out.print(BOARDS_SEPARATOR);
             }
         }

@@ -11,13 +11,15 @@ import GameLogic.Users.Player;
 import GameLogic.Game.eAttackResult;
 import javafx.fxml.LoadException;
 
+import java.io.*;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GamesManager implements IGamesLogic {
+public class GamesManager implements IGamesLogic, Serializable{
     private Map<String, Player> allPlayers = new HashMap<>();
     private Map<Integer, Game> allGames = new HashMap<>();
+    private static final String SAVE_FILE_NAME = "SaveMe.dat";
 
     public void addPlayer(Player newPlayer) {
         allPlayers.put(newPlayer.getID(), newPlayer);
@@ -56,5 +58,31 @@ public class GamesManager implements IGamesLogic {
     @Override
     public void plantMine(Game game, BoardCoordinates cell) throws CellNotOnBoardException, InvalidGameObjectPlacementException, NoMinesAvailableException {
         game.plantMineOnActivePlayersBoard(cell);
+    }
+
+/*
+    private static void readPersonsFromFile() throws IOException, ClassNotFoundException {
+        // Read the array list  from the file
+        try (ObjectInputStream in =
+                     new ObjectInputStream(
+                             new FileInputStream(FILE_NAME))) {
+            // we know that we read array list of Persons
+            ArrayList<Person> survivorsFromFile =
+                    (ArrayList<Person>) in.readObject();
+            System.out.println("survivorsFromFile:"*//* +
+                    survivorsFromFile*//*);
+            for (Person person : survivorsFromFile){
+                System.out.println(person);
+            }
+        }
+    }*/
+
+    public void writeToFile() throws IOException {
+        try (ObjectOutputStream out =
+                     new ObjectOutputStream(
+                             new FileOutputStream(SAVE_FILE_NAME))) {
+            out.writeObject(this);
+            out.flush();
+        }
     }
 }
