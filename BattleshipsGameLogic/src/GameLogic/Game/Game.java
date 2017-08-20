@@ -8,11 +8,12 @@ import GameLogic.Game.GameObjects.Ship.*;
 import GameLogic.Users.*;
 import jaxb.generated.BattleShipGame;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
-public class Game {
+public class Game implements Serializable{
     private static int IDGenerator = 1000;
     private int ID;
     private boolean gameIsSet = false;

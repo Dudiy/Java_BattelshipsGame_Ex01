@@ -10,7 +10,9 @@ import GameLogic.Game.eAttackResult;
 import com.sun.corba.se.impl.oa.NullServantImpl;
 import javafx.fxml.LoadException;
 
+import java.beans.XMLEncoder;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.nio.file.Files;
@@ -19,22 +21,28 @@ import java.time.Instant;
 import java.util.Scanner;
 
 public class ConsoleUIManager {
-    GamesManager gamesManager = new GamesManager();
+    private GamesManager gamesManager = new GamesManager();
     // console application may have only 1 game
-    Game activeGame;
-    BoardPrinter boardPrinter = new BoardPrinter();
-    Scanner scanner = new Scanner(System.in);
-
-    Menu menu = new Menu();
+    private Game activeGame;
+    private BoardPrinter boardPrinter = new BoardPrinter();
+    private Scanner scanner = new Scanner(System.in);
+    private Menu menu = new Menu();
+    private boolean exit = false;
 
     public void run() {
         eGameState gameState;
         do {
             gameState = activeGame == null ? eGameState.INVALID : activeGame.getGameState();
-            eMenuOption menuItemSelected = menu.display(gameState);
-            invokeMenuItem(menuItemSelected);
+            // TODO ?
+            try {
+                eMenuOption menuItemSelected = menu.display(gameState);
+                invokeMenuItem(menuItemSelected);
+            } catch (Exception e) {
+                System.out.println("Error: while invoking menu item. Game will restart");
+                activeGame = null;
+            }
             gameState = activeGame == null ? eGameState.INVALID : activeGame.getGameState();
-        } while (gameState != eGameState.PLAYER_QUIT);
+        } while (!exit);
     }
 
     private void invokeMenuItem(eMenuOption menuItemSelected) {
@@ -71,14 +79,16 @@ public class ConsoleUIManager {
         try {
             // TODO get path from user(uncomment)
             //String path = getFilePathFromUser();
-            //C:\Or\Semester C\Java\Projects\Git\Java_BattelshipsGame_Ex01\BattleshipsGameLogic\src\resources\battleShip_5_basic.xml
             String path = "C:/battleShip_5_basic.xml";
+            //C:\Or\Semester C\Java\Projects\Git\Java_BattelshipsGame_Ex01\BattleshipsGameLogic\src\resources\1.txt
+            //C:\Or\Semester C\Java\Projects\Git\Java_BattelshipsGame_Ex01\BattleshipsGameLogic\src\resources\battleShip_5_basicBAD1.xml
+
             if (path != null) {
                 activeGame = gamesManager.loadGameFile(path);
                 System.out.println("Game loaded");
             }
         } catch (LoadException e) {
-            System.out.println("Error while loading game: " + e.getMessage() + " please try again.");
+            System.out.println("Error while loading game: " + e.getMessage() + ". Please try again.");
         }
     }
 
@@ -146,10 +156,17 @@ public class ConsoleUIManager {
                     "Cannot place a given " + e.getGameObjectType() + " at position " + e.GetCoordinates() + ".\n" +
                     "reason: " + e.getReason()) + "\n";
             System.out.println(message);
+            errorWhileStartGame();
         } catch (Exception e) {
             //TODO fix error handling
-            System.out.println("Error while starting game: " + e.getMessage() + " please try again.");
+            System.out.println("Error while starting game. " + e.getMessage());
+            errorWhileStartGame();
         }
+    }
+
+    private void errorWhileStartGame() {
+        activeGame = null;
+        System.out.println("Game file unloaded. Please load other file game in order to start the game.");
     }
 
     // ======================================= Show Game State =======================================
@@ -260,19 +277,39 @@ public class ConsoleUIManager {
 
     // ======================================= End Game =======================================
     private void endGame() {
+        eGameState gameStateBeforeEndGame = activeGame.getGameState();
         gamesManager.endGame(activeGame);
-        System.out.println("The winner is: " + activeGame.getWinnerPlayer().getName() + "!!! :)");
-        System.out.println("Game ended.");
-        System.out.println("Players boards:");
-        printPlayerBoard(activeGame.getActivePlayer());
-        printPlayerBoard(activeGame.getOtherPlayer());
+        if(gameStateBeforeEndGame.isGameStart()){
+            System.out.println("The winner is: " + activeGame.getWinnerPlayer().getName() + "!!! :)");
+            System.out.println("Game ended.");
+            System.out.println("Players boards:");
+            printPlayerBoard(activeGame.getActivePlayer());
+            printPlayerBoard(activeGame.getOtherPlayer());
+        }
         // it get the user to the first step of the application
         activeGame = null;
     }
 
     // ======================================= Exit =======================================
     private void exit() {
-        endGame();
+        if (activeGame != null) {
+            saveActiveGameToFile();
+            endGame();
+        }
+        exit = true;
+        System.out.println("Game will close. Goodbye !");
+    }
+
+    private void saveActiveGameToFile() {
+        try {
+            FileOutputStream fileOutputStreamOfGame = new FileOutputStream(new File("./game.xml"));
+            XMLEncoder xmlEncoder = new XMLEncoder(fileOutputStreamOfGame);
+            xmlEncoder.writeObject(activeGame);
+            xmlEncoder.close();
+            fileOutputStreamOfGame.close();
+        } catch (Exception e) {
+
+        }
     }
 
     // ======================================= Other methods =======================================
