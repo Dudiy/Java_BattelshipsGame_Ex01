@@ -3,8 +3,6 @@ package GameLogic.Game.GameObjects.Ship;
 import GameLogic.Game.Board.BoardCoordinates;
 
 public class LShapeShip extends AbstractShip {
-
-
     public enum eShipDirection{
         DOWN_RIGHT,
         UP_RIGHT,

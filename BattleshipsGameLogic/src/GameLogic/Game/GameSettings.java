@@ -70,6 +70,7 @@ public class GameSettings implements Serializable{
     // assume: file exist, file is XML
     public static GameSettings loadGameFile(String gameFilePath) throws LoadException {
         GameSettings gameSettings = new GameSettings();
+
         try {
             InputStream fileInputStream = new FileInputStream(gameFilePath);
             gameSettings.gameLoadedFromXml = deserializeFrom(fileInputStream);
@@ -79,7 +80,6 @@ public class GameSettings implements Serializable{
         } catch (Exception e) {
             throw new LoadException(e.getMessage());
         }
-        //InputStream inputStream = GameSettings.class.getResourceAsStream(file.toPath().toString());
 
         return gameSettings;
     }
@@ -92,7 +92,6 @@ public class GameSettings implements Serializable{
         if (gameSettings.boardSize < MIN_BOARD_SIZE || gameSettings.boardSize > MAX_BOARD_SIZE) {
             throw new Exception("Invalid board size");
         }
-
         // validate game type
         String gameTypeStr = objectImported.getGameType();
         if (gameTypeStr.toUpperCase().equals("BASIC")) {
@@ -102,7 +101,6 @@ public class GameSettings implements Serializable{
         } else {
             throw new Exception("Invalid game type");
         }
-
         // set shipTypes
         for (BattleShipGame.ShipTypes.ShipType shipType : objectImported.getShipTypes().getShipType()) {
             gameSettings.shipTypes.put(shipType.getId(),shipType);

@@ -34,7 +34,6 @@ public class BoardCoordinates implements Serializable {
         // input from xml starts from 1,1 but board starts from 0,0
         int tempRow = row;
         char tempCol = (char) ('A' + col - 1);
-
         return new BoardCoordinates(tempCol, tempRow);
     }
 

@@ -24,7 +24,6 @@ public class Board implements Cloneable, Serializable {
 
     private void initBoard() {
         board = new BoardCell[boardSize][boardSize];
-
         for (int row = 0; row < boardSize; row++) {
             for (int col = 0; col < boardSize; col++) {
                 //ctor of new BoardCell points to a new "Water" object by default
@@ -55,7 +54,6 @@ public class Board implements Cloneable, Serializable {
     }
 
     // ======================================= getters =======================================
-
     public int getMinesAvailable() {
         return minesAvailable;
     }
@@ -96,10 +94,10 @@ public class Board implements Cloneable, Serializable {
     // return a the BoardCell object on this board that is at the given coordinates
     public BoardCell getBoardCellAtCoordinates(BoardCoordinates coordinates) throws CellNotOnBoardException {
         BoardCell res;
+
         if (coordinatesAreOnBoard(coordinates)) {
             int col = coordinates.getColAsInt();
             int row = coordinates.getRow();
-
             res = board[row][col];
         } else {
             throw new CellNotOnBoardException();
@@ -110,13 +108,12 @@ public class Board implements Cloneable, Serializable {
 
     // ======================================= methods =======================================
     public boolean allSurroundingCellsClear(BoardCell cell, GameObject objectBeingCheckedFor) {
-//        BoardCoordinates tempPosition = (BoardCoordinates) cell.getPosition().clone();
         BoardCoordinates tempPosition = new BoardCoordinates(cell.getPosition());
         boolean allClear = true;
+
         //start from top left cell
         tempPosition.OffsetRow(-1);
         tempPosition.offsetCol(-1);
-
         for (int i = 0; i < 8; i++) {
             try {
                 GameObject objectAtCell = this.getBoardCellAtCoordinates(tempPosition).getCellValue();
@@ -192,7 +189,6 @@ public class Board implements Cloneable, Serializable {
             } else {
                 throw new IllegalArgumentException("The given Ship has an unknown direction value");
             }
-
             setCellValue(currCoordinates, ship);
         }
     }
@@ -207,7 +203,6 @@ public class Board implements Cloneable, Serializable {
     private boolean coordinatesAreOnBoard(BoardCoordinates i_Coordinates) {
         int col = i_Coordinates.getColAsInt();
         int row = i_Coordinates.getRow();
-
         return ((0 <= col && col <= boardSize - 1) && (0 <= row && row <= boardSize - 1));
     }
 
