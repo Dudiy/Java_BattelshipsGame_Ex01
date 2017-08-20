@@ -2,6 +2,7 @@ package GameLogic;
 
 import GameLogic.Exceptions.CellNotOnBoardException;
 import GameLogic.Exceptions.InvalidGameObjectPlacementException;
+import GameLogic.Exceptions.NoMinesAvailableException;
 import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.Game;
 import GameLogic.Users.Player;
@@ -15,6 +16,6 @@ public interface IGamesLogic {
     void startGame(Game gameToStart, Player player1, Player player2) throws Exception;
     eAttackResult makeMove(Game game, BoardCoordinates cellToAttack) throws CellNotOnBoardException;
     Duration getGameDuration(Game game);
-    void plantMine(Game game, BoardCoordinates cell) throws CellNotOnBoardException, InvalidGameObjectPlacementException;
+    void plantMine(Game game, BoardCoordinates cell) throws CellNotOnBoardException, InvalidGameObjectPlacementException, NoMinesAvailableException;
     void endGame(Game game);
 }

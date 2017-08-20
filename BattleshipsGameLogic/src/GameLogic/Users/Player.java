@@ -2,15 +2,14 @@ package GameLogic.Users;
 
 import GameLogic.Exceptions.CellNotOnBoardException;
 import GameLogic.Exceptions.InvalidGameObjectPlacementException;
+import GameLogic.Exceptions.NoMinesAvailableException;
 import GameLogic.Game.Board.Board;
 import GameLogic.Game.Board.BoardCell;
 import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.GameObjects.Mine;
-import GameLogic.Game.GameObjects.Ship.AbstractShip;
 import GameLogic.Game.GameObjects.Water;
 import GameLogic.Game.eAttackResult;
 
-import java.sql.Time;
 import java.time.Duration;
 
 public class Player {
@@ -82,12 +81,25 @@ public class Player {
         }
 
         if (attackResult.isScoreIncrementer()) {
-            score++;
+            incrementScore();
         }
 
         if (attackResult == eAttackResult.HIT_MINE) {
-            // if hit a mine attack my own board
+            // if I hit a mine, attack my own board
+//            Mine mineThatWasHit = (Mine)opponentBoard.getBoardCellAtCoordinates(position).getCellValue();
+//            mineThatWasHit.setExplosionResult(myBoard.attack(position));
             myBoard.attack(position);
+//        // TODO implement in EX02
+//            if (mineExplosionResult == eAttackResult.HIT_MINE) {
+//                BoardCell cellHit = opponentBoard.getBoardCellAtCoordinates(position);
+//                cellHit.removeGameObjectFromCell();
+//                // TODO verify we don't need to attack again to make is a "MISS"
+//            } else if (mineExplosionResult == eAttackResult.CELL_ALREADY_ATTACKED){
+//                // ....
+//            }
+//            else{
+//                // ...
+//            }
         }
 
         if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED) {
@@ -97,10 +109,20 @@ public class Player {
         return attackResult;
     }
 
-    public void plantMine(BoardCoordinates position) throws CellNotOnBoardException, InvalidGameObjectPlacementException {
+    public void incrementScore() {
+        score++;
+    }
+
+    public void plantMine(BoardCoordinates position) throws CellNotOnBoardException, InvalidGameObjectPlacementException, NoMinesAvailableException {
         BoardCell cellToPlantMine = myBoard.getBoardCellAtCoordinates(position);
+
+        if (myBoard.getMinesAvailable() == 0) {
+            throw new NoMinesAvailableException();
+        }
+
         if (myBoard.allSurroundingCellsClear(cellToPlantMine, null)) {
             cellToPlantMine.SetCellValue(new Mine(position));
+            myBoard.minePlanted();
         } else {
             throw new InvalidGameObjectPlacementException(Mine.class.getSimpleName(), position, "All surrounding cells must be clear.");
         }

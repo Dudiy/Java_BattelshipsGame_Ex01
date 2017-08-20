@@ -21,7 +21,7 @@
 //
 //    @Override
 //    public String toString() {
-//        GameObject cellValue = boardCell.GetCellValue();
+//        GameObject cellValue = boardCell.getCellValue();
 //        String cellChar;
 //
 //        if (boardCell.wasAttacked()) {

@@ -5,6 +5,7 @@ import GameLogic.Game.GameObjects.GameObject;
 import GameLogic.Game.GameObjects.Mine;
 import GameLogic.Game.GameObjects.Ship.AbstractShip;
 import GameLogic.Game.GameObjects.Water;
+import GameLogic.Game.eAttackResult;
 import GameLogic.Users.Player;
 
 public class BoardPrinter {
@@ -25,7 +26,7 @@ public class BoardPrinter {
     // indices
     private final char startColIndex = 'A';
     private final byte startRowIndex = 1;
-    private final String PADDING_FROM_LEFT = "\t\t";
+    private final String PADDING_FROM_LEFT = "          ";
     // cell char values
     private final String HIT = "X";
     private final String MISS = "º";
@@ -35,7 +36,7 @@ public class BoardPrinter {
 
     private byte currRowIndex;
     private boolean hideNonVisible;
-    private final String BOARDS_SEPARATOR = "\t\t|\t\t";
+    private final String BOARDS_SEPARATOR = "          |          ";
     private int boardSize;
 
     public void printBoardsNew(Player activePlayer) {
@@ -100,8 +101,8 @@ public class BoardPrinter {
         for (int i = 0; i < 2; i++) {
             hideNonVisible = i != 0;
             // add another space in case there are more than 9 rows
-            if (currRowIndex > 10) {
-                System.out.print("\b");
+            if (currRowIndex >= 10) {
+                System.out.print('\b');
             }
             System.out.print(currRowIndex);
 
@@ -152,7 +153,7 @@ public class BoardPrinter {
     }
 
     private String getCellChar(BoardCell boardCell) {
-        GameObject cellValue = boardCell.GetCellValue();
+        GameObject cellValue = boardCell.getCellValue();
         String cellChar;
 
         if (boardCell.wasAttacked()) {
@@ -176,5 +177,10 @@ public class BoardPrinter {
         }
 
         return cellChar;
+//                eAttackResult mineExplosionResult = ((Mine) cellValue).getExplosionResult();
+//                if (mineExplosionResult == eAttackResult.HIT_WATER) {
+//                    cellChar = MISS;
+//                } else if (mineExplosionResult == )
+//                    cellChar = HIT;
     }
 }

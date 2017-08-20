@@ -38,6 +38,7 @@ public class BoardCoordinates {
 
     // ======================================= methods =======================================
     // convert a string of type "A1" or "1A" to coordinates
+    // input of 0 returns null value
     public static BoardCoordinates Parse(String stringToParse) throws IllegalArgumentException {
         BoardCoordinates res;
 
