@@ -17,8 +17,8 @@ public class Player {
     private int score = 0;
     private int timesMissed = 0;
     // duration of a turn is from the time the user selects make move until he enters the cell to attack
-    private Duration totalTurnsDuration;
-    private int numTurnsPlayed;
+    private Duration totalTurnsDuration = Duration.ZERO;
+    private int numTurnsPlayed = 0;
 
     public Player(String playerID, String name) {
         this.ID = playerID;
@@ -65,6 +65,10 @@ public class Player {
         totalTurnsDuration = totalTurnsDuration.plus(turnDuration);
     }
 
+    public Duration getAvgTurnDuration(){
+        return numTurnsPlayed == 0 ? Duration.ZERO : totalTurnsDuration.dividedBy(numTurnsPlayed);
+    }
+
     // ======================================= Methods =======================================
     public eAttackResult attack(BoardCoordinates position) throws CellNotOnBoardException {
         eAttackResult attackResult = opponentBoard.attack(position);
@@ -80,6 +84,10 @@ public class Player {
         if (attackResult == eAttackResult.HIT_MINE) {
             // if hit a mine attack my own board
             myBoard.attack(position);
+        }
+
+        if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED){
+            numTurnsPlayed++;
         }
 
         return attackResult;

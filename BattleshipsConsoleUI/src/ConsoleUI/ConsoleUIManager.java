@@ -164,11 +164,14 @@ public class ConsoleUIManager {
 
     // ======================================= Make Move =======================================
     private void makeMove() {
+        // get active player before players are swapped
+        Player activePlayer = activeGame.getActivePlayer();
         Instant startTime = Instant.now();
         BoardCoordinates positionToAttack;
         eAttackResult attackResult = null;
         boolean moveSuccessful = false;
         boolean printGameState = true;
+
         do {
             try {
                 if (printGameState && attackResult != eAttackResult.CELL_ALREADY_ATTACKED) {
@@ -184,9 +187,10 @@ public class ConsoleUIManager {
             }
         } while (!moveSuccessful || attackResult == eAttackResult.CELL_ALREADY_ATTACKED);
 //    } while (!attackResult.moveEnded());
+
         Duration turnTime = Duration.between(startTime, Instant.now());
-        activeGame.getActivePlayer().addTurnDurationToTotal(turnTime);
         System.out.println(String.format("Total duration for this turn was: %d:%02d", turnTime.toMinutes(), turnTime.getSeconds() % 60));
+        activePlayer.addTurnDurationToTotal(turnTime);
         pressAnyKeyToContinue();
         showGameState();
     }
@@ -209,23 +213,29 @@ public class ConsoleUIManager {
 
     // ======================================= Show Statistics =======================================
     private void showStatistics() {
-        System.out.println("Showing game statistics:");
+        System.out.println("***** Showing game statistics: *****");
         // total turns played
-        System.out.println("Total turns played: " + activeGame.getMovesCounter());
+        System.out.println("\tTotal turns played: " + activeGame.getMovesCounter());
         // total game duration
         Duration gameDuration = gamesManager.getGameDuration(activeGame);
         String durationStr = String.format("%d:%02d", gameDuration.toMinutes(), gameDuration.getSeconds() % 60);
-        System.out.println("Total game time: " + durationStr);
+        System.out.println("\tTotal game time: " + durationStr);
         // player info
+        System.out.println("\n\t***** Player statistics *****");
         showPlayerStatistics(activeGame.getActivePlayer());
+        System.out.println();
         showPlayerStatistics(activeGame.getOtherPlayer());
+        System.out.println();
 
     }
 
     private void showPlayerStatistics(Player player) {
-        System.out.println("Showing player statistics for " + player.getName());
-        System.out.println("Current score: " + player.getScore());
-        System.out.println("Times missed: " + player.getTimesMissed());
+        System.out.println("\t\tShowing player statistics for " + player.getName());
+        System.out.println("\t\tCurrent score: " + player.getScore());
+        System.out.println("\t\tTimes missed: " + player.getTimesMissed());
+        // avg turn duration
+        Duration avgDuration = player.getAvgTurnDuration();
+        System.out.println(String.format("\t\tAverage turn duration: %d:%02d",avgDuration.toMinutes(), avgDuration.getSeconds()%60));
     }
 
     // ======================================= End Game =======================================
