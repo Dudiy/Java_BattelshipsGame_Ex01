@@ -13,7 +13,9 @@ public enum eMenuOption {
     SHOW_STATISTICS(5, "Show statistics", EnumSet.of(eGameState.STARTED)),
     END_GAME(6, "End game", EnumSet.of(eGameState.STARTED)),
     PLANT_MINE(7,"Plant mine",EnumSet.of(eGameState.STARTED)),
-    EXIT(8, "Exit", EnumSet.allOf(eGameState.class));
+    SAVE_GAME(8, "Save game", EnumSet.of(eGameState.STARTED)),
+    LOAD_SAVED_GAME(9, "Load saved game", EnumSet.of(eGameState.INVALID, eGameState.INITIALIZED, eGameState.LOADED)),
+    EXIT(0, "Exit", EnumSet.allOf(eGameState.class));
 
     private String description;
     private int ID;

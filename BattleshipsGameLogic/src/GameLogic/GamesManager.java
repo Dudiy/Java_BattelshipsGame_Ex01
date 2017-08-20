@@ -11,18 +11,17 @@ import GameLogic.Users.Player;
 import GameLogic.Game.eAttackResult;
 import javafx.fxml.LoadException;
 
-import java.io.*;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GamesManager implements IGamesLogic, Serializable{
+public class GamesManager implements IGamesLogic {
     private Map<String, Player> allPlayers = new HashMap<>();
     private Map<Integer, Game> allGames = new HashMap<>();
-    private static final String SAVE_FILE_NAME = "SaveMe.dat";
 
-    public void addPlayer(Player newPlayer) {
-        allPlayers.put(newPlayer.getID(), newPlayer);
+    public void addPlayers(Player[] players) {
+        allPlayers.put(players[0].getID(), players[0]);
+        allPlayers.put(players[1].getID(), players[1]);
     }
 
     @Override
@@ -50,39 +49,28 @@ public class GamesManager implements IGamesLogic, Serializable{
         return game.getTotalGameDuration();
     }
 
-    @Override
-    public void endGame(Game game) {
-        game.endGame();
-    }
 
     @Override
     public void plantMine(Game game, BoardCoordinates cell) throws CellNotOnBoardException, InvalidGameObjectPlacementException, NoMinesAvailableException {
         game.plantMineOnActivePlayersBoard(cell);
     }
 
-/*
-    private static void readPersonsFromFile() throws IOException, ClassNotFoundException {
-        // Read the array list  from the file
-        try (ObjectInputStream in =
-                     new ObjectInputStream(
-                             new FileInputStream(FILE_NAME))) {
-            // we know that we read array list of Persons
-            ArrayList<Person> survivorsFromFile =
-                    (ArrayList<Person>) in.readObject();
-            System.out.println("survivorsFromFile:"*//* +
-                    survivorsFromFile*//*);
-            for (Person person : survivorsFromFile){
-                System.out.println(person);
-            }
-        }
-    }*/
+    @Override
+    public void saveGameToFile(Game game, String fileName) throws Exception {
+        Game.saveToFile(game, fileName);
+    }
 
-    public void writeToFile() throws IOException {
-        try (ObjectOutputStream out =
-                     new ObjectOutputStream(
-                             new FileOutputStream(SAVE_FILE_NAME))) {
-            out.writeObject(this);
-            out.flush();
-        }
+    @Override
+    public Game loadSavedGameFromFile(String fileName) throws Exception {
+        Game game =Game.loadFromFile(fileName);
+        allGames.put(game.getID(), game);
+        addPlayers(game.getPlayers());
+        game.setGameState(eGameState.STARTED);
+        return game;
+    }
+
+    @Override
+    public void endGame(Game game) {
+        game.endGame();
     }
 }

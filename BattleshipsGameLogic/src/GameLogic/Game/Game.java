@@ -10,7 +10,7 @@ import GameLogic.Game.GameObjects.Water;
 import GameLogic.Users.*;
 import jaxb.generated.BattleShipGame;
 
-import java.io.Serializable;
+import java.io.*;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
@@ -24,7 +24,7 @@ public class Game implements Serializable{
     private int winnerPlayerIndex = -1;
     private int movesCounter = 0;
     private Instant gameStartTime;
-    private Map<String, User> spectators = new HashMap<>();
+    //private Map<String, User> spectators = new HashMap<>();
     private GameSettings gameSettings;
     private ShipFactory shipFactory;
     private eGameState gameState = eGameState.INVALID;
@@ -44,6 +44,10 @@ public class Game implements Serializable{
     // ======================================= getters =======================================
     public int getID() {
         return ID;
+    }
+
+    public Player[] getPlayers() {
+        return players;
     }
 
     public Player getActivePlayer() {
@@ -173,5 +177,23 @@ public class Game implements Serializable{
         swapPlayers();
         winnerPlayerIndex = activePlayerIndex;
         gameState = eGameState.PLAYER_QUIT;
+    }
+
+    public static void saveToFile(Game game, final String fileName) throws Exception {
+        try (ObjectOutputStream outputStream =
+                     new ObjectOutputStream(
+                             new FileOutputStream(fileName))) {
+            outputStream.writeObject(game);
+            outputStream.flush();
+        }
+    }
+    public static Game loadFromFile(final String fileName) throws Exception {
+        Game game = null;
+        try (ObjectInputStream inStream =
+                     new ObjectInputStream(
+                             new FileInputStream(fileName))) {
+            game = (Game)inStream.readObject();
+        }
+        return game;
     }
 }

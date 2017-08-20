@@ -64,7 +64,6 @@ public class BoardPrinter {
 
             currRowIndex++;
         }
-
         printLastRowBorder();
     }
 
@@ -99,7 +98,6 @@ public class BoardPrinter {
                 System.out.print(BOARDS_SEPARATOR);
             }
         }
-
         System.out.println();
     }
 
@@ -125,7 +123,6 @@ public class BoardPrinter {
                 currRow = opponentsRow;
             }
         }
-
         System.out.println();
     }
 
@@ -144,7 +141,6 @@ public class BoardPrinter {
                 System.out.print(BOARDS_SEPARATOR);
             }
         }
-
         System.out.println();
     }
 

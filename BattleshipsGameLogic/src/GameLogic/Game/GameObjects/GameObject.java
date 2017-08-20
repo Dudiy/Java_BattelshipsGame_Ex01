@@ -5,7 +5,7 @@ import GameLogic.Game.eAttackResult;
 
 import java.io.Serializable;
 
-public abstract class GameObject implements Cloneable, Serializable {
+public abstract class GameObject implements Cloneable,Serializable {
     protected static final boolean VISIBLE = true;
     private BoardCoordinates position;
     private static String objectTypeSimpleName;
@@ -18,7 +18,6 @@ public abstract class GameObject implements Cloneable, Serializable {
     }
 
     // ======================================= setters =======================================
-
     public void setPosition(BoardCoordinates position) {
         this.position = position;
     }
@@ -28,7 +27,6 @@ public abstract class GameObject implements Cloneable, Serializable {
     }
 
     // ======================================= getters =======================================
-
     public BoardCoordinates getPosition() {
         return position;
     }
@@ -52,23 +50,3 @@ public abstract class GameObject implements Cloneable, Serializable {
     @Override
     public abstract Object clone() throws CloneNotSupportedException;
 }
-
-//    private boolean hit = false;
-//
-//    public boolean isHit() {
-//        return hit;
-//    }
-
-//
-//    public final eAttackResult attack() {
-//        return getAttackResult();
-////        eAttackResult attackResult;
-////        if (hit) {
-////            attackResult = eAttackResult.CELL_ALREADY_ATTACKED;
-////        } else {
-////            hit = true;
-////            attackResult = getAttackResult();
-////        }
-////
-////        return attackResult;
-//    }

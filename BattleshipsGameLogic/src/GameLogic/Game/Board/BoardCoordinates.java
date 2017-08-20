@@ -1,6 +1,8 @@
 package GameLogic.Game.Board;
 
-public class BoardCoordinates {
+import java.io.Serializable;
+
+public class BoardCoordinates implements Serializable {
     private char col;
     private int row;
 
@@ -32,7 +34,6 @@ public class BoardCoordinates {
         // input from xml starts from 1,1 but board starts from 0,0
         int tempRow = row;
         char tempCol = (char) ('A' + col - 1);
-
         return new BoardCoordinates(tempCol, tempRow);
     }
 

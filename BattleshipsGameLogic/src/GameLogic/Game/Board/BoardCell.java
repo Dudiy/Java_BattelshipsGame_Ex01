@@ -63,7 +63,6 @@ public class BoardCell implements Serializable {
         } else {
             attackResult = eAttackResult.CELL_ALREADY_ATTACKED;
         }
-
         return attackResult;
     }
 }

@@ -1,6 +1,8 @@
 package GameLogic.Game;
 
-public enum eGameState {
+import java.io.Serializable;
+
+public enum eGameState implements Serializable {
     INVALID("Game not loaded from xml file"),
     LOADED("Game successfully loaded from xml file"),
     INITIALIZED("Game loaded and initialized"),

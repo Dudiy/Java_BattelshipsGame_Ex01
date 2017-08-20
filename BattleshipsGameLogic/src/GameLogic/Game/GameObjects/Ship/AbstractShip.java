@@ -51,14 +51,3 @@ public abstract class AbstractShip extends GameObject{
         return attackResult;
     }
 }
-
-//    private boolean isSunken = false;
-
-//    public boolean isSunken() {
-//
-//        return isSunken;
-//    }
-
-//    public void setSunken(boolean sunken) {
-//        isSunken = sunken;
-//    }
