@@ -139,6 +139,9 @@ public class ConsoleUIManager {
             Player player1 = new Player("p1", "Player 1");
             Player player2 = new Player("p2", "Player 2");
             gamesManager.startGame(activeGame, player1, player2);
+            // give each player 2 mines
+            player1.getMyBoard().setMinesAvailable(2);
+            player2.getMyBoard().setMinesAvailable(2);
             showGameState();
             System.out.println("Game started");
         } catch (InvalidGameObjectPlacementException e) {
@@ -244,18 +247,25 @@ public class ConsoleUIManager {
     // ======================================= Plant mine =======================================
 
     private void plantMine() {
-        boolean minePlanted = false;
+        boolean minePlantedOrNotAvailable = false;
+        BoardCoordinates position = null;
         do {
             try {
-                BoardCoordinates position = getPositionFromUser();
+                position = getPositionFromUser();
                 gamesManager.plantMine(activeGame, position);
-                minePlanted = true;
+                minePlantedOrNotAvailable = true;
+                System.out.println("You have successfully planted a mine at position " + position.toString() + " ;)");
             } catch (CellNotOnBoardException e) {
                 System.out.println(e.getMessage());
             } catch (InvalidGameObjectPlacementException e) {
                 System.out.println(e.getMessage());
+            } catch (NoMinesAvailableException e) {
+                minePlantedOrNotAvailable = true;
+                System.out.println(e.getMessage());
             }
-        } while (!minePlanted);
+        } while (!minePlantedOrNotAvailable);
+
+        pressAnyKeyToContinue();
     }
 
     // ======================================= End Game =======================================

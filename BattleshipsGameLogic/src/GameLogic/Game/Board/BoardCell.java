@@ -31,12 +31,19 @@ public class BoardCell {
         }
     }
 
+    // sets the cell value to be water
+    public void removeGameObjectFromCell() {
+        if (!(cellValue instanceof Water)) {
+            this.cellValue = new Water(this.cellValue.getPosition());
+        }
+    }
+
     // ======================================= getters =======================================
     public BoardCoordinates getPosition() {
         return position;
     }
 
-    public GameObject GetCellValue() {
+    public GameObject getCellValue() {
         return cellValue;
     }
 

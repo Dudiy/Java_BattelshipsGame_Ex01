@@ -33,8 +33,8 @@ public class Board implements Cloneable {
     }
 
     // ======================================= setters =======================================
+
     // set the value of the BoardCell at the given coordinates to be value
-    // throws InvalidGameObjectPlacementException if value cannot be placed in the given coordinates on this board
     private void setCellValue(BoardCoordinates position, GameObject value) throws InvalidGameObjectPlacementException, CloneNotSupportedException {
         try {
             BoardCell cell = getBoardCellAtCoordinates(position);
@@ -48,11 +48,17 @@ public class Board implements Cloneable {
         }
     }
 
+    // throws InvalidGameObjectPlacementException if value cannot be placed in the given coordinates on this board
     public void setMinesAvailable(int minesAvailable) {
         this.minesAvailable = minesAvailable;
     }
 
     // ======================================= getters =======================================
+
+    public int getMinesAvailable() {
+        return minesAvailable;
+    }
+
     // TODO hide
     public BoardCell[][] getBoard() {
         return board;
@@ -112,7 +118,7 @@ public class Board implements Cloneable {
 
         for (int i = 0; i < 8; i++) {
             try {
-                GameObject objectAtCell = this.getBoardCellAtCoordinates(tempPosition).GetCellValue();
+                GameObject objectAtCell = this.getBoardCellAtCoordinates(tempPosition).getCellValue();
                 if (!(objectAtCell instanceof Water) && (objectAtCell != objectBeingCheckedFor)) {
                     allClear = false;
                     break;
@@ -160,7 +166,7 @@ public class Board implements Cloneable {
             BoardCell boardCell = getBoardCellAtCoordinates(position);
             if (boardCell.wasAttacked()) {
                 throw new InvalidGameObjectPlacementException(Mine.getObjectTypeSimpleName(), position, "Cannot place mine on a cell that was attacked");
-            } else if (boardCell.GetCellValue() instanceof Water) {
+            } else if (boardCell.getCellValue() instanceof Water) {
                 boardCell.SetCellValue(new Mine(position));
                 minesAvailable--;
             }
@@ -212,7 +218,7 @@ public class Board implements Cloneable {
             for (BoardCell cell : row) {
                 BoardCoordinates position = cell.getPosition();
                 try {
-                    copiedBoard.setCellValue(position, (GameObject) cell.GetCellValue().clone());
+                    copiedBoard.setCellValue(position, (GameObject) cell.getCellValue().clone());
                 } catch (Exception e) {
                     throw new CloneNotSupportedException("Error while cloning board");
                 }
@@ -224,5 +230,9 @@ public class Board implements Cloneable {
 
     public eAttackResult attack(BoardCoordinates coordinatesToAttack) throws CellNotOnBoardException {
         return getBoardCellAtCoordinates(coordinatesToAttack).attack();
+    }
+
+    public void minePlanted() {
+        minesAvailable--;
     }
 }

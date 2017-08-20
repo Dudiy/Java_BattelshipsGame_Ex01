@@ -2,9 +2,11 @@ package GameLogic.Game;
 
 import GameLogic.Exceptions.CellNotOnBoardException;
 import GameLogic.Exceptions.InvalidGameObjectPlacementException;
+import GameLogic.Exceptions.NoMinesAvailableException;
 import GameLogic.Game.Board.Board;
 import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.GameObjects.Ship.*;
+import GameLogic.Game.GameObjects.Water;
 import GameLogic.Users.*;
 import jaxb.generated.BattleShipGame;
 
@@ -78,8 +80,8 @@ public class Game {
         gameStartTime = Instant.now();
     }
 
-    public Duration getTotalGameDuration(){
-        return Duration.between(gameStartTime,Instant.now());
+    public Duration getTotalGameDuration() {
+        return Duration.between(gameStartTime, Instant.now());
     }
 
     private void initBoards() throws Exception {
@@ -139,6 +141,10 @@ public class Game {
     public eAttackResult attack(BoardCoordinates position) throws CellNotOnBoardException {
         eAttackResult attackResult = getActivePlayer().attack(position);
 
+        if (attackResult == eAttackResult.HIT_MINE &&
+            !(getActivePlayer().getMyBoard().getBoardCellAtCoordinates(position).getCellValue() instanceof Water)){
+            getOtherPlayer().incrementScore();
+        }
         // TODO check when we need to increment the move counter? every time players swap or every attack?
 //        if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED) {
 //        }
@@ -156,11 +162,12 @@ public class Game {
     }
 
 
-    public void plantMineOnActivePlayersBoard(BoardCoordinates cell) throws CellNotOnBoardException, InvalidGameObjectPlacementException {
+    public void plantMineOnActivePlayersBoard(BoardCoordinates cell) throws CellNotOnBoardException, InvalidGameObjectPlacementException, NoMinesAvailableException {
         getActivePlayer().plantMine(cell);
+        swapPlayers();
     }
 
-    public void endGame(){
+    public void endGame() {
         // the player who left the game lose
         swapPlayers();
         winnerPlayerIndex = activePlayerIndex;
