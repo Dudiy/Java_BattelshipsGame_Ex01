@@ -1,6 +1,7 @@
 package GameLogic;
 
 import GameLogic.Exceptions.CellNotOnBoardException;
+import GameLogic.Exceptions.InvalidGameObjectPlacementException;
 import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.Game;
 import GameLogic.Game.GameSettings;
@@ -49,5 +50,10 @@ public class GamesManager implements IGamesLogic {
     @Override
     public void endGame(Game game) {
         game.endGame();
+    }
+
+    @Override
+    public void plantMine(Game game, BoardCoordinates cell) throws CellNotOnBoardException, InvalidGameObjectPlacementException {
+        game.plantMineOnActivePlayersBoard(cell);
     }
 }

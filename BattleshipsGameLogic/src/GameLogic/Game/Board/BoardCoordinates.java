@@ -1,12 +1,17 @@
 package GameLogic.Game.Board;
 
-public class BoardCoordinates implements Cloneable {
+public class BoardCoordinates {
     private char col;
     private int row;
 
     public BoardCoordinates(char col, int row) {
         this.col = col;
         this.row = row;
+    }
+
+    public BoardCoordinates(BoardCoordinates position) {
+        this.col = position.col;
+        this.row = position.row;
     }
     // ======================================= setters =======================================
 
@@ -22,12 +27,13 @@ public class BoardCoordinates implements Cloneable {
     public int getRow() {
         return row - 1;
     }
-    public static BoardCoordinates convertFromXmlToBoard(int row, int col){
+
+    public static BoardCoordinates convertFromXmlToBoard(int row, int col) {
         // input from xml starts from 1,1 but board starts from 0,0
         int tempRow = row;
-        char tempCol = (char)('A' + col - 1);
+        char tempCol = (char) ('A' + col - 1);
 
-        return new BoardCoordinates(tempCol,tempRow);
+        return new BoardCoordinates(tempCol, tempRow);
     }
 
     // ======================================= methods =======================================
@@ -65,17 +71,12 @@ public class BoardCoordinates implements Cloneable {
     }
 
     // updates the value of col, does not check if the value is on the board!
-    public void offsetCol(int offset){
+    public void offsetCol(int offset) {
         col += offset;
     }
 
     @Override
     public String toString() {
         return String.format("(%c,%d)", col, row);
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return new BoardCoordinates(this.col,this.row);
     }
 }

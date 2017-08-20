@@ -31,7 +31,7 @@ public class BoardPrinter {
     private final String MISS = "º";
     private final String SHIP = "█";
     private final String WATER = "~";
-    private final String MINE = "░";
+    private final String MINE = "Ω";
 
     private byte currRowIndex;
     private boolean hideNonVisible;

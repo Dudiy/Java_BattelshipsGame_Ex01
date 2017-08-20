@@ -1,9 +1,13 @@
 package GameLogic.Users;
 
 import GameLogic.Exceptions.CellNotOnBoardException;
+import GameLogic.Exceptions.InvalidGameObjectPlacementException;
 import GameLogic.Game.Board.Board;
+import GameLogic.Game.Board.BoardCell;
 import GameLogic.Game.Board.BoardCoordinates;
+import GameLogic.Game.GameObjects.Mine;
 import GameLogic.Game.GameObjects.Ship.AbstractShip;
+import GameLogic.Game.GameObjects.Water;
 import GameLogic.Game.eAttackResult;
 
 import java.sql.Time;
@@ -61,11 +65,11 @@ public class Player {
         return timesMissed;
     }
 
-    public void addTurnDurationToTotal(Duration turnDuration){
+    public void addTurnDurationToTotal(Duration turnDuration) {
         totalTurnsDuration = totalTurnsDuration.plus(turnDuration);
     }
 
-    public Duration getAvgTurnDuration(){
+    public Duration getAvgTurnDuration() {
         return numTurnsPlayed == 0 ? Duration.ZERO : totalTurnsDuration.dividedBy(numTurnsPlayed);
     }
 
@@ -86,10 +90,19 @@ public class Player {
             myBoard.attack(position);
         }
 
-        if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED){
+        if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED) {
             numTurnsPlayed++;
         }
 
         return attackResult;
+    }
+
+    public void plantMine(BoardCoordinates position) throws CellNotOnBoardException, InvalidGameObjectPlacementException {
+        BoardCell cellToPlantMine = myBoard.getBoardCellAtCoordinates(position);
+        if (myBoard.allSurroundingCellsClear(cellToPlantMine, null)) {
+            cellToPlantMine.SetCellValue(new Mine(position));
+        } else {
+            throw new InvalidGameObjectPlacementException(Mine.class.getSimpleName(), position, "All surrounding cells must be clear.");
+        }
     }
 }

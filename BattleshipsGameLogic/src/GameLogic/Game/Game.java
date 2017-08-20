@@ -155,6 +155,11 @@ public class Game {
         activePlayerIndex = (activePlayerIndex + 1) % 2;
     }
 
+
+    public void plantMineOnActivePlayersBoard(BoardCoordinates cell) throws CellNotOnBoardException, InvalidGameObjectPlacementException {
+        getActivePlayer().plantMine(cell);
+    }
+
     public void endGame(){
         // the player who left the game lose
         swapPlayers();

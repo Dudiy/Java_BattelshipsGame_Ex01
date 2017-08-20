@@ -64,7 +64,7 @@ public class Board implements Cloneable {
 
     private BoardCell getCellByOffset(BoardCell srcCell, eBoardDirection direction, int offset) throws CellNotOnBoardException {
         BoardCell res;
-        BoardCoordinates requiredCoordinates = srcCell.GetPosition();
+        BoardCoordinates requiredCoordinates = srcCell.getPosition();
 
         switch (direction) {
             case DOWN:
@@ -102,8 +102,9 @@ public class Board implements Cloneable {
     }
 
     // ======================================= methods =======================================
-    private boolean allSurroundingCellsClear(BoardCell cell, GameObject objectBeingCheckedFor) throws CloneNotSupportedException {
-        BoardCoordinates tempPosition = (BoardCoordinates) cell.GetPosition().clone();
+    public boolean allSurroundingCellsClear(BoardCell cell, GameObject objectBeingCheckedFor) {
+//        BoardCoordinates tempPosition = (BoardCoordinates) cell.getPosition().clone();
+        BoardCoordinates tempPosition = new BoardCoordinates(cell.getPosition());
         boolean allClear = true;
         //start from top left cell
         tempPosition.OffsetRow(-1);
@@ -209,7 +210,7 @@ public class Board implements Cloneable {
 
         for (BoardCell[] row : board) {
             for (BoardCell cell : row) {
-                BoardCoordinates position = cell.GetPosition();
+                BoardCoordinates position = cell.getPosition();
                 try {
                     copiedBoard.setCellValue(position, (GameObject) cell.GetCellValue().clone());
                 } catch (Exception e) {

@@ -32,7 +32,7 @@ public class BoardCell {
     }
 
     // ======================================= getters =======================================
-    public BoardCoordinates GetPosition() {
+    public BoardCoordinates getPosition() {
         return position;
     }
 
@@ -62,6 +62,6 @@ public class BoardCell {
 
 /*    private void checkSurroundingCells() {
         // ships are only added at the beginning of the game when there are no other objects so we only need to check for ships in surrounding cells
-        BoardCoordinates positionToCheck = this.GetPosition();
+        BoardCoordinates positionToCheck = this.getPosition();
         positionToCheck.OffsetRow(-1);
     }*/

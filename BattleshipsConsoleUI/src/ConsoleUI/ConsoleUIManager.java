@@ -54,6 +54,9 @@ public class ConsoleUIManager {
             case SHOW_STATISTICS:
                 showStatistics();
                 break;
+            case PLANT_MINE:
+                plantMine();
+                break;
             case END_GAME:
                 endGame();
                 break;
@@ -201,7 +204,7 @@ public class ConsoleUIManager {
 
         while (!isValidSelection) {
             try {
-                System.out.print("Please select cell to attack (format = \"A1\"): ");
+                System.out.print("Please select cell coordinates (format = \"A1\"): ");
                 userSelection = BoardCoordinates.Parse(scanner.nextLine());
                 isValidSelection = true;
             } catch (Exception e) {
@@ -235,7 +238,24 @@ public class ConsoleUIManager {
         System.out.println("\t\tTimes missed: " + player.getTimesMissed());
         // avg turn duration
         Duration avgDuration = player.getAvgTurnDuration();
-        System.out.println(String.format("\t\tAverage turn duration: %d:%02d",avgDuration.toMinutes(), avgDuration.getSeconds()%60));
+        System.out.println(String.format("\t\tAverage turn duration: %d:%02d", avgDuration.toMinutes(), avgDuration.getSeconds() % 60));
+    }
+
+    // ======================================= Plant mine =======================================
+
+    private void plantMine() {
+        boolean minePlanted = false;
+        do {
+            try {
+                BoardCoordinates position = getPositionFromUser();
+                gamesManager.plantMine(activeGame, position);
+                minePlanted = true;
+            } catch (CellNotOnBoardException e) {
+                System.out.println(e.getMessage());
+            } catch (InvalidGameObjectPlacementException e) {
+                System.out.println(e.getMessage());
+            }
+        } while (!minePlanted);
     }
 
     // ======================================= End Game =======================================
