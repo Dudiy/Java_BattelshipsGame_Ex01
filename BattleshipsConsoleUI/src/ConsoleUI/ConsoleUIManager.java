@@ -178,10 +178,10 @@ public class ConsoleUIManager {
         printPlayerBoard(activeGame.getActivePlayer(), !BoardPrinter.PRINT_SINGLE_BOARD);
     }
 
-    private void printPlayerBoard(Player player, boolean printBothBoards) {
+    private void printPlayerBoard(Player player, boolean printSingleBoard) {
         System.out.println("Current player: " + player.getName());
         System.out.println("Score: " + activeGame.getActivePlayer().getScore());
-        boardPrinter.printBoards(player, printBothBoards);
+        boardPrinter.printBoards(player, printSingleBoard);
     }
 
     // ======================================= Make Move =======================================
@@ -267,8 +267,8 @@ public class ConsoleUIManager {
             System.out.println("The winner is: " + activeGame.getWinnerPlayer().getName() + "!!! :)");
             System.out.println("Game ended.");
             System.out.println("Players boards:");
-            printPlayerBoard(activeGame.getActivePlayer());
-            printPlayerBoard(activeGame.getOtherPlayer());
+            printPlayerBoard(activeGame.getActivePlayer(), BoardPrinter.PRINT_SINGLE_BOARD);
+            printPlayerBoard(activeGame.getOtherPlayer(), BoardPrinter.PRINT_SINGLE_BOARD);
         }
         // it get the user to the first step of the application
         activeGame = null;
