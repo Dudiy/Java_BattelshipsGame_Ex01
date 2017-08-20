@@ -14,4 +14,5 @@ public interface IGamesLogic {
     void startGame(Game gameToStart, Player player1, Player player2) throws Exception;
     eAttackResult makeMove(Game game, BoardCoordinates cellToAttack) throws CellNotOnBoardException;
     Duration getGameDuration(Game game);
+    void endGame(Game game);
 }

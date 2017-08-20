@@ -1,6 +1,8 @@
 package ConsoleUI;
 
 import GameLogic.Game.eGameState;
+import jdk.internal.org.objectweb.asm.Type;
+
 import java.util.EnumSet;
 
 public enum eMenuOption {
@@ -9,7 +11,8 @@ public enum eMenuOption {
     SHOW_GAME_STATE(3, "Show game state", EnumSet.of(eGameState.STARTED)),
     MAKE_MOVE(4, "Make a move", EnumSet.of(eGameState.STARTED)),
     SHOW_STATISTICS(5, "Show statistics", EnumSet.of(eGameState.STARTED)),
-    END_GAME(6, "End game", EnumSet.of(eGameState.STARTED));
+    END_GAME(6, "End game", EnumSet.of(eGameState.STARTED)),
+    EXIT(6, "Exit", EnumSet.allOf(eGameState.class));
 
     private String description;
     private int ID;

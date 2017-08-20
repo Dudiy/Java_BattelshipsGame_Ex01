@@ -18,6 +18,7 @@ public class Game {
     private boolean gameIsSet = false;
     private Player[] players = new Player[2];
     private int activePlayerIndex;
+    private int winnerPlayerIndex = -1;
     private int movesCounter = 0;
     private Instant gameStartTime;
     private Map<String, User> spectators = new HashMap<>();
@@ -33,12 +34,11 @@ public class Game {
     }
 
     // ======================================= setters =======================================
-
     public void setGameState(eGameState gameState) {
         this.gameState = gameState;
     }
-    // ======================================= getters =======================================
 
+    // ======================================= getters =======================================
     public int getID() {
         return ID;
     }
@@ -53,6 +53,10 @@ public class Game {
 
     public Player getOtherPlayer() {
         return players[(activePlayerIndex + 1) % 2];
+    }
+
+    public Player getWinnerPlayer() {
+        return players[winnerPlayerIndex];
     }
 
     public eGameState getGameState() {
@@ -151,5 +155,10 @@ public class Game {
         activePlayerIndex = (activePlayerIndex + 1) % 2;
     }
 
-
+    public void endGame(){
+        // the player who left the game lose
+        swapPlayers();
+        winnerPlayerIndex = activePlayerIndex;
+        gameState = eGameState.PLAYER_QUIT;
+    }
 }

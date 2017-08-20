@@ -57,6 +57,9 @@ public class ConsoleUIManager {
             case END_GAME:
                 endGame();
                 break;
+            case EXIT:
+                exit();
+                break;
         }
     }
 
@@ -149,10 +152,14 @@ public class ConsoleUIManager {
     // ======================================= Show Game State =======================================
     private void showGameState() {
         System.out.println("Game state:");
-        System.out.println("Current player: " + activeGame.getActivePlayer().getName());
+        System.out.println("Current player:");
+        printPlayerBoard(activeGame.getActivePlayer());
+    }
+
+    private void printPlayerBoard(Player player) {
+        System.out.println("Player: " + player.getName());
         System.out.println("Score: " + activeGame.getActivePlayer().getScore());
-//        boardPrinter.printBothBoards(activeGame);
-        boardPrinter.printBoardsNew(activeGame.getActivePlayer());
+        boardPrinter.printBoardsNew(player);
     }
 
     // ======================================= Make Move =======================================
@@ -223,9 +230,22 @@ public class ConsoleUIManager {
 
     // ======================================= End Game =======================================
     private void endGame() {
-        // TODO
+        gamesManager.endGame(activeGame);
+        System.out.println("The winner is: " + activeGame.getWinnerPlayer().getName() + "!!! :)");
+        System.out.println("Game ended.");
+        System.out.println("Players boards:");
+        printPlayerBoard(activeGame.getActivePlayer());
+        printPlayerBoard(activeGame.getOtherPlayer());
+        // it get the user to the first step of the application
+        activeGame = null;
     }
 
+    // ======================================= Exit =======================================
+    private void exit() {
+        endGame();
+    }
+
+    // ======================================= Other methods =======================================
     private void pressAnyKeyToContinue() {
         System.out.println("\n--- Press enter to continue ---\n");
         scanner.reset();

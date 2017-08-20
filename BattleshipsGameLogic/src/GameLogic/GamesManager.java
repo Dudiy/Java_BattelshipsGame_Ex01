@@ -45,4 +45,9 @@ public class GamesManager implements IGamesLogic {
     public Duration getGameDuration(Game game) {
         return game.getTotalGameDuration();
     }
+
+    @Override
+    public void endGame(Game game) {
+        game.endGame();
+    }
 }
