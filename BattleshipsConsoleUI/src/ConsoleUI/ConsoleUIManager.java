@@ -193,7 +193,7 @@ public class ConsoleUIManager {
         Instant startTime = Instant.now();
         BoardCoordinates positionToAttack;
         eAttackResult attackResult = null;
-        boolean moveSuccessful = false;
+        boolean moveEnded = false;
         boolean printGameState = true;
 
         do {
@@ -204,12 +204,12 @@ public class ConsoleUIManager {
                 positionToAttack = getPositionFromUser();
                 attackResult = gamesManager.makeMove(activeGame, positionToAttack);
                 System.out.println("Attack result: " + attackResult);
-                moveSuccessful = true;
+                moveEnded = attackResult.moveEnded();
             } catch (CellNotOnBoardException e) {
                 System.out.println("The cell selected is not on the board, try again");
                 printGameState = false;
             }
-        } while (!moveSuccessful || attackResult == eAttackResult.CELL_ALREADY_ATTACKED);
+        } while (!moveEnded);
 
         Duration turnTime = Duration.between(startTime, Instant.now());
         System.out.println(String.format("Total duration for this turn was: %d:%02d", turnTime.toMinutes(), turnTime.getSeconds() % 60));
