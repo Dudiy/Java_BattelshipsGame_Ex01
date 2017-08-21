@@ -1,7 +1,6 @@
 package ConsoleUI;
 
 import GameLogic.Game.eGameState;
-import GameLogic.Users.Player;
 import java.util.Scanner;
 
 public class Menu {
@@ -13,41 +12,43 @@ public class Menu {
 
     public eMenuOption display(eGameState gameState) {
         this.gameState = gameState;
+
         printMenu();
         eMenuOption userSelection = getUserSelection();
+
         return userSelection;
     }
 
     private void printMenu() {
         System.out.println(MENU_TOP);
+
         for (eMenuOption menuOption : eMenuOption.values()) {
-            if (menuOption.sameGameState(gameState)) {
-                System.out.print(MENU_VERTICAL);
-                System.out.print(menuOption);
-                for (int i = 0; i < menuWidth - menuOption.toString().length() - 2; i++) {
-                    System.out.print(" ");
-                }
-                System.out.println(MENU_VERTICAL);
+            if (menuOption.isVisibleAtGameState(gameState)) {
+                int numSpaces = menuWidth - menuOption.toString().length() - 2;
+                String spacesAfter = String.format("%"+numSpaces+"s", " ");
+                System.out.println(MENU_VERTICAL + menuOption + spacesAfter + MENU_VERTICAL);
             }
         }
+
         System.out.println(MENU_BOTTOM);
     }
 
     private eMenuOption getUserSelection() {
+        Scanner scanner = new Scanner(System.in);
         eMenuOption userSelection = null;
         boolean isValidSelection = false;
-        int userIntSelection = 0;
-        Scanner scanner = new Scanner(System.in);
+        int userIntSelection;
 
         System.out.print("\nPlease select one of the options above: ");
         do {
             try {
                 userIntSelection = scanner.nextInt();
                 userSelection = eMenuOption.valueOf(userIntSelection);
-                if (userSelection != null && userSelection.sameGameState(gameState)) {
+                if (userSelection != null && userSelection.isVisibleAtGameState(gameState)) {
                         isValidSelection = true;
                 } else {
                     System.out.print("Invalid selection please select one of the options above: ");
+                    scanner.nextLine();
                 }
             } catch (Exception ex) {
                 System.out.print("Invalid input, please input an integer representing one of the options above: ");

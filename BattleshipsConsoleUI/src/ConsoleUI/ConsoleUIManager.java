@@ -22,7 +22,7 @@ public class ConsoleUIManager {
     private BoardPrinter boardPrinter = new BoardPrinter();
     private Scanner scanner = new Scanner(System.in);
     private Menu menu = new Menu();
-    private boolean exit = false;
+    private boolean exitGameSelected = false;
 
     public void run() {
         eGameState gameState;
@@ -37,7 +37,10 @@ public class ConsoleUIManager {
                 System.out.println("Error: while invoking menu item. Game will restart");
                 activeGame = null;
             }
-        } while (!exit);
+            finally {
+                pressAnyKeyToContinue();
+            }
+        } while (!exitGameSelected);
     }
 
     private void invokeMenuItem(eMenuOption menuItemSelected) {
@@ -79,10 +82,8 @@ public class ConsoleUIManager {
     private void loadGame() {
         try {
             // TODO get path from user(uncomment)
-            //String path = getFilePathFromUser();
+//            String path = getFilePathFromUser();
             String path = "C:/battleShip_5_basic.xml";
-            //C:\Or\Semester C\Java\Projects\Git\Java_BattelshipsGame_Ex01\BattleshipsGameLogic\src\resources\1.txt
-            //C:\Or\Semester C\Java\Projects\Git\Java_BattelshipsGame_Ex01\BattleshipsGameLogic\src\resources\battleShip_5_basicBAD1.xml
             if (path != null) {
                 activeGame = gamesManager.loadGameFile(path);
                 System.out.println("Game loaded");
@@ -99,7 +100,8 @@ public class ConsoleUIManager {
         File file;
 
         do {
-            path = getInputFromUser("Please enter a XML path file(Or 0 to return to main menu):");
+            path = getInputFromUser("Please enter an XML path file (0 to return to main menu):");
+
             if (path != null) {
                 file = openFileFromPath(path);
                 if (file != null) {
@@ -336,7 +338,7 @@ public class ConsoleUIManager {
         if (activeGame != null) {
             endGame();
         }
-        exit = true;
+        exitGameSelected = true;
         System.out.println("Game will close. Goodbye !");
     }
 
@@ -352,9 +354,9 @@ public class ConsoleUIManager {
     }
 
     private String getInputFromUser(String title){
-        String message = title + "(Or 0 to return to main menu):";
-        System.out.println(message);
+        System.out.println(title + "(Or 0 to return to main menu):");
         String inputFromUser = scanner.nextLine();
+
         return inputFromUser.equals("0") ? null : inputFromUser;
     }
 

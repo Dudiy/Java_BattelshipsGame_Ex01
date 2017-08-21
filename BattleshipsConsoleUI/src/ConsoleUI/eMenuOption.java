@@ -17,10 +17,10 @@ public enum eMenuOption {
     LOAD_SAVED_GAME(9, "Load saved game", EnumSet.of(eGameState.INVALID, eGameState.INITIALIZED, eGameState.LOADED)),
     EXIT(0, "Exit", EnumSet.allOf(eGameState.class));
 
-    private String description;
     private int ID;
-    private boolean isDisplayed = true;
+    private String description;
     private EnumSet<eGameState> displayedConditions;
+//    private boolean isDisplayed = true;
 
     eMenuOption(int optionID, String description, EnumSet<eGameState> displayConditions) {
         this.ID = optionID;
@@ -28,12 +28,13 @@ public enum eMenuOption {
         this.displayedConditions = displayConditions;
     }
 
-    public Boolean sameGameState(eGameState gameState){
+    public Boolean isVisibleAtGameState(eGameState gameState){
         return displayedConditions.contains(gameState);
     }
 
     public static eMenuOption valueOf(int optionID) {
         eMenuOption value = null;
+
         for (eMenuOption menuOption : eMenuOption.values()) {
             if (optionID == menuOption.ID) {
                 value = menuOption;

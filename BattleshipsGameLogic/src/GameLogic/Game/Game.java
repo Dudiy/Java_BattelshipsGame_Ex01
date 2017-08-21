@@ -18,16 +18,16 @@ import java.util.*;
 public class Game implements Serializable{
     private static int IDGenerator = 1000;
     private int ID;
-    private boolean gameIsSet = false;
-    private Player[] players = new Player[2];
     private int activePlayerIndex;
     private int winnerPlayerIndex = -1;
     private int movesCounter = 0;
+    private boolean gameIsSet = false;
+    private Player[] players = new Player[2];
     private Instant gameStartTime;
-    //private Map<String, User> spectators = new HashMap<>();
-    private GameSettings gameSettings;
     private ShipFactory shipFactory;
     private eGameState gameState = eGameState.INVALID;
+    private GameSettings gameSettings;
+    //private Map<String, User> spectators = new HashMap<>();
 
     public Game(GameSettings gameSettings) {
         this.ID = IDGenerator++;
