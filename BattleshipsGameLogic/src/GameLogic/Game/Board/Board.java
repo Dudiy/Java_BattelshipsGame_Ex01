@@ -1,13 +1,10 @@
 package GameLogic.Game.Board;
 
 import GameLogic.Exceptions.*;
-import GameLogic.Game.GameObjects.GameObject;
-import GameLogic.Game.GameObjects.Mine;
+import GameLogic.Game.GameObjects.*;
 import GameLogic.Game.GameObjects.Ship.*;
-import GameLogic.Game.GameObjects.Water;
 import GameLogic.Game.eAttackResult;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.io.Serializable;
 import java.util.LinkedList;
 
@@ -33,7 +30,6 @@ public class Board implements Cloneable, Serializable {
     }
 
     // ======================================= setters =======================================
-
     // set the value of the BoardCell at the given coordinates to be value
     private void setCellValue(BoardCoordinates position, GameObject value) throws InvalidGameObjectPlacementException, CloneNotSupportedException {
         try {

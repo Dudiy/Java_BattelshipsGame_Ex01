@@ -33,12 +33,12 @@ public class BoardPrinter {
     private final String SHIP = "█";
     private final String WATER = "~";
     private final String MINE = "Ω";
-
+    // other variables
+    public static final boolean PRINT_SINGLE_BOARD = true;
+    private final String BOARDS_SEPARATOR = "          |          ";
     private byte currRowIndex;
     private boolean hideNonVisible;
-    private final String BOARDS_SEPARATOR = "          |          ";
     private int boardSize;
-    public static final boolean PRINT_SINGLE_BOARD = true;
     private int numBoardsToPrint;
 
     public void printBoards(Player activePlayer, boolean printSingleBoard) {

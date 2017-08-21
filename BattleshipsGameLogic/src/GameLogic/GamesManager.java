@@ -62,7 +62,7 @@ public class GamesManager implements IGamesLogic {
 
     @Override
     public Game loadSavedGameFromFile(String fileName) throws Exception {
-        Game game =Game.loadFromFile(fileName);
+        Game game = Game.loadFromFile(fileName);
         allGames.put(game.getID(), game);
         addPlayers(game.getPlayers());
         game.setGameState(eGameState.STARTED);

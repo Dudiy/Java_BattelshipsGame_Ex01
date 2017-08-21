@@ -20,7 +20,6 @@ public enum eMenuOption {
     private int ID;
     private String description;
     private EnumSet<eGameState> displayedConditions;
-//    private boolean isDisplayed = true;
 
     eMenuOption(int optionID, String description, EnumSet<eGameState> displayConditions) {
         this.ID = optionID;

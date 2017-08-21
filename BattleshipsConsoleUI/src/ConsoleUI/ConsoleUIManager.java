@@ -3,19 +3,28 @@ package ConsoleUI;
 import GameLogic.Exceptions.*;
 import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.Game;
+import GameLogic.Game.GameSettings;
 import GameLogic.Game.eGameState;
 import GameLogic.Game.eAttackResult;
 import GameLogic.GamesManager;
 import GameLogic.Users.Player;
 import javafx.fxml.LoadException;
+
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Scanner;
+import java.util.*;
+
+import static java.nio.file.Paths.get;
 
 public class ConsoleUIManager {
+
     private GamesManager gamesManager = new GamesManager();
     // console application may have only 1 game
     private Game activeGame;
@@ -36,8 +45,7 @@ public class ConsoleUIManager {
             } catch (Exception e) {
                 System.out.println("Error: while invoking menu item. Game will restart");
                 activeGame = null;
-            }
-            finally {
+            } finally {
                 pressAnyKeyToContinue();
             }
         } while (!exitGameSelected);
@@ -94,10 +102,9 @@ public class ConsoleUIManager {
     }
 
     public String getFilePathFromUser() {
-        Scanner scanner = new Scanner(System.in);
         String path;
-        boolean endOfInput = false;
         File file;
+        boolean endOfInput = false;
 
         do {
             path = getInputFromUser("Please enter an XML path file (0 to return to main menu):");
@@ -110,6 +117,7 @@ public class ConsoleUIManager {
                     } else {
                         System.out.println("Error: file type mismatch");
                     }
+
                 } else {
                     System.out.println("Error: file doesn't exist");
                 }
@@ -123,9 +131,11 @@ public class ConsoleUIManager {
 
     private File openFileFromPath(String filePath) {
         File file = new File(filePath);
+
         if (!file.exists() || file.isDirectory()) {
             file = null;
         }
+
         return file;
     }
 
@@ -135,9 +145,7 @@ public class ConsoleUIManager {
 
         try {
             fileType = Files.probeContentType(file.toPath());
-            if (fileType.equals(fileTypeToCompare)) {
-                sameType = true;
-            }
+            sameType = fileType.equals(fileTypeToCompare);
         } catch (IOException ioException) {
             System.out.println("Error: Unable to determine file type for " + file.getName());
         }
@@ -161,17 +169,17 @@ public class ConsoleUIManager {
                     "Cannot place a given " + e.getGameObjectType() + " at position " + e.GetCoordinates() + ".\n" +
                     "reason: " + e.getReason()) + "\n";
             System.out.println(message);
-            errorWhileStartGame();
+            errorWhileStartingGame();
         } catch (Exception e) {
             //TODO fix error handling
             System.out.println("Error while starting game. " + e.getMessage());
-            errorWhileStartGame();
+            errorWhileStartingGame();
         }
     }
 
-    private void errorWhileStartGame() {
+    private void errorWhileStartingGame() {
         activeGame = null;
-        System.out.println("Game file unloaded. Please load other file game in order to start the game.");
+        System.out.println("Game file given was invalid therefor it was not loaded. \nPlease check the file and try again.");
     }
 
     // ======================================= Show Game State =======================================
@@ -188,19 +196,20 @@ public class ConsoleUIManager {
 
     // ======================================= Make Move =======================================
     private void makeMove() {
-        // get active player before players are swapped
-        Player activePlayer = activeGame.getActivePlayer();
         Instant startTime = Instant.now();
         BoardCoordinates positionToAttack;
         eAttackResult attackResult = null;
         boolean moveEnded = false;
         boolean printGameState = true;
 
+        // get active player before players are swapped
+        Player activePlayer = activeGame.getActivePlayer();
         do {
             try {
                 if (printGameState && attackResult != eAttackResult.CELL_ALREADY_ATTACKED) {
                     showGameState();
                 }
+
                 positionToAttack = getPositionFromUser();
                 attackResult = gamesManager.makeMove(activeGame, positionToAttack);
                 System.out.println("Attack result: " + attackResult);
@@ -212,10 +221,11 @@ public class ConsoleUIManager {
         } while (!moveEnded);
 
         Duration turnTime = Duration.between(startTime, Instant.now());
-        System.out.println(String.format("Total duration for this turn was: %d:%02d", turnTime.toMinutes(), turnTime.getSeconds() % 60));
         activePlayer.addTurnDurationToTotal(turnTime);
-        pressAnyKeyToContinue();
-        showGameState();
+        System.out.println(String.format("Total duration for this turn was: %d:%02d", turnTime.toMinutes(), turnTime.getSeconds() % 60));
+//      TODO delete
+//        pressAnyKeyToContinue();
+//        showGameState();
     }
 
     public BoardCoordinates getPositionFromUser() {
@@ -265,14 +275,16 @@ public class ConsoleUIManager {
     private void endGame() {
         eGameState gameStateBeforeEndGame = activeGame.getGameState();
         gamesManager.endGame(activeGame);
-        if(gameStateBeforeEndGame.isGameStart()){
+
+        if (gameStateBeforeEndGame.gameHasStarted()) {
             System.out.println("The winner is: " + activeGame.getWinnerPlayer().getName() + "!!! :)");
             System.out.println("Game ended.");
-            System.out.println("Players boards:");
+            System.out.println("Player boards:");
             printPlayerBoard(activeGame.getActivePlayer(), BoardPrinter.PRINT_SINGLE_BOARD);
             printPlayerBoard(activeGame.getOtherPlayer(), BoardPrinter.PRINT_SINGLE_BOARD);
         }
-        // it get the user to the first step of the application
+
+        // set the game to be as if it was just started
         activeGame = null;
     }
 
@@ -280,8 +292,9 @@ public class ConsoleUIManager {
     private void plantMine() {
         boolean minePlantedOrNotAvailable = false;
         BoardCoordinates position = null;
+        printPlayerBoard(activeGame.getActivePlayer(), !BoardPrinter.PRINT_SINGLE_BOARD);
 
-        do {
+        while (!minePlantedOrNotAvailable) {
             try {
                 position = getPositionFromUser();
                 gamesManager.plantMine(activeGame, position);
@@ -295,22 +308,21 @@ public class ConsoleUIManager {
                 minePlantedOrNotAvailable = true;
                 System.out.println(e.getMessage());
             }
-        } while (!minePlantedOrNotAvailable);
-        pressAnyKeyToContinue();
+        }
     }
 
     // ======================================= Save game =======================================
     private void saveGame() {
         //String fileName = "aa.dat";
-        String fileName = getInputFromUser("Please enter a file name for the saving file:");
+        String fileName = getInputFromUser("Please enter a file name for saving:");
         // TODO check validation name
 
-        if(fileName!=null){
-            fileName=fileName + ".dat";
+        if (fileName != null && !fileName.isEmpty()) {
+            fileName = GameSettings.SAVED_GAME_DIR + fileName + GameSettings.SAVED_GAME_EXTENSION;
             // TODO IOException ?
             try {
                 gamesManager.saveGameToFile(activeGame, fileName);
-                System.out.println("Game saved !");
+                System.out.println("Game saved successfully!");
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -319,18 +331,70 @@ public class ConsoleUIManager {
 
     // ======================================= Load saved game=======================================
     private void loadSavedGame() {
-        String fileName = getInputFromUser("Please enter a file name for the loading the saving file:");
+//        String fileName = getInputFromUser("Please enter a file name for the loading the saving file:");
+        String fileName;
 
-        if(fileName!=null){
-            fileName=fileName + ".dat";
-            // TODO IOException ?
-            try {
-                activeGame = gamesManager.loadSavedGameFromFile(fileName);
-                System.out.println("Saved game loaded !");
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+        try {
+            HashMap<Integer, String> savedGamesList = getSavedGamesList();
+            fileName = getGameToLoadFromUser(savedGamesList);
+            activeGame = gamesManager.loadSavedGameFromFile(fileName);
+            System.out.println("Game loaded from file!");
+        } catch (Exception e) {
+            System.out.println("Error while loading saved games: " + e.getMessage());
+        }
+    }
+
+    private HashMap<Integer, String> getSavedGamesList() throws LoadException {
+        HashMap<Integer, String> savedGamesList = new HashMap<>();
+        File savedGamesDir = new File(GameSettings.SAVED_GAME_DIR);
+        int fileCounter = 0;
+
+        if (!savedGamesDir.exists()) {
+            throw new LoadException("No \"Saved Games\" directory found");
+        } else {
+            for (File file : savedGamesDir.listFiles(File::isFile)) {
+                // TODO do we want to check filetype?
+//                if (checkFileType(file, GameSettings.SAVED_GAME_EXTENSION)) {
+                fileCounter++;
+                savedGamesList.put(fileCounter, file.getName());
+//                }
             }
         }
+
+        if (fileCounter == 0) {
+            throw new LoadException("No saved game file found in \"Saved Games\" directory");
+        }
+
+        return savedGamesList;
+    }
+
+    private String getGameToLoadFromUser(HashMap<Integer, String> savedGamesList) {
+        boolean isValidSelection = false;
+        String selectedFileName = null;
+        System.out.println("Saved games available :");
+
+        for (Map.Entry<Integer, String> savedGame : savedGamesList.entrySet()) {
+            System.out.println(savedGame.getKey() + ") " + savedGame.getValue());
+        }
+
+        while (!isValidSelection) {
+            try {
+                String inputStr = getInputFromUser("Please select an index of a game to load: ");
+                int input = Integer.parseInt(inputStr);
+                selectedFileName = savedGamesList.get(input);
+                if (selectedFileName == null) {
+                    System.out.println("Invalid selection, please select the index of one of the files above");
+                } else {
+                    isValidSelection = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input format please input a number");
+            } catch (Exception e) {
+                System.out.println("Invalid selection, please select the index of one of the files above");
+            }
+        }
+
+        return GameSettings.SAVED_GAME_DIR + selectedFileName;
     }
 
     // ======================================= Exit =======================================
@@ -339,7 +403,7 @@ public class ConsoleUIManager {
             endGame();
         }
         exitGameSelected = true;
-        System.out.println("Game will close. Goodbye !");
+        System.out.println("Closing the game, thank you for playing. Goodbye !");
     }
 
     // ======================================= Other methods =======================================
@@ -353,14 +417,14 @@ public class ConsoleUIManager {
         }
     }
 
-    private String getInputFromUser(String title){
-        System.out.println(title + "(Or 0 to return to main menu):");
+    private String getInputFromUser(String title) {
+        System.out.print(title + "(Or 0 to return to main menu): ");
         String inputFromUser = scanner.nextLine();
 
         return inputFromUser.equals("0") ? null : inputFromUser;
     }
 
-    public void printWelcomeScreen(){
+    public void printWelcomeScreen() {
         System.out.println(" ~~~~~ WELCOME TO THE MOST AMAZING BATTLESHIP GAME OF ALL! ~~~~~\n\n");
         System.out.println("                      ,:',:`,:'");
         System.out.println("                   __||_||_||_||__");

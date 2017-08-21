@@ -11,6 +11,7 @@ import GameLogic.Users.*;
 import jaxb.generated.BattleShipGame;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
@@ -173,27 +174,40 @@ public class Game implements Serializable{
     }
 
     public void endGame() {
-        // the player who left the game lose
+        // the player who left the game loses
         swapPlayers();
         winnerPlayerIndex = activePlayerIndex;
         gameState = eGameState.PLAYER_QUIT;
     }
 
     public static void saveToFile(Game game, final String fileName) throws Exception {
+        File file = new File(fileName);
+        // TODO do we want to overwrite?
+//        if (file.exists()){
+//            throw new Exception("File already exists please choose another name");
+//        }
+        if (!file.getParentFile().exists()){
+            if (!file.getParentFile().mkdirs()){
+                throw new Exception("\"Saved Games\" directory was not found and could not be created");
+            }
+        }
         try (ObjectOutputStream outputStream =
                      new ObjectOutputStream(
                              new FileOutputStream(fileName))) {
+            // TODO are the players saved? only thir reference is here
             outputStream.writeObject(game);
             outputStream.flush();
         }
     }
     public static Game loadFromFile(final String fileName) throws Exception {
-        Game game = null;
+        Game game;
+
         try (ObjectInputStream inStream =
                      new ObjectInputStream(
                              new FileInputStream(fileName))) {
             game = (Game)inStream.readObject();
         }
+
         return game;
     }
 }

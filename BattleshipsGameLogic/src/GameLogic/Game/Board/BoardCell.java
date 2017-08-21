@@ -66,10 +66,3 @@ public class BoardCell implements Serializable {
         return attackResult;
     }
 }
-
-
-/*    private void checkSurroundingCells() {
-        // ships are only added at the beginning of the game when there are no other objects so we only need to check for ships in surrounding cells
-        BoardCoordinates positionToCheck = this.getPosition();
-        positionToCheck.OffsetRow(-1);
-    }*/

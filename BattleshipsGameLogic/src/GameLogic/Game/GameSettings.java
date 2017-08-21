@@ -2,6 +2,7 @@ package GameLogic.Game;
 
 import javafx.fxml.LoadException;
 import jaxb.generated.BattleShipGame;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -14,15 +15,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class GameSettings implements Serializable{
+public class GameSettings implements Serializable {
     private final static String JAXB_XML_GAME_PACKAGE_NAME = "jaxb.generated";
+    public final static String SAVED_GAME_EXTENSION = ".dat";
+    public final static String SAVED_GAME_DIR = "Saved Games/";
     private static final int MIN_BOARD_SIZE = 5;
     private static final int MAX_BOARD_SIZE = 20;
     private int boardSize;
     private int minesPerPlayer;
     private eGameType gameType;
     private transient BattleShipGame gameLoadedFromXml;
-    private transient Map<String,BattleShipGame.ShipTypes.ShipType> shipTypes = new HashMap<>();
+    private transient Map<String, BattleShipGame.ShipTypes.ShipType> shipTypes = new HashMap<>();
     private transient Map<BattleShipGame.ShipTypes.ShipType, Integer> numShipsPerBoard = new HashMap<>();
 
     // private ctor, GameSettings can only be created by calling LoadGameFile
@@ -58,7 +61,7 @@ public class GameSettings implements Serializable{
     public Map<String, Integer> getShipTypesAmount() {
         Map<String, Integer> shipTypesAmount = new HashMap<>();
 
-        for(Map.Entry<String,BattleShipGame.ShipTypes.ShipType> shipType : shipTypes.entrySet()){
+        for (Map.Entry<String, BattleShipGame.ShipTypes.ShipType> shipType : shipTypes.entrySet()) {
             shipTypesAmount.put(shipType.getKey(), shipType.getValue().getAmount());
         }
 
@@ -90,8 +93,9 @@ public class GameSettings implements Serializable{
         // validate board size
         gameSettings.boardSize = objectImported.getBoardSize();
         if (gameSettings.boardSize < MIN_BOARD_SIZE || gameSettings.boardSize > MAX_BOARD_SIZE) {
-            throw new Exception("Invalid board size");
+            throw new Exception("Invalid board size, the size must be between " + MIN_BOARD_SIZE + " and " + MAX_BOARD_SIZE);
         }
+
         // validate game type
         String gameTypeStr = objectImported.getGameType();
         if (gameTypeStr.toUpperCase().equals("BASIC")) {
@@ -101,10 +105,11 @@ public class GameSettings implements Serializable{
         } else {
             throw new Exception("Invalid game type");
         }
+
         // set shipTypes
         for (BattleShipGame.ShipTypes.ShipType shipType : objectImported.getShipTypes().getShipType()) {
-            gameSettings.shipTypes.put(shipType.getId(),shipType);
-            gameSettings.numShipsPerBoard.put(shipType,shipType.getAmount());
+            gameSettings.shipTypes.put(shipType.getId(), shipType);
+            gameSettings.numShipsPerBoard.put(shipType, shipType.getAmount());
         }
     }
 
@@ -114,12 +119,12 @@ public class GameSettings implements Serializable{
         return (BattleShipGame) u.unmarshal(in);
     }
 
+    // TODO delete?
     public void shipAddedToBoard(BattleShipGame.ShipTypes.ShipType shipType) throws Exception {
         int shipsRemainingToAdd = numShipsPerBoard.get(shipType);
-        if (shipsRemainingToAdd <= 0){
+        if (shipsRemainingToAdd <= 0) {
             throw new Exception("Cannot add more ships of type " + shipType.getId() + " to the board");
-        }
-        else{
+        } else {
             numShipsPerBoard.put(shipType, numShipsPerBoard.get(shipType) - 1);
         }
     }
