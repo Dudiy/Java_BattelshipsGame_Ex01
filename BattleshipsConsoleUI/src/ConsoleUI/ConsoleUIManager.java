@@ -34,7 +34,6 @@ public class ConsoleUIManager {
     private boolean exitGameSelected = false;
 
     public void run() {
-        eGameState gameState;
         printWelcomeScreen();
 
         do {
