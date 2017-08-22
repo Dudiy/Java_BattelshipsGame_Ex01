@@ -1,5 +1,6 @@
 package GameLogic.Game.Board;
 
+import java.awt.*;
 import java.io.Serializable;
 
 public class BoardCoordinates implements Serializable {
@@ -64,6 +65,14 @@ public class BoardCoordinates implements Serializable {
         }
 
         return res;
+    }
+
+    public static BoardCoordinates Parse(int row, int col) {
+        return new BoardCoordinates((char)('A'+col), row +1);
+    }
+
+    public static Point coordinatesToPoint(BoardCoordinates position){
+        return new Point(position.getRowIndexInMemory(), position.getColIndexInMemory());
     }
 
     // updates the value of row, does not check if the value is on the board!

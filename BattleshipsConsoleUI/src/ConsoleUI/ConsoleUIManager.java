@@ -7,7 +7,9 @@ import GameLogic.Game.GameSettings;
 import GameLogic.Game.eGameState;
 import GameLogic.Game.eAttackResult;
 import GameLogic.GamesManager;
+import GameLogic.Users.ComputerPlayer;
 import GameLogic.Users.Player;
+import GameLogic.Users.RegularPlayer;
 import javafx.fxml.LoadException;
 
 import java.io.File;
@@ -38,8 +40,12 @@ public class ConsoleUIManager {
 
         do {
             try {
-                eMenuOption menuItemSelected = menu.display(activeGame);
-                invokeMenuItem(menuItemSelected);
+                if(activeGame != null && activeGame.getActivePlayer() instanceof ComputerPlayer){
+                    makeMove();
+                }else{
+                    eMenuOption menuItemSelected = menu.display(activeGame);
+                    invokeMenuItem(menuItemSelected);
+                }
             } catch (Exception e) {
                 System.out.println("Error: while invoking menu item. Game will restart");
                 activeGame = null;
@@ -154,8 +160,8 @@ public class ConsoleUIManager {
     // ======================================= Start Game =======================================
     private void startGame() {
         try {
-            Player player1 = new Player("p1", "Player 1");
-            Player player2 = new Player("p2", "Player 2");
+            Player player1 = new RegularPlayer("p1", "Player 1");
+            Player player2 = new RegularPlayer("p2", "Player 2");
             gamesManager.startGame(activeGame, player1, player2);
             // give each player 2 mines
             player1.getMyBoard().setMinesAvailable(2);
@@ -195,7 +201,7 @@ public class ConsoleUIManager {
     // ======================================= Make Move =======================================
     private void makeMove() {
         Instant startTime = Instant.now();
-        BoardCoordinates positionToAttack;
+        BoardCoordinates positionToAttack = null;
         eAttackResult attackResult = null;
         boolean moveEnded = false;
         boolean printGameState = true;
@@ -208,7 +214,12 @@ public class ConsoleUIManager {
                     showGameState();
                 }
 
-                positionToAttack = getPositionFromUser();
+                if(activePlayer instanceof ComputerPlayer){
+                    positionToAttack = ((ComputerPlayer)activePlayer).getNextMove();
+                }else if(activePlayer instanceof RegularPlayer){
+                    positionToAttack = getPositionFromUser();
+                }
+                // TODO positionToAttack can be null ? there is exception ?
                 attackResult = gamesManager.makeMove(activeGame, positionToAttack);
                 System.out.println("Attack result: " + attackResult);
                 moveEnded = attackResult.moveEnded() || activeGame.getGameState() == eGameState.PLAYER_WON;

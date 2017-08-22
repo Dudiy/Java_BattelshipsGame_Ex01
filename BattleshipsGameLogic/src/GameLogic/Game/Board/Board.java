@@ -195,9 +195,9 @@ public class Board implements Cloneable, Serializable {
     }
 
     // check if the given coordinates are on this board
-    private boolean coordinatesAreOnBoard(BoardCoordinates i_Coordinates) {
-        int col = i_Coordinates.getColIndexInMemory();
-        int row = i_Coordinates.getRowIndexInMemory();
+    private boolean coordinatesAreOnBoard(BoardCoordinates coordinates) {
+        int col = coordinates.getColIndexInMemory();
+        int row = coordinates.getRowIndexInMemory();
         return ((0 <= col && col <= boardSize - 1) && (0 <= row && row <= boardSize - 1));
     }
 

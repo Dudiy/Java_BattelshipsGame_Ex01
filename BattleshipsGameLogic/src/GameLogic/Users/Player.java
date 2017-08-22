@@ -13,11 +13,11 @@ import GameLogic.Game.eAttackResult;
 import java.io.Serializable;
 import java.time.Duration;
 
-public class Player implements Serializable {
+public abstract class Player implements Serializable {
     private String ID;
     private String name;
-    private Board myBoard;
-    private Board opponentBoard;
+    protected Board myBoard;
+    protected Board opponentBoard;
     private int score = 0;
     private int timesMissed = 0;
     // duration of a turn is from the time the user selects make move until he enters the cell to attack
@@ -30,7 +30,6 @@ public class Player implements Serializable {
     }
 
     // ======================================= setters =======================================
-
     public void setMyBoard(Board board) {
         this.myBoard = board;
     }
@@ -40,7 +39,6 @@ public class Player implements Serializable {
     }
 
     // ======================================= getters =======================================
-
     public String getID() {
         return ID;
     }
