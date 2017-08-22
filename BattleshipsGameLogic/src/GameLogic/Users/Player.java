@@ -121,6 +121,10 @@ public class Player implements Serializable {
             throw new NoMinesAvailableException();
         }
 
+        if (cellToPlantMine.wasAttacked()){
+            throw new InvalidGameObjectPlacementException(Mine.getObjectTypeSimpleName(), position, "Cannot place mine on a cell that was attacked");
+        }
+
         if (myBoard.allSurroundingCellsClear(cellToPlantMine, null)) {
             cellToPlantMine.SetCellValue(new Mine(position));
             myBoard.minePlanted();

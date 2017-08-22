@@ -30,8 +30,9 @@ public class Board implements Cloneable, Serializable {
     }
 
     // ======================================= setters =======================================
-    // set the value of the BoardCell at the given coordinates to be value
-    private void setCellValue(BoardCoordinates position, GameObject value) throws InvalidGameObjectPlacementException, CloneNotSupportedException {
+    // set the value of the BoardCell at the given coordinates to be "value"
+    // throws InvalidGameObjectPlacementException if value cannot be placed in the given coordinates on this board
+    private void setCellValue(BoardCoordinates position, GameObject value) throws InvalidGameObjectPlacementException {
         try {
             BoardCell cell = getBoardCellAtCoordinates(position);
             if (value instanceof AbstractShip && !allSurroundingCellsClear(cell, value)) {
@@ -44,7 +45,6 @@ public class Board implements Cloneable, Serializable {
         }
     }
 
-    // throws InvalidGameObjectPlacementException if value cannot be placed in the given coordinates on this board
     public void setMinesAvailable(int minesAvailable) {
         this.minesAvailable = minesAvailable;
     }
@@ -65,7 +65,7 @@ public class Board implements Cloneable, Serializable {
 
     private BoardCell getCellByOffset(BoardCell srcCell, eBoardDirection direction, int offset) throws CellNotOnBoardException {
         BoardCell res;
-        BoardCoordinates requiredCoordinates = srcCell.getPosition();
+        BoardCoordinates requiredCoordinates = new BoardCoordinates(srcCell.getPosition());
 
         switch (direction) {
             case DOWN:
@@ -155,20 +155,6 @@ public class Board implements Cloneable, Serializable {
         shipsOnBoard.add(ship);
     }
 
-    public void addMineToBoard(BoardCoordinates position) throws CellNotOnBoardException, InvalidGameObjectPlacementException {
-        if (minesAvailable > 0) {
-            BoardCell boardCell = getBoardCellAtCoordinates(position);
-            if (boardCell.wasAttacked()) {
-                throw new InvalidGameObjectPlacementException(Mine.getObjectTypeSimpleName(), position, "Cannot place mine on a cell that was attacked");
-            } else if (boardCell.getCellValue() instanceof Water) {
-                boardCell.SetCellValue(new Mine(position));
-                minesAvailable--;
-            }
-        } else {
-            throw new InvalidGameObjectPlacementException(Mine.getObjectTypeSimpleName(), position, "No mines available");
-        }
-    }
-
     // add a new RegularShip to this board
     private void addRegularShipToBoard(RegularShip ship) throws Exception {
         BoardCoordinates currCoordinates = ship.getPosition();
@@ -191,7 +177,7 @@ public class Board implements Cloneable, Serializable {
 
     // add a new LShapeShip to this board
     private void addLShapeShipToBoard(LShapeShip Ship) {
-        //TODO implement
+        //TODO implement on EX02
         throw new NotImplementedException();
     }
 
@@ -202,29 +188,31 @@ public class Board implements Cloneable, Serializable {
         return ((0 <= col && col <= boardSize - 1) && (0 <= row && row <= boardSize - 1));
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        Board copiedBoard = new Board(boardSize);
-
-        for (BoardCell[] row : board) {
-            for (BoardCell cell : row) {
-                BoardCoordinates position = cell.getPosition();
-                try {
-                    copiedBoard.setCellValue(position, (GameObject) cell.getCellValue().clone());
-                } catch (Exception e) {
-                    throw new CloneNotSupportedException("Error while cloning board");
-                }
-            }
-        }
-
-        return copiedBoard;
+    public void minePlanted() {
+        minesAvailable--;
     }
 
     public eAttackResult attack(BoardCoordinates coordinatesToAttack) throws CellNotOnBoardException {
         return getBoardCellAtCoordinates(coordinatesToAttack).attack();
     }
-
-    public void minePlanted() {
-        minesAvailable--;
-    }
 }
+
+
+//     TODO delete
+//    @Override
+//    protected Object clone() throws CloneNotSupportedException {
+//        Board copiedBoard = new Board(boardSize);
+//
+//        for (BoardCell[] row : board) {
+//            for (BoardCell cell : row) {
+//                BoardCoordinates position = cell.getPosition();
+//                try {
+//                    copiedBoard.setCellValue(position, (GameObject) cell.getCellValue().clone());
+//                } catch (Exception e) {
+//                    throw new CloneNotSupportedException("Error while cloning board");
+//                }
+//            }
+//        }
+//
+//        return copiedBoard;
+//    }

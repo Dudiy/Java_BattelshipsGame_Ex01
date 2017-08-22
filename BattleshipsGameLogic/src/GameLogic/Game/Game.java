@@ -16,7 +16,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
-public class Game implements Serializable{
+public class Game implements Serializable {
     private static int IDGenerator = 1000;
     private int ID;
     private int activePlayerIndex;
@@ -148,7 +148,7 @@ public class Game implements Serializable{
         eAttackResult attackResult = getActivePlayer().attack(position);
 
         if (attackResult == eAttackResult.HIT_MINE &&
-            !(getActivePlayer().getMyBoard().getBoardCellAtCoordinates(position).getCellValue() instanceof Water)){
+                !(getActivePlayer().getMyBoard().getBoardCellAtCoordinates(position).getCellValue() instanceof Water)) {
             getOtherPlayer().incrementScore();
         }
         // TODO check when we need to increment the move counter? every time players swap or every attack?
@@ -182,15 +182,13 @@ public class Game implements Serializable{
 
     public static void saveToFile(Game game, final String fileName) throws Exception {
         File file = new File(fileName);
-        // TODO do we want to overwrite?
-//        if (file.exists()){
-//            throw new Exception("File already exists please choose another name");
-//        }
-        if (!file.getParentFile().exists()){
-            if (!file.getParentFile().mkdirs()){
+
+        if (!file.getParentFile().exists()) {
+            if (!file.getParentFile().mkdirs()) {
                 throw new Exception("\"Saved Games\" directory was not found and could not be created");
             }
         }
+
         try (ObjectOutputStream outputStream =
                      new ObjectOutputStream(
                              new FileOutputStream(fileName))) {
@@ -199,13 +197,14 @@ public class Game implements Serializable{
             outputStream.flush();
         }
     }
+
     public static Game loadFromFile(final String fileName) throws Exception {
         Game game;
 
         try (ObjectInputStream inStream =
                      new ObjectInputStream(
                              new FileInputStream(fileName))) {
-            game = (Game)inStream.readObject();
+            game = (Game) inStream.readObject();
         }
 
         return game;
