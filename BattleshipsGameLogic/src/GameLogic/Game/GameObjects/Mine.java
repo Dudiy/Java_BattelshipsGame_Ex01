@@ -24,10 +24,4 @@ public class Mine extends GameObject {
     public eAttackResult getAttackResult() {
         return eAttackResult.HIT_MINE;
     }
-
-    // ======================================= methods =======================================
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return new Mine(this.getPosition());
-    }
 }

@@ -15,18 +15,17 @@ public class BoardCoordinates implements Serializable {
         this.col = position.col;
         this.row = position.row;
     }
-    // ======================================= setters =======================================
 
     // ======================================= getters =======================================
     public char getCol() {
         return col;
     }
 
-    public int getColAsInt() {
+    public int getColIndexInMemory() {
         return col - 'A';
     }
 
-    public int getRow() {
+    public int getRowIndexInMemory() {
         return row - 1;
     }
 
@@ -39,12 +38,12 @@ public class BoardCoordinates implements Serializable {
 
     // ======================================= methods =======================================
     // convert a string of type "A1" or "1A" to coordinates
-    // input of 0 returns null value
+    // input of 0 returns null value (for cancel)
     public static BoardCoordinates Parse(String stringToParse) throws IllegalArgumentException {
         BoardCoordinates res;
 
         if (stringToParse.length() != 2) {
-            throw new IllegalArgumentException("Input str must be exactly 2 characters long");
+            throw new IllegalArgumentException("Input string must be exactly 2 characters long");
         } else {
             char firstCharInString = stringToParse.charAt(0);
             char secondCharInString = stringToParse.charAt(1);

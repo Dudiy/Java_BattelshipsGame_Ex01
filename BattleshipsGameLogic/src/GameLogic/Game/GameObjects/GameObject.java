@@ -5,7 +5,7 @@ import GameLogic.Game.eAttackResult;
 
 import java.io.Serializable;
 
-public abstract class GameObject implements Cloneable,Serializable {
+public abstract class GameObject implements Serializable {
     protected static final boolean VISIBLE = true;
     private BoardCoordinates position;
     private static String objectTypeSimpleName;
@@ -46,7 +46,4 @@ public abstract class GameObject implements Cloneable,Serializable {
     }
 
     public abstract eAttackResult getAttackResult();
-
-    @Override
-    public abstract Object clone() throws CloneNotSupportedException;
 }

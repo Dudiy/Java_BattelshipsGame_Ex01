@@ -13,10 +13,4 @@ public class Water extends GameObject {
     public eAttackResult getAttackResult() {
         return eAttackResult.HIT_WATER;
     }
-
-    // ======================================= methods =======================================
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return new Water(this.getPosition());
-    }
 }

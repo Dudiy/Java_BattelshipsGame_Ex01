@@ -1,6 +1,9 @@
 package ConsoleUI;
 
+import GameLogic.Game.Game;
 import GameLogic.Game.eGameState;
+
+import java.security.MessageDigest;
 import java.util.Scanner;
 
 public class Menu {
@@ -10,11 +13,15 @@ public class Menu {
     private final int menuWidth = MENU_BOTTOM.length();
     private eGameState gameState;
 
-    public eMenuOption display(eGameState gameState) {
-        this.gameState = gameState;
+    public eMenuOption display(Game game) {
+        this.gameState = game == null ? eGameState.INVALID : game.getGameState();
 
         printMenu();
-        eMenuOption userSelection = getUserSelection();
+        String activePlayerName =
+                (game == null || game.getActivePlayer() == null) ?
+                        "" :
+                        game.getActivePlayer().getName();
+        eMenuOption userSelection = getUserSelection(activePlayerName);
 
         return userSelection;
     }
@@ -25,7 +32,7 @@ public class Menu {
         for (eMenuOption menuOption : eMenuOption.values()) {
             if (menuOption.isVisibleAtGameState(gameState)) {
                 int numSpaces = menuWidth - menuOption.toString().length() - 2;
-                String spacesAfter = String.format("%"+numSpaces+"s", " ");
+                String spacesAfter = String.format("%" + numSpaces + "s", " ");
                 System.out.println(MENU_VERTICAL + menuOption + spacesAfter + MENU_VERTICAL);
             }
         }
@@ -33,19 +40,20 @@ public class Menu {
         System.out.println(MENU_BOTTOM);
     }
 
-    private eMenuOption getUserSelection() {
+    private eMenuOption getUserSelection(String activePlayerName) {
         Scanner scanner = new Scanner(System.in);
         eMenuOption userSelection = null;
         boolean isValidSelection = false;
         int userIntSelection;
 
-        System.out.print("\nPlease select one of the options above: ");
+        String title = "Please select one of the options above" + (activePlayerName.isEmpty() ? ":" : "(active player is " + activePlayerName + "):");
+        System.out.print(title);
         do {
             try {
                 userIntSelection = scanner.nextInt();
                 userSelection = eMenuOption.valueOf(userIntSelection);
                 if (userSelection != null && userSelection.isVisibleAtGameState(gameState)) {
-                        isValidSelection = true;
+                    isValidSelection = true;
                 } else {
                     System.out.print("Invalid selection please select one of the options above: ");
                     scanner.nextLine();

@@ -38,9 +38,8 @@ public class ConsoleUIManager {
         printWelcomeScreen();
 
         do {
-            gameState = activeGame == null ? eGameState.INVALID : activeGame.getGameState();
             try {
-                eMenuOption menuItemSelected = menu.display(gameState);
+                eMenuOption menuItemSelected = menu.display(activeGame);
                 invokeMenuItem(menuItemSelected);
             } catch (Exception e) {
                 System.out.println("Error: while invoking menu item. Game will restart");
@@ -189,7 +188,7 @@ public class ConsoleUIManager {
     }
 
     private void printPlayerBoard(Player player, boolean printSingleBoard) {
-        System.out.println("Current player: " + player.getName());
+        System.out.println("Player: " + player.getName());
         System.out.println("Score: " + activeGame.getActivePlayer().getScore());
         boardPrinter.printBoards(player, printSingleBoard);
     }
@@ -213,7 +212,10 @@ public class ConsoleUIManager {
                 positionToAttack = getPositionFromUser();
                 attackResult = gamesManager.makeMove(activeGame, positionToAttack);
                 System.out.println("Attack result: " + attackResult);
-                moveEnded = attackResult.moveEnded();
+                moveEnded = attackResult.moveEnded() || activeGame.getGameState() == eGameState.PLAYER_WON;
+                if (!moveEnded) {
+                    pressAnyKeyToContinue();
+                }
             } catch (CellNotOnBoardException e) {
                 System.out.println("The cell selected is not on the board, try again");
                 printGameState = false;
@@ -223,9 +225,10 @@ public class ConsoleUIManager {
         Duration turnTime = Duration.between(startTime, Instant.now());
         activePlayer.addTurnDurationToTotal(turnTime);
         System.out.println(String.format("Total duration for this turn was: %d:%02d", turnTime.toMinutes(), turnTime.getSeconds() % 60));
-//      TODO delete
-//        pressAnyKeyToContinue();
-//        showGameState();
+
+        if (activeGame.getGameState() == eGameState.PLAYER_WON) {
+            onGameEnded(eGameState.STARTED);
+        }
     }
 
     public BoardCoordinates getPositionFromUser() {
@@ -275,13 +278,18 @@ public class ConsoleUIManager {
     private void endGame() {
         eGameState gameStateBeforeEndGame = activeGame.getGameState();
         gamesManager.endGame(activeGame);
+        onGameEnded(gameStateBeforeEndGame);
+    }
 
-        if (gameStateBeforeEndGame.gameHasStarted()) {
-            System.out.println("The winner is: " + activeGame.getWinnerPlayer().getName() + "!!! :)");
-            System.out.println("Game ended.");
+    private void onGameEnded(eGameState stateBeforeEndingGame) {
+        if (stateBeforeEndingGame.gameHasStarted()) {
+            printPlayerWonScreen(activeGame.getWinnerPlayer().getName());
+            pressAnyKeyToContinue();
+            showStatistics();
             System.out.println("Player boards:");
             printPlayerBoard(activeGame.getActivePlayer(), BoardPrinter.PRINT_SINGLE_BOARD);
             printPlayerBoard(activeGame.getOtherPlayer(), BoardPrinter.PRINT_SINGLE_BOARD);
+            System.out.println("The current game has ended, load a new game file if you wold like to play again");
         }
 
         // set the game to be as if it was just started
@@ -403,18 +411,14 @@ public class ConsoleUIManager {
             endGame();
         }
         exitGameSelected = true;
-        System.out.println("Closing the game, thank you for playing. Goodbye !");
+        printGoodbyeScreen();
     }
 
     // ======================================= Other methods =======================================
     private void pressAnyKeyToContinue() {
         System.out.println("\n--- Press enter to continue ---\n");
         scanner.reset();
-        try {
-            System.in.read();
-        } catch (IOException e) {
-            System.out.println("IO Error caught, resuming as if key was pressed");
-        }
+        scanner.nextLine();
     }
 
     private String getInputFromUser(String title) {
@@ -438,5 +442,61 @@ public class ConsoleUIManager {
            \ " '''''''''''''''''''' |
     ~~~~~~^~^~^^~^~^~^~^~^~^~^~~^~^~^^~~^~^
 */
+    }
+
+    public void printGoodbyeScreen() {
+        System.out.println("Thank you for playing, goodbye!\n");
+        System.out.println("                  /\\/\\,\\,\\ ,");
+        System.out.println("                 /        ` \\'\\,");
+        System.out.println("                /               '/|_");
+        System.out.println("               /                   /");
+        System.out.println("              /                   /");
+        System.out.println("             /                   ;");
+        System.out.println("             ;-\"\"-.  ____       ,");
+        System.out.println("            /      )'    `.     '");
+        System.out.println("           (    o |        )   ;");
+        System.out.println("            ),'\"\"\"\\    o   ;  :");
+        System.out.println("            ;\\___  `._____/ ,-:");
+        System.out.println("           ;                 @ )");
+        System.out.println("          /                `;-'");
+        System.out.println("       ,. `-.______________,|");
+        System.out.println("  ,(`._||         \\__\\__\\__)|");
+        System.out.println(" ,`.`-   \\        '.        |");
+        System.out.println("  `._  ) :          )______,;\\_");
+        System.out.println("     \\    \\_   _,--/       ,   `.");
+        System.out.println("      \\     `--\\   :      /      `.");
+        System.out.println("       \\        \\  ;     |         \\");
+        System.out.println("        `-._____ ;|      |       _,'");
+        System.out.println("                \\/'      `-.----' \\");
+        System.out.println("                 /          \\      \\");
+        System.out.println();
+        pressAnyKeyToContinue();
+    }
+
+    private void printPlayerWonScreen(String winner) {
+        System.out.println("\n~~~~~ Good job " + winner + " you have won the battle! ~~~~~\n");
+        System.out.println("                  _,----.");
+        System.out.println("               ,-'     __`.");
+        System.out.println("              /    .  /--\\`)");
+        System.out.println("             /  .  )\\/_,--\\");
+        System.out.println("            /  ,'\\/,-'    _\\_");
+        System.out.println("           |  /  ,' ,---'  __\\");
+        System.out.println("          ,' / ,:     _,-\\'_,(");
+        System.out.println("           (/ /  \\ \\,'   |'  _)         ,. ,.,.");
+        System.out.println("            \\/   |          '  \\        \\ ,. \\ )");
+        System.out.println("             \\, ,-              \\       /,' )//");
+        System.out.println("              ; \\'`      _____,-'      _|`  ,'");
+        System.out.println("               \\ `\"\\    (_,'_)     _,-'    ,'");
+        System.out.println("                \\   \\       \\  _,-'       ,'");
+        System.out.println("                |, , )       `'       _,-'");
+        System.out.println("                /`/ Y    ,    \\   _,-'");
+        System.out.println("                   :    /      \\-'");
+        System.out.println("                   |     `--.__\\___");
+        System.out.println("                   |._           __)");
+        System.out.println("                   |  `--.___    _)");
+        System.out.println("                   |         `----'");
+        System.out.println("                  /                \\");
+        System.out.println("                 '                . )");
+        System.out.println();
     }
 }

@@ -71,6 +71,6 @@ public class GamesManager implements IGamesLogic {
 
     @Override
     public void endGame(Game game) {
-        game.endGame();
+        game.activePlayerForfeit();
     }
 }

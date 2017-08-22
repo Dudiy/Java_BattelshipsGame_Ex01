@@ -92,8 +92,8 @@ public class Board implements Cloneable, Serializable {
         BoardCell res;
 
         if (coordinatesAreOnBoard(coordinates)) {
-            int col = coordinates.getColAsInt();
-            int row = coordinates.getRow();
+            int col = coordinates.getColIndexInMemory();
+            int row = coordinates.getRowIndexInMemory();
             res = board[row][col];
         } else {
             throw new CellNotOnBoardException();
@@ -158,15 +158,15 @@ public class Board implements Cloneable, Serializable {
     // add a new RegularShip to this board
     private void addRegularShipToBoard(RegularShip ship) throws Exception {
         BoardCoordinates currCoordinates = ship.getPosition();
-        RegularShip.eShipDirection shipDirection = (RegularShip.eShipDirection) ship.getDirection();
+        eShipDirection shipDirection = ship.getDirection();
 
         // set the value of the first cell
         setCellValue(currCoordinates, ship);
         // set the values of the next size-1 cells
         for (int i = 0; i < ship.getLength() - 1; i++) {
-            if (shipDirection == RegularShip.eShipDirection.COLUMN) {
+            if (shipDirection == eShipDirection.COLUMN) {
                 currCoordinates.OffsetRow(1);
-            } else if (shipDirection == RegularShip.eShipDirection.ROW) {
+            } else if (shipDirection == eShipDirection.ROW) {
                 currCoordinates.offsetCol(1);
             } else {
                 throw new IllegalArgumentException("The given Ship has an unknown direction value");
@@ -175,16 +175,29 @@ public class Board implements Cloneable, Serializable {
         }
     }
 
+    public boolean allShipsWereSunk(){
+        boolean allShipsWereSunk = true;
+
+        for (AbstractShip ship : shipsOnBoard){
+            if (ship.getHitsRemainingUntilSunk() != 0){
+                allShipsWereSunk = false;
+                break;
+            }
+        }
+
+        return allShipsWereSunk;
+    }
+
     // add a new LShapeShip to this board
-    private void addLShapeShipToBoard(LShapeShip Ship) {
+    private void addLShapeShipToBoard(LShapeShip ship) {
         //TODO implement on EX02
         throw new NotImplementedException();
     }
 
     // check if the given coordinates are on this board
     private boolean coordinatesAreOnBoard(BoardCoordinates i_Coordinates) {
-        int col = i_Coordinates.getColAsInt();
-        int row = i_Coordinates.getRow();
+        int col = i_Coordinates.getColIndexInMemory();
+        int row = i_Coordinates.getRowIndexInMemory();
         return ((0 <= col && col <= boardSize - 1) && (0 <= row && row <= boardSize - 1));
     }
 

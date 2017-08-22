@@ -1,11 +1,10 @@
 package GameLogic.Game.Board;
 
+import java.io.Serializable;
 import GameLogic.Exceptions.InvalidGameObjectPlacementException;
 import GameLogic.Game.GameObjects.GameObject;
 import GameLogic.Game.GameObjects.Water;
 import GameLogic.Game.eAttackResult;
-
-import java.io.Serializable;
 
 public class BoardCell implements Serializable {
     private BoardCoordinates position;
@@ -17,26 +16,14 @@ public class BoardCell implements Serializable {
         cellValue = new Water(position);
     }
 
-    public BoardCell(BoardCoordinates position) {
-        this.position = position;
-    }
-
     // ======================================= setters =======================================
     public void SetCellValue(GameObject cellValue) throws InvalidGameObjectPlacementException {
-        // TODO check surrounding cell
         if (this.cellValue == null || this.cellValue instanceof Water) {
             this.cellValue = cellValue;
         } else {
             String objectTypeInCell = this.cellValue.getClass().getSimpleName();
             throw new InvalidGameObjectPlacementException(cellValue.getClass().getSimpleName(), position,
                     "Cannot place a game object, cell is already occupied by a " + objectTypeInCell + " object");
-        }
-    }
-
-    // sets the cell value to be water
-    public void removeGameObjectFromCell() {
-        if (!(cellValue instanceof Water)) {
-            this.cellValue = new Water(this.cellValue.getPosition());
         }
     }
 
@@ -54,6 +41,13 @@ public class BoardCell implements Serializable {
     }
 
     // ======================================= methods =======================================
+    // sets the cell value to be water
+    public void removeGameObjectFromCell() {
+        if (!(cellValue instanceof Water)) {
+            this.cellValue = new Water(this.cellValue.getPosition());
+        }
+    }
+
     // TODO board attack
     public eAttackResult attack() {
         eAttackResult attackResult;

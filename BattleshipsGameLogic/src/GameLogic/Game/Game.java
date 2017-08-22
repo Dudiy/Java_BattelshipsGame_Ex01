@@ -1,34 +1,31 @@
 package GameLogic.Game;
 
-import GameLogic.Exceptions.CellNotOnBoardException;
-import GameLogic.Exceptions.InvalidGameObjectPlacementException;
-import GameLogic.Exceptions.NoMinesAvailableException;
+import java.io.*;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.*;
+
+import jaxb.generated.BattleShipGame;
+import GameLogic.Users.*;
+import GameLogic.Exceptions.*;
 import GameLogic.Game.Board.Board;
 import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.GameObjects.Ship.*;
 import GameLogic.Game.GameObjects.Water;
-import GameLogic.Users.*;
-import jaxb.generated.BattleShipGame;
-
-import java.io.*;
-import java.nio.file.Paths;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.*;
 
 public class Game implements Serializable {
     private static int IDGenerator = 1000;
     private int ID;
     private int activePlayerIndex;
-    private int winnerPlayerIndex = -1;
+//    private int winnerPlayerIndex = -1;
     private int movesCounter = 0;
     private boolean gameIsSet = false;
+    private Player winner;
     private Player[] players = new Player[2];
     private Instant gameStartTime;
     private ShipFactory shipFactory;
     private eGameState gameState = eGameState.INVALID;
     private GameSettings gameSettings;
-    //private Map<String, User> spectators = new HashMap<>();
 
     public Game(GameSettings gameSettings) {
         this.ID = IDGenerator++;
@@ -64,11 +61,16 @@ public class Game implements Serializable {
     }
 
     public Player getWinnerPlayer() {
-        return players[winnerPlayerIndex];
+        return winner;
+//        return players[winnerPlayerIndex];
     }
 
     public eGameState getGameState() {
         return gameState;
+    }
+
+    public Duration getTotalGameDuration() {
+        return Duration.between(gameStartTime, Instant.now());
     }
 
     // ======================================= methods =======================================
@@ -84,10 +86,6 @@ public class Game implements Serializable {
         initBoards();
         gameState = eGameState.INITIALIZED;
         gameStartTime = Instant.now();
-    }
-
-    public Duration getTotalGameDuration() {
-        return Duration.between(gameStartTime, Instant.now());
     }
 
     private void initBoards() throws Exception {
@@ -124,29 +122,30 @@ public class Game implements Serializable {
         }
 
         if (!allRequiredShipsAdded(shipTypesAmount)) {
-            throw new InputMismatchException("Error: not all the required ship was added.");
+            throw new InputMismatchException("Error: not all required ships were added.");
         }
 
         return currentBoard;
     }
 
     private boolean allRequiredShipsAdded(Map<String, Integer> shipTypes) {
-        Boolean allShipsAdded = true;
+        Boolean allShipsWereAdded = true;
 
         for (Map.Entry<String, Integer> shipType : shipTypes.entrySet()) {
             if (shipType.getValue() != 0) {
-                allShipsAdded = false;
+                allShipsWereAdded = false;
                 break;
             }
         }
 
-        return allShipsAdded;
+        return allShipsWereAdded;
     }
-
 
     public eAttackResult attack(BoardCoordinates position) throws CellNotOnBoardException {
         eAttackResult attackResult = getActivePlayer().attack(position);
 
+        //if a mine was attacked which hit my own ship or mine, increment the other player's score
+        // TODO if a mine hits another mine do we increment the score?
         if (attackResult == eAttackResult.HIT_MINE &&
                 !(getActivePlayer().getMyBoard().getBoardCellAtCoordinates(position).getCellValue() instanceof Water)) {
             getOtherPlayer().incrementScore();
@@ -155,10 +154,17 @@ public class Game implements Serializable {
 //        if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED) {
 //        }
 
-        if (attackResult.moveEnded()) {
+        if (attackResult == eAttackResult.HIT_AND_SUNK_SHIP) {
+            movesCounter++;
+            if (activePlayerSunkAllShips()) {
+                winner = getActivePlayer();
+                gameState = eGameState.PLAYER_WON;
+            }
+        } else if (attackResult.moveEnded()) {
             swapPlayers();
             movesCounter++;
         }
+
 
         return attackResult;
     }
@@ -167,17 +173,24 @@ public class Game implements Serializable {
         activePlayerIndex = (activePlayerIndex + 1) % 2;
     }
 
-
     public void plantMineOnActivePlayersBoard(BoardCoordinates cell) throws CellNotOnBoardException, InvalidGameObjectPlacementException, NoMinesAvailableException {
         getActivePlayer().plantMine(cell);
         swapPlayers();
     }
 
-    public void endGame() {
-        // the player who left the game loses
-        swapPlayers();
-        winnerPlayerIndex = activePlayerIndex;
+    public boolean activePlayerSunkAllShips() {
+        return getActivePlayer().getOpponentBoard().allShipsWereSunk();
+    }
+
+    public void activePlayerForfeit(){
+//        swapPlayers();
+        winner = getOtherPlayer();
         gameState = eGameState.PLAYER_QUIT;
+    }
+
+    public void activePlayerWon(){
+        winner = getActivePlayer();
+        gameState = eGameState.PLAYER_WON;
     }
 
     public static void saveToFile(Game game, final String fileName) throws Exception {
