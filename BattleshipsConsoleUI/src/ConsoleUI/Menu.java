@@ -46,7 +46,7 @@ public class Menu {
         boolean isValidSelection = false;
         int userIntSelection;
 
-        String title = "Please select one of the options above" + (activePlayerName.isEmpty() ? ":" : "(active player is " + activePlayerName + "):");
+        String title = "Please select one of the options above" + (activePlayerName.isEmpty() ? ": " : " (active player is " + activePlayerName + "): ");
         System.out.print(title);
         do {
             try {

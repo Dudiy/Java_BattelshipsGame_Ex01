@@ -470,7 +470,6 @@ public class ConsoleUIManager {
         System.out.println("                \\/'      `-.----' \\");
         System.out.println("                 /          \\      \\");
         System.out.println();
-        pressAnyKeyToContinue();
     }
 
     private void printPlayerWonScreen(String winner) {

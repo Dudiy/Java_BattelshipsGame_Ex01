@@ -17,7 +17,6 @@ public class Game implements Serializable {
     private static int IDGenerator = 1000;
     private int ID;
     private int activePlayerIndex;
-//    private int winnerPlayerIndex = -1;
     private int movesCounter = 0;
     private boolean gameIsSet = false;
     private Player winner;
@@ -62,7 +61,6 @@ public class Game implements Serializable {
 
     public Player getWinnerPlayer() {
         return winner;
-//        return players[winnerPlayerIndex];
     }
 
     public eGameState getGameState() {
@@ -122,7 +120,7 @@ public class Game implements Serializable {
         }
 
         if (!allRequiredShipsAdded(shipTypesAmount)) {
-            throw new InputMismatchException("Error: not all required ships were added.");
+            throw new InputMismatchException("Error: amount of ships added to " + currentPlayer.getName() + "'s board is invalid.");
         }
 
         return currentBoard;
@@ -157,8 +155,7 @@ public class Game implements Serializable {
         if (attackResult == eAttackResult.HIT_AND_SUNK_SHIP) {
             movesCounter++;
             if (activePlayerSunkAllShips()) {
-                winner = getActivePlayer();
-                gameState = eGameState.PLAYER_WON;
+                activePlayerWon();
             }
         } else if (attackResult.moveEnded()) {
             swapPlayers();
@@ -183,7 +180,6 @@ public class Game implements Serializable {
     }
 
     public void activePlayerForfeit(){
-//        swapPlayers();
         winner = getOtherPlayer();
         gameState = eGameState.PLAYER_QUIT;
     }

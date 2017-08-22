@@ -53,7 +53,6 @@ public class GameSettings implements Serializable {
         return gameLoadedFromXml;
     }
 
-    // TODO del ?
     public Map<String, BattleShipGame.ShipTypes.ShipType> getShipTypes() {
         return shipTypes;
     }
