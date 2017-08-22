@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
+import javafx.fxml.LoadException;
 import jaxb.generated.BattleShipGame;
 import GameLogic.Users.*;
 import GameLogic.Exceptions.*;
@@ -90,11 +91,16 @@ public class Game implements Serializable {
         int currentBoardIndex = 0;
         BattleShipGame gameLoadedFromXml = gameSettings.getGameLoadedFromXml();
 
-        for (BattleShipGame.Boards.Board board : gameLoadedFromXml.getBoards().getBoard()) {
-            Board currentBoard = addAllShipsToBoard(getActivePlayer(), board);
-            players[currentBoardIndex].setMyBoard(currentBoard);
-            players[(currentBoardIndex + 1) % 2].setOpponentBoard(currentBoard);
-            currentBoardIndex++;
+        if (gameLoadedFromXml == null) {
+            // game was loaded from save game and not a file
+            throw new LoadException("This game was loaded from a file, no data from the original xml is available for resetting");
+        } else {
+            for (BattleShipGame.Boards.Board board : gameLoadedFromXml.getBoards().getBoard()) {
+                Board currentBoard = addAllShipsToBoard(getActivePlayer(), board);
+                players[currentBoardIndex].setMyBoard(currentBoard);
+                players[(currentBoardIndex + 1) % 2].setOpponentBoard(currentBoard);
+                currentBoardIndex++;
+            }
         }
 
         gameIsSet = true;

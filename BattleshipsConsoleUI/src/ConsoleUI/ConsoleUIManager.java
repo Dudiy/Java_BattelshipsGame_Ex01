@@ -2,27 +2,20 @@ package ConsoleUI;
 
 import GameLogic.Exceptions.*;
 import GameLogic.Game.Board.BoardCoordinates;
-import GameLogic.Game.Game;
-import GameLogic.Game.GameSettings;
-import GameLogic.Game.eGameState;
-import GameLogic.Game.eAttackResult;
+import GameLogic.Game.*;
 import GameLogic.GamesManager;
-import GameLogic.Users.ComputerPlayer;
-import GameLogic.Users.Player;
-import GameLogic.Users.RegularPlayer;
+import GameLogic.Users.*;
 import javafx.fxml.LoadException;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
-
-import static java.nio.file.Paths.get;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 public class ConsoleUIManager {
-
     private GamesManager gamesManager = new GamesManager();
     // console application may have only 1 game
     private Game activeGame;
@@ -37,7 +30,9 @@ public class ConsoleUIManager {
 
         do {
             try {
-                if (activeGame != null && activeGame.getActivePlayer() instanceof ComputerPlayer) {
+                if (activeGame != null &&
+                        activeGame.getGameState() == eGameState.STARTED &&
+                        activeGame.getActivePlayer() instanceof ComputerPlayer) {
                     makeMove();
                 } else {
                     eMenuOption menuItemSelected = menu.display(activeGame);
@@ -107,10 +102,13 @@ public class ConsoleUIManager {
             }
         } catch (LoadException e) {
             System.out.println("Error while loading game: " + e.getMessage() + ". Please try again.");
-        }
+        } //TODO uncomment
+//        catch (UserSelectedCancelException e) {
+//            System.out.println(e.getMessage());
+//        }
     }
 
-    public String getFilePathFromUser() {
+    private String getFilePathFromUser() throws UserSelectedCancelException {
         String path;
         File file;
         boolean endOfInput = false;
@@ -148,7 +146,7 @@ public class ConsoleUIManager {
         return file;
     }
 
-    public boolean checkFileType(final File file, final String fileTypeToCompare) {
+    private boolean checkFileType(final File file, final String fileTypeToCompare) {
         String fileType;
         boolean sameType = false;
 
@@ -265,16 +263,6 @@ public class ConsoleUIManager {
 
         if (activeGame.getGameState() == eGameState.PLAYER_WON) {
             onGameEnded(eGameState.STARTED);
-            resetGame(activeGame);
-        }
-    }
-
-    private void resetGame(Game activeGame) {
-        try {
-            activeGame.resetGame();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            activeGame.setGameState(eGameState.INVALID);
         }
     }
 
@@ -343,7 +331,7 @@ public class ConsoleUIManager {
             System.out.println("Player boards:");
             printPlayerBoard(activeGame.getActivePlayer(), BoardPrinter.PRINT_SINGLE_BOARD);
             printPlayerBoard(activeGame.getOtherPlayer(), BoardPrinter.PRINT_SINGLE_BOARD);
-            System.out.println("The current game has ended, load a new game file if you wold like to play again");
+            System.out.println("The current game has ended...resetting the game");
         }
 
         // set the game to be as if it was just started
@@ -375,19 +363,25 @@ public class ConsoleUIManager {
 
     // ======================================= Save game =======================================
     private void saveGame() {
-        //String fileName = "aa.dat";
-        String fileName = getInputFromUser("Please enter a file name for saving:");
-        // TODO check validation name
+        String fileName;
+        try {
+            fileName = getInputFromUser("Please enter a file name for saving:");
+            // TODO check validation name
 
-        if (fileName != null && !fileName.isEmpty()) {
-            fileName = GameSettings.SAVED_GAME_DIR + fileName + GameSettings.SAVED_GAME_EXTENSION;
-            // TODO IOException ?
-            try {
-                gamesManager.saveGameToFile(activeGame, fileName);
-                System.out.println("Game saved successfully!");
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+            if (!fileName.isEmpty()) {
+                fileName = GameSettings.SAVED_GAME_DIR + fileName + GameSettings.SAVED_GAME_EXTENSION;
+                // TODO IOException ?
+                try {
+                    gamesManager.saveGameToFile(activeGame, fileName);
+                    System.out.println("Game saved successfully!");
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            } else {
+                System.out.println("Filename can not be empty, the game was not saved");
             }
+        } catch (UserSelectedCancelException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -401,6 +395,8 @@ public class ConsoleUIManager {
             fileName = getGameToLoadFromUser(savedGamesList);
             activeGame = gamesManager.loadSavedGameFromFile(fileName);
             System.out.println("Game loaded from file!");
+        } catch (UserSelectedCancelException e) {
+            System.out.println(e.getMessage());
         } catch (Exception e) {
             System.out.println("Error while loading saved games: " + e.getMessage());
         }
@@ -430,7 +426,7 @@ public class ConsoleUIManager {
         return savedGamesList;
     }
 
-    private String getGameToLoadFromUser(HashMap<Integer, String> savedGamesList) {
+    private String getGameToLoadFromUser(HashMap<Integer, String> savedGamesList) throws UserSelectedCancelException {
         boolean isValidSelection = false;
         String selectedFileName = null;
         System.out.println("Saved games available :");
@@ -451,6 +447,8 @@ public class ConsoleUIManager {
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input format please input a number");
+            } catch (UserSelectedCancelException e) {
+                throw new UserSelectedCancelException();
             } catch (Exception e) {
                 System.out.println("Invalid selection, please select the index of one of the files above");
             }
@@ -461,7 +459,7 @@ public class ConsoleUIManager {
 
     // ======================================= Exit =======================================
     private void exit() {
-        if (activeGame != null) {
+        if (activeGame != null && activeGame.getGameState() != eGameState.INVALID) {
             endGame();
         }
         exitGameSelected = true;
@@ -475,11 +473,14 @@ public class ConsoleUIManager {
         scanner.nextLine();
     }
 
-    private String getInputFromUser(String title) {
+    private String getInputFromUser(String title) throws UserSelectedCancelException {
         System.out.print(title + "(Or 0 to return to main menu): ");
         String inputFromUser = scanner.nextLine();
+        if (inputFromUser.equals("0")) {
+            throw new UserSelectedCancelException();
+        }
 
-        return inputFromUser.equals("0") ? null : inputFromUser;
+        return inputFromUser;
     }
 
     public void printWelcomeScreen() {
@@ -576,5 +577,14 @@ public class ConsoleUIManager {
                 scanner.nextLine();
             }
         } while (!isValidSelection);
+    }
+
+    private void resetGame(Game activeGame) {
+        try {
+            activeGame.resetGame();
+        } catch (Exception e) {
+            System.out.println(e.getMessage() + ".\nPlease load the file again or choose another file");
+            activeGame.setGameState(eGameState.INVALID);
+        }
     }
 }

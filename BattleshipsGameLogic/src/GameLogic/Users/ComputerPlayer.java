@@ -40,6 +40,7 @@ public class ComputerPlayer extends Player {
     }
 
     private void addDiagonalToOptionalMovesStartingFrom(int currRow, int currCol) {
+        // if initial cell is above the board, run to the first row on the board
         while (currRow < 0) {
             currRow++;
             currCol++;

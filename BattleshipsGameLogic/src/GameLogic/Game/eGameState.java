@@ -17,7 +17,9 @@ public enum eGameState implements Serializable {
     }
 
     public boolean gameHasStarted() {
-        return this != INVALID && this != LOADED && this != INITIALIZED;
+        return this != INVALID &&
+                this != LOADED &&
+                this != INITIALIZED;
     }
 
     @Override
