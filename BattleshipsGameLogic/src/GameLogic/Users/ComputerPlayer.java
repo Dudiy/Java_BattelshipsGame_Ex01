@@ -27,13 +27,6 @@ public class ComputerPlayer extends Player {
     }
 
     // ============================================ init ============================================
-
-//    private void initOptionalMoves() {
-//        initDiagonalWithSpaces();
-////        initDiagonalWithSpaces(0, 1, 2);
-//    }
-    // assume that the input is: (0,0) OR (0,1)
-
     // we only need to check diagonals that are (minimalShipSizeOnBoard - 1) spaces apart
     // if we start at one of the corners we get the least amount of moves necessary
     private void initOptionalMoves() {
@@ -44,27 +37,10 @@ public class ComputerPlayer extends Player {
             addDiagonalToOptionalMovesStartingFrom(currRow, currCol);
             currRow -= minimalShipSizeOnBoard;
         }
-
-/*        for (int i = 0; i < numSpacesBetweenDiagonals; i++) {
-            currCol = i;
-            currRow = 0;
-            // start from center diagonal and fill up diagonals to the right/up
-            while (currCol < boardSize) {
-                addDiagonalToOptionalMovesStartingFrom(currRow, currCol);
-                currCol += numSpacesBetweenDiagonals;
-            }
-            currCol = 0;
-            currRow = i == 0 ? i + numSpacesBetweenDiagonals : i;
-            // go back to the diagonal left of the center diagonal and move left/down
-            while (currRow < boardSize) {
-                addDiagonalToOptionalMovesStartingFrom(currRow, currCol);
-                currRow += numSpacesBetweenDiagonals;
-            }
-        }*/
     }
 
     private void addDiagonalToOptionalMovesStartingFrom(int currRow, int currCol) {
-        while (currRow < 0){
+        while (currRow < 0) {
             currRow++;
             currCol++;
         }
@@ -190,14 +166,6 @@ public class ComputerPlayer extends Player {
         if (attackResult == eAttackResult.HIT_AND_SUNK_SHIP) {
             sunkAShip();
         }
-        // 1 2 3
-        // 4 5 6
-        // 7 8 9
-        //
-        // if hit 5:
-        // add to critical move: 2 4 6 8
-        // assign as hit: 1 3 7 9
-        // use dudi logic in allSurroundingCellsClear in class Board
     }
 
     // after ship is sunk mark all surrounding point as known and remove from suspected list;
