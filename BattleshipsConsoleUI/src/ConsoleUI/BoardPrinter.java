@@ -65,6 +65,7 @@ public class BoardPrinter {
             currRowIndex++;
         }
         printLastRowBorder();
+        System.out.println();
     }
 
     private void printBoardTitles() {

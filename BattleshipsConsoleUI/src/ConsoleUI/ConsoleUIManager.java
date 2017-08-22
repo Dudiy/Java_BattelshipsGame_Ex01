@@ -13,12 +13,8 @@ import GameLogic.Users.RegularPlayer;
 import javafx.fxml.LoadException;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
@@ -34,15 +30,16 @@ public class ConsoleUIManager {
     private Scanner scanner = new Scanner(System.in);
     private Menu menu = new Menu();
     private boolean exitGameSelected = false;
+    private int computerPlayerIndex = 0;
 
     public void run() {
         printWelcomeScreen();
 
         do {
             try {
-                if(activeGame != null && activeGame.getActivePlayer() instanceof ComputerPlayer){
+                if (activeGame != null && activeGame.getActivePlayer() instanceof ComputerPlayer) {
                     makeMove();
-                }else{
+                } else {
                     eMenuOption menuItemSelected = menu.display(activeGame);
                     invokeMenuItem(menuItemSelected);
                 }
@@ -84,10 +81,18 @@ public class ConsoleUIManager {
             case LOAD_SAVED_GAME:
                 loadSavedGame();
                 break;
+            case PLAY_AGAINST_COMPUTER:
+                playAgainstComputer();
+                break;
             case EXIT:
                 exit();
                 break;
         }
+    }
+
+    private void playAgainstComputer() {
+        setComputerPlayer();
+
     }
 
     // ======================================= Load Game =======================================
@@ -160,9 +165,19 @@ public class ConsoleUIManager {
     // ======================================= Start Game =======================================
     private void startGame() {
         try {
-            Player player1 = new RegularPlayer("p1", "Player 1");
-            Player player2 = new RegularPlayer("p2", "Player 2");
+            ComputerPlayer computerPlayer = computerPlayerIndex == 0 ? null :
+                    new ComputerPlayer("ComputerPlayer2", "Computer Player", activeGame.getSizeOfMinimalShipOnBoard());
+            Player player1 = computerPlayerIndex == 1 ?
+                    computerPlayer :
+                    new RegularPlayer("P1", "Player 1");
+            Player player2 = computerPlayerIndex == 2 ?
+                    computerPlayer :
+                    new RegularPlayer("P2", "Player 2");
+
             gamesManager.startGame(activeGame, player1, player2);
+            if (computerPlayerIndex == 1) {
+                activeGame.swapPlayers();
+            }
             // give each player 2 mines
             player1.getMyBoard().setMinesAvailable(2);
             player2.getMyBoard().setMinesAvailable(2);
@@ -194,7 +209,7 @@ public class ConsoleUIManager {
 
     private void printPlayerBoard(Player player, boolean printSingleBoard) {
         System.out.println("Player: " + player.getName());
-        System.out.println("Score: " + activeGame.getActivePlayer().getScore());
+        System.out.println("Score: " + player.getScore());
         boardPrinter.printBoards(player, printSingleBoard);
     }
 
@@ -205,30 +220,42 @@ public class ConsoleUIManager {
         eAttackResult attackResult = null;
         boolean moveEnded = false;
         boolean printGameState = true;
+        boolean currentPlayerIsComputer;
 
         // get active player before players are swapped
         Player activePlayer = activeGame.getActivePlayer();
         do {
             try {
-                if (printGameState && attackResult != eAttackResult.CELL_ALREADY_ATTACKED) {
+                currentPlayerIsComputer = activePlayer instanceof ComputerPlayer;
+                if (printGameState &&
+                        attackResult != eAttackResult.CELL_ALREADY_ATTACKED
+                        && !currentPlayerIsComputer) {
                     showGameState();
                 }
 
-                if(activePlayer instanceof ComputerPlayer){
-                    positionToAttack = ((ComputerPlayer)activePlayer).getNextMove();
-                }else if(activePlayer instanceof RegularPlayer){
-                    positionToAttack = getPositionFromUser();
-                }
-                // TODO positionToAttack can be null ? there is exception ?
+                //TODO verify this works
+                positionToAttack = currentPlayerIsComputer ?
+                        ((ComputerPlayer) activePlayer).getNextPositionToAttack() :
+                        getPositionFromUser();
                 attackResult = gamesManager.makeMove(activeGame, positionToAttack);
-                System.out.println("Attack result: " + attackResult);
                 moveEnded = attackResult.moveEnded() || activeGame.getGameState() == eGameState.PLAYER_WON;
-                if (!moveEnded) {
-                    pressAnyKeyToContinue();
+
+                if (!currentPlayerIsComputer) {
+                    System.out.println("Attack result: " + attackResult);
+                    if (!moveEnded) {
+                        pressAnyKeyToContinue();
+                    }
+                } else {
+                    if (moveEnded) {
+                        printComputerAttackLog((ComputerPlayer) activePlayer);
+                    }
                 }
             } catch (CellNotOnBoardException e) {
                 System.out.println("The cell selected is not on the board, try again");
                 printGameState = false;
+            } catch (ComputerPlayerException e) {
+                System.out.println(e.getMessage());
+                break;
             }
         } while (!moveEnded);
 
@@ -238,7 +265,24 @@ public class ConsoleUIManager {
 
         if (activeGame.getGameState() == eGameState.PLAYER_WON) {
             onGameEnded(eGameState.STARTED);
+            resetGame(activeGame);
         }
+    }
+
+    private void resetGame(Game activeGame) {
+        try {
+            activeGame.resetGame();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            activeGame.setGameState(eGameState.INVALID);
+        }
+    }
+
+    private void printComputerAttackLog(ComputerPlayer computerPlayer) {
+        for (String loggedAttackResult : computerPlayer.getMovesLog()) {
+            System.out.println(loggedAttackResult);
+        }
+        computerPlayer.clearMovesLog();
     }
 
     public BoardCoordinates getPositionFromUser() {
@@ -303,7 +347,7 @@ public class ConsoleUIManager {
         }
 
         // set the game to be as if it was just started
-        activeGame = null;
+        resetGame(activeGame);
     }
 
     // ======================================= Plant mine =======================================
@@ -426,7 +470,7 @@ public class ConsoleUIManager {
 
     // ======================================= Other methods =======================================
     private void pressAnyKeyToContinue() {
-        System.out.println("\n--- Press enter to continue ---\n");
+        System.out.println("\n--- Press enter to continue ---");
         scanner.reset();
         scanner.nextLine();
     }
@@ -507,5 +551,30 @@ public class ConsoleUIManager {
         System.out.println("                  /                \\");
         System.out.println("                 '                . )");
         System.out.println();
+    }
+
+    public void setComputerPlayer() {
+        boolean isValidSelection = false;
+
+        do {
+            try {
+                System.out.println("Which player would you like the computer to be (1 or 2)?");
+                System.out.println("* enter 3 if you would like to with another human player *");
+                int selectedPlayerIndex = scanner.nextInt();
+                if (selectedPlayerIndex == 1 || selectedPlayerIndex == 2) {
+                    computerPlayerIndex = selectedPlayerIndex;
+                    isValidSelection = true;
+                } else if (selectedPlayerIndex == 3) {
+                    computerPlayerIndex = 0;
+                    isValidSelection = true;
+                } else {
+                    System.out.println("Invalid selection, Please enter \"1\" or \"2\"");
+                    scanner.nextLine();
+                }
+            } catch (Exception e) {
+                System.out.println("Error while selecting player: " + e.getMessage() + ". Please enter \"1\" or \"2\"");
+                scanner.nextLine();
+            }
+        } while (!isValidSelection);
     }
 }

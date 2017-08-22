@@ -67,6 +67,19 @@ public class GameSettings implements Serializable {
         return shipTypesAmount;
     }
 
+    public int getMinimalShipSize(){
+        //there must be at least a ship that is longer than 1
+        int minimalSize = shipTypes.values().iterator().next().getLength();
+
+        for (BattleShipGame.ShipTypes.ShipType shipType : shipTypes.values()){
+            if (shipType.getLength() < minimalSize){
+                minimalSize = shipType.getLength();
+            }
+        }
+
+        return minimalSize;
+    }
+
     // ======================================= file methods =======================================
     // creates a new GameSettings object from xml file, with validation
     // assume: file exist, file is XML

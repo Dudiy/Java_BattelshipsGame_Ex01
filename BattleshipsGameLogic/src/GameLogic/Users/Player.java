@@ -87,11 +87,12 @@ public abstract class Player implements Serializable {
             // if I hit a mine, attack my own board
 //            Mine mineThatWasHit = (Mine)opponentBoard.getBoardCellAtCoordinates(position).getCellValue();
 //            mineThatWasHit.setExplosionResult(myBoard.attack(position));
-            myBoard.attack(position);
+            eAttackResult mineExplosionResult = myBoard.attack(position);
 //        // TODO implement in EX02
-//            if (mineExplosionResult == eAttackResult.HIT_MINE) {
-//                BoardCell cellHit = opponentBoard.getBoardCellAtCoordinates(position);
-//                cellHit.removeGameObjectFromCell();
+            if (mineExplosionResult == eAttackResult.HIT_MINE) {
+                BoardCell cellHit = opponentBoard.getBoardCellAtCoordinates(position);
+                cellHit.removeGameObjectFromCell();
+            }
 //                // TODO verify we don't need to attack again to make is a "MISS"
 //            } else if (mineExplosionResult == eAttackResult.CELL_ALREADY_ATTACKED){
 //                // ....

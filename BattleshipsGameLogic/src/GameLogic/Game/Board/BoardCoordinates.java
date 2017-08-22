@@ -67,11 +67,17 @@ public class BoardCoordinates implements Serializable {
         return res;
     }
 
+    // converts two indices strting at 0,0 to boardCoordinates
     public static BoardCoordinates Parse(int row, int col) {
-        return new BoardCoordinates((char)('A'+col), row +1);
+        return new BoardCoordinates((char) ('A' + col), row + 1);
     }
 
-    public static Point coordinatesToPoint(BoardCoordinates position){
+    public static BoardCoordinates Parse(Point point) {
+        return BoardCoordinates.Parse(point.x, point.y);
+    }
+
+    // returns the index of the cell as it is in the memory (starting from 0,0)
+    public static Point coordinatesToPoint(BoardCoordinates position) {
         return new Point(position.getRowIndexInMemory(), position.getColIndexInMemory());
     }
 

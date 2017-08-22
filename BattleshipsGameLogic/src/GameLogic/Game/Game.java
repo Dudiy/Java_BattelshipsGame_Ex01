@@ -166,7 +166,7 @@ public class Game implements Serializable {
         return attackResult;
     }
 
-    private void swapPlayers() {
+    public void swapPlayers() {
         activePlayerIndex = (activePlayerIndex + 1) % 2;
     }
 
@@ -179,14 +179,25 @@ public class Game implements Serializable {
         return getActivePlayer().getOpponentBoard().allShipsWereSunk();
     }
 
-    public void activePlayerForfeit(){
+    public void activePlayerForfeit() {
         winner = getOtherPlayer();
         gameState = eGameState.PLAYER_QUIT;
     }
 
-    public void activePlayerWon(){
+    public void activePlayerWon() {
         winner = getActivePlayer();
         gameState = eGameState.PLAYER_WON;
+    }
+
+    public void resetGame() throws Exception {
+        activePlayerIndex = 0;
+        try {
+            initBoards();
+        } catch (Exception e) {
+            throw new Exception("Error while resetting game. internal error: " + e.getMessage());
+        }
+        gameState = eGameState.INITIALIZED;
+        gameStartTime = Instant.now();
     }
 
     public static void saveToFile(Game game, final String fileName) throws Exception {
@@ -217,5 +228,9 @@ public class Game implements Serializable {
         }
 
         return game;
+    }
+
+    public int getSizeOfMinimalShipOnBoard() {
+        return gameSettings.getMinimalShipSize();
     }
 }

@@ -15,6 +15,7 @@ public enum eMenuOption {
     PLANT_MINE(7,"Plant mine",EnumSet.of(eGameState.STARTED)),
     SAVE_GAME(8, "Save game", EnumSet.of(eGameState.STARTED)),
     LOAD_SAVED_GAME(9, "Load saved game", EnumSet.of(eGameState.INVALID, eGameState.INITIALIZED, eGameState.LOADED)),
+    PLAY_AGAINST_COMPUTER(10,"Play against computer",EnumSet.of(eGameState.INITIALIZED, eGameState.LOADED)),
     EXIT(0, "Exit", EnumSet.allOf(eGameState.class));
 
     private int ID;

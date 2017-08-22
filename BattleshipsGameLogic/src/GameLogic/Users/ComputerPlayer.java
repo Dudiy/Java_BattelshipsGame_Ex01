@@ -1,6 +1,7 @@
 package GameLogic.Users;
 
 import GameLogic.Exceptions.CellNotOnBoardException;
+import GameLogic.Exceptions.ComputerPlayerException;
 import GameLogic.Game.Board.Board;
 import GameLogic.Game.Board.BoardCoordinates;
 import GameLogic.Game.eAttackResult;
@@ -10,42 +11,64 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ComputerPlayer extends Player {
+    private int boardSize;
     private List<Point> optionalMoves = new LinkedList<>();
-    private List<Point> criticalMoves = new LinkedList<>();
-    private boolean[][] hitBoard;
-    int boardSize;
+    private List<Point> suspectedShipPositions = new LinkedList<>();
+    // cells that still need to be checked are false
+    private boolean[][] knownCellStateBoard;
+    private int minimalShipSizeOnBoard;
 
-    public ComputerPlayer(String playerID, String name) {
+    private List<String> movesLog = new LinkedList<>();
+
+    public ComputerPlayer(String playerID, String name, int minimalShipSizeOnBoard) {
         super(playerID, name);
+        this.minimalShipSizeOnBoard = minimalShipSizeOnBoard;
+        movesLog.add("Computer attack results log:");
     }
 
     // ============================================ init ============================================
-    public void initOptionalMoves() {
-        initDiagonalWithTwoSpace(0, 0);
-        initDiagonalWithTwoSpace(0, 1);
-    }
 
+//    private void initOptionalMoves() {
+//        initDiagonalWithSpaces();
+////        initDiagonalWithSpaces(0, 1, 2);
+//    }
     // assume that the input is: (0,0) OR (0,1)
-    private void initDiagonalWithTwoSpace(int currRow, int currCol) {
-        // if currCol == 0, lower half diagonal start in currRow = 2.
-        // if currCol == 1, lower half diagonal start in currRow = 1.
-        int startRowInLowerHalf = currCol == 0 ? 2 : 1;
 
-        // upper half diagonal
-        while (currCol < boardSize) {
-            getDiagonalValue(currRow, currCol);
-            currCol += 2;
+    // we only need to check diagonals that are (minimalShipSizeOnBoard - 1) spaces apart
+    // if we start at one of the corners we get the least amount of moves necessary
+    private void initOptionalMoves() {
+        int currCol = 0;
+        int currRow = boardSize - 1;
+
+        while (Math.abs(currRow) < boardSize) {
+            addDiagonalToOptionalMovesStartingFrom(currRow, currCol);
+            currRow -= minimalShipSizeOnBoard;
         }
-        currRow = startRowInLowerHalf;
-        currCol = 0;
-        // lower half diagonal
-        while (currRow < boardSize) {
-            getDiagonalValue(currRow, currCol);
-            currRow += 2;
-        }
+
+/*        for (int i = 0; i < numSpacesBetweenDiagonals; i++) {
+            currCol = i;
+            currRow = 0;
+            // start from center diagonal and fill up diagonals to the right/up
+            while (currCol < boardSize) {
+                addDiagonalToOptionalMovesStartingFrom(currRow, currCol);
+                currCol += numSpacesBetweenDiagonals;
+            }
+            currCol = 0;
+            currRow = i == 0 ? i + numSpacesBetweenDiagonals : i;
+            // go back to the diagonal left of the center diagonal and move left/down
+            while (currRow < boardSize) {
+                addDiagonalToOptionalMovesStartingFrom(currRow, currCol);
+                currRow += numSpacesBetweenDiagonals;
+            }
+        }*/
     }
 
-    private void getDiagonalValue(int currRow, int currCol) {
+    private void addDiagonalToOptionalMovesStartingFrom(int currRow, int currCol) {
+        while (currRow < 0){
+            currRow++;
+            currCol++;
+        }
+
         while (currRow < boardSize && currCol < boardSize) {
             optionalMoves.add(new Point(currRow, currCol));
             currRow++;
@@ -53,67 +76,120 @@ public class ComputerPlayer extends Player {
         }
     }
 
-    // ============================================ setter ============================================
+    // ============================================ Setters ============================================
+
     public void setMyBoard(Board board) {
         this.myBoard = board;
-        boardSize= board.getBoardSize();
-        hitBoard = new boolean[ boardSize ][ boardSize ];
+        boardSize = board.getBoardSize();
+        //TODO verify init to false
+        knownCellStateBoard = new boolean[boardSize][boardSize];
         initOptionalMoves();
     }
 
+    public void clearMovesLog() {
+        movesLog.clear();
+        movesLog.add("Computer attack results log:");
+    }
+
+    // ============================================ Getters ============================================
+    public List<String> getMovesLog() {
+        return movesLog;
+    }
+
     // ============================================ Next Move ============================================
-    public BoardCoordinates getNextMove(){
-        Point movePoint=null;
-        boolean cellNeverHit = false;
+    public BoardCoordinates getNextPositionToAttack() throws ComputerPlayerException {
+        Point nextPositionToAttack;
+        boolean foundCellToCheck = false;
 
-        movePoint = getBestMove();
-        while(!cellNeverHit){
-            movePoint = getBestMove();
-            cellNeverHit = checkCellAlreadyHit(movePoint);
-        }
+        do {
+            nextPositionToAttack = getNextMove();
+            foundCellToCheck = checkCellAlreadyHit(nextPositionToAttack);
+        } while (!foundCellToCheck);
 
-        return pointToCoordinates(movePoint);
+        return pointToCoordinates(nextPositionToAttack);
     }
 
-    private Point getBestMove() {
-        Point bestMove=null;
-        if(!criticalMoves.isEmpty()){
-            bestMove = getPoint(criticalMoves);
-        }else if(!optionalMoves.isEmpty()){
-            bestMove = getPoint(optionalMoves);
+    private Point getNextMove() throws ComputerPlayerException {
+        Point nextMove;
+
+        if (!suspectedShipPositions.isEmpty()) {
+            nextMove = getNextPointInList(suspectedShipPositions);
+        } else if (!optionalMoves.isEmpty()) {
+            nextMove = getNextPointInList(optionalMoves);
+        } else {
+            throw new ComputerPlayerException("Computer player has run out of moves  :(");
         }
-        return bestMove;
+
+        return nextMove;
     }
 
-    private Point getPoint(List<Point> moveList) {
+    private Point getNextPointInList(List<Point> moveList) {
         Point movePoint;
         movePoint = moveList.get(0);
-        if(movePoint != null){
+
+        if (movePoint != null) {
             moveList.remove(0);
         }
+
         return movePoint;
     }
 
     private boolean checkCellAlreadyHit(Point movePoint) {
-        return hitBoard[(int)movePoint.getX()][(int)movePoint.getY()];
+        return !knownCellStateBoard[(int) movePoint.getX()][(int) movePoint.getY()];
     }
 
     // ============================================ Other methods ============================================
     public eAttackResult attack(BoardCoordinates position) throws CellNotOnBoardException {
         eAttackResult attackResult = super.attack(position);
-        Point movePoint = BoardCoordinates.coordinatesToPoint(position);
+        Point pointAttacked = BoardCoordinates.coordinatesToPoint(position);
+        removePointFromSuspectedShipPositionsListIfExists(pointAttacked);
+        knownCellStateBoard[(int) pointAttacked.getX()][(int) pointAttacked.getY()] = true;
 
-        if(attackResult == eAttackResult.HIT_SHIP){
-            hitShip(movePoint, false);
-        }else if(attackResult == eAttackResult.HIT_AND_SUNK_SHIP){
-            hitShip(movePoint, true);
+        if (attackResult == eAttackResult.HIT_SHIP || attackResult == eAttackResult.HIT_AND_SUNK_SHIP) {
+            hitShip(pointAttacked, attackResult);
         }
-        hitBoard[(int)movePoint.getX()][(int)movePoint.getY()] = true;
+
+        movesLog.add("Attacked cell " + position + ". Result was: " + attackResult.toString());
 
         return attackResult;
     }
 
-    private void hitShip(Point movePoint, boolean sunkTheShip) {
+    private void hitShip(Point movePoint, eAttackResult attackResult) {
+        Point tempPoint = (Point) movePoint.clone();
+        // move temp point to top left of surrounding cells
+        tempPoint.x -= 1;
+        tempPoint.y -= 1;
+
+        for (int i = 0; i < 8; i++) {
+            if (tempPoint.x >= 0 &&
+                    tempPoint.x < boardSize &&
+                    tempPoint.y >= 0 &&
+                    tempPoint.y < boardSize) {
+                // if is corner point
+                if (i % 2 == 0) {
+                    removePointFromSuspectedShipPositionsListIfExists(tempPoint);
+                    knownCellStateBoard[tempPoint.x][tempPoint.y] = true;
+                } else {
+                    if (knownCellStateBoard[tempPoint.x][tempPoint.y] == false) {
+                        addPointToSuspectedShipPositionsListIfDoesNotExist(tempPoint);
+                    }
+                }
+            }
+
+            if (i < 2) {
+                tempPoint.x++;
+            } else if (i < 4) {
+                tempPoint.y++;
+            } else if (i < 6) {
+                tempPoint.x--;
+            } else {
+                tempPoint.y--;
+            }
+        }
+
+        if (attackResult == eAttackResult.HIT_AND_SUNK_SHIP) {
+            sunkAShip();
+        }
         // 1 2 3
         // 4 5 6
         // 7 8 9
@@ -124,7 +200,34 @@ public class ComputerPlayer extends Player {
         // use dudi logic in allSurroundingCellsClear in class Board
     }
 
-    private BoardCoordinates pointToCoordinates(Point point){
-        return BoardCoordinates.Parse((int)point.getX(), (int)point.getY());
+    // after ship is sunk mark all surrounding point as known and remove from suspected list;
+    private void sunkAShip() {
+        for (Point point : suspectedShipPositions) {
+            knownCellStateBoard[point.x][point.y] = true;
+        }
+
+        suspectedShipPositions.clear();
+    }
+
+    private void removePointFromSuspectedShipPositionsListIfExists(Point point) {
+        int listSize = suspectedShipPositions.size();
+
+        for (int i = 0; i < listSize; i++) {
+            if (suspectedShipPositions.get(i).x == point.x &&
+                    suspectedShipPositions.get(i).y == point.y) {
+                suspectedShipPositions.remove(i);
+                break;
+            }
+        }
+    }
+
+    private void addPointToSuspectedShipPositionsListIfDoesNotExist(Point point) {
+        if (!suspectedShipPositions.contains(point)) {
+            suspectedShipPositions.add(new Point(point));
+        }
+    }
+
+    private BoardCoordinates pointToCoordinates(Point point) {
+        return BoardCoordinates.Parse((int) point.getX(), (int) point.getY());
     }
 }
