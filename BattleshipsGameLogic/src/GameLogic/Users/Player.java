@@ -13,7 +13,7 @@ import GameLogic.Game.eAttackResult;
 import java.io.Serializable;
 import java.time.Duration;
 
-public abstract class Player implements Serializable {
+public class Player implements Serializable {
     private String ID;
     private String name;
     protected Board myBoard;
@@ -93,13 +93,6 @@ public abstract class Player implements Serializable {
                 BoardCell cellHit = opponentBoard.getBoardCellAtCoordinates(position);
                 cellHit.removeGameObjectFromCell();
             }
-//                // TODO verify we don't need to attack again to make is a "MISS"
-//            } else if (mineExplosionResult == eAttackResult.CELL_ALREADY_ATTACKED){
-//                // ....
-//            }
-//            else{
-//                // ...
-//            }
         }
 
         if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED) {

@@ -5,6 +5,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
+import GameLogic.Game.Board.BoardCell;
+import GameLogic.Game.GameObjects.Mine;
 import javafx.fxml.LoadException;
 import jaxb.generated.BattleShipGame;
 import GameLogic.Users.*;
@@ -149,10 +151,14 @@ public class Game implements Serializable {
         eAttackResult attackResult = getActivePlayer().attack(position);
 
         //if a mine was attacked which hit my own ship or mine, increment the other player's score
-        // TODO if a mine hits another mine do we increment the score?
         if (attackResult == eAttackResult.HIT_MINE &&
                 !(getActivePlayer().getMyBoard().getBoardCellAtCoordinates(position).getCellValue() instanceof Water)) {
             getOtherPlayer().incrementScore();
+
+            BoardCell myCell = getActivePlayer().getMyBoard().getBoardCellAtCoordinates(position);
+            if (myCell.getCellValue() instanceof Mine){
+                myCell.removeGameObjectFromCell();
+            }
         }
         // TODO check when we need to increment the move counter? every time players swap or every attack?
 //        if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED) {
@@ -218,7 +224,6 @@ public class Game implements Serializable {
         try (ObjectOutputStream outputStream =
                      new ObjectOutputStream(
                              new FileOutputStream(fileName))) {
-            // TODO are the players saved? only thir reference is here
             outputStream.writeObject(game);
             outputStream.flush();
         }

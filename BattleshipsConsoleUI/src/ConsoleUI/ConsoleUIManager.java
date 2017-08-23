@@ -93,9 +93,31 @@ public class ConsoleUIManager {
     // ======================================= Load Game =======================================
     private void loadGame() {
         try {
+            // TODO - delete...important!!!
+            // test bad files, delete before submission
+            {
+                File directory = new File("C:/Test Folder");
+                for (File file : directory.listFiles(File::isFile)) {
+                    try {
+                        System.out.println("===========started test===============\n");
+                        System.out.println("Loading " + file.getName());
+                        activeGame = gamesManager.loadGameFile(file.getPath());
+                        startGame();
+                        if (activeGame.getGameState() == eGameState.STARTED){
+                                System.out.println("Successfully loaded");
+                        }
+                        activeGame = null;
+                        System.out.println("\n===========finished test===============\n\n");
+                    } catch (Exception e1) {
+                        System.out.println(e1.getMessage());
+                        System.out.println("\n===========finished test===============\n\n");
+
+                    }
+                }
+            }
             // TODO get path from user(uncomment)
 //            String path = getFilePathFromUser();
-            String path = "C:/battleShip_5_basic.xml";
+            String path = "C:/Test Folder/battleShip_5_basic.xml";
             if (path != null) {
                 activeGame = gamesManager.loadGameFile(path);
                 System.out.println("Game loaded");
@@ -167,10 +189,10 @@ public class ConsoleUIManager {
                     new ComputerPlayer("ComputerPlayer2", "Computer Player", activeGame.getSizeOfMinimalShipOnBoard());
             Player player1 = computerPlayerIndex == 1 ?
                     computerPlayer :
-                    new RegularPlayer("P1", "Player 1");
+                    new Player("P1", "Player 1");
             Player player2 = computerPlayerIndex == 2 ?
                     computerPlayer :
-                    new RegularPlayer("P2", "Player 2");
+                    new Player("P2", "Player 2");
 
             gamesManager.startGame(activeGame, player1, player2);
             if (computerPlayerIndex == 1) {
@@ -188,7 +210,6 @@ public class ConsoleUIManager {
             System.out.println(message);
             errorWhileStartingGame();
         } catch (Exception e) {
-            //TODO fix error handling
             System.out.println("Error while starting game. " + e.getMessage());
             errorWhileStartingGame();
         }
@@ -231,7 +252,6 @@ public class ConsoleUIManager {
                     showGameState();
                 }
 
-                //TODO verify this works
                 positionToAttack = currentPlayerIsComputer ?
                         ((ComputerPlayer) activePlayer).getNextPositionToAttack() :
                         getPositionFromUser();
@@ -366,11 +386,9 @@ public class ConsoleUIManager {
         String fileName;
         try {
             fileName = getInputFromUser("Please enter a file name for saving:");
-            // TODO check validation name
 
             if (!fileName.isEmpty()) {
                 fileName = GameSettings.SAVED_GAME_DIR + fileName + GameSettings.SAVED_GAME_EXTENSION;
-                // TODO IOException ?
                 try {
                     gamesManager.saveGameToFile(activeGame, fileName);
                     System.out.println("Game saved successfully!");
@@ -411,11 +429,8 @@ public class ConsoleUIManager {
             throw new LoadException("No \"Saved Games\" directory found");
         } else {
             for (File file : savedGamesDir.listFiles(File::isFile)) {
-                // TODO do we want to check filetype?
-//                if (checkFileType(file, GameSettings.SAVED_GAME_EXTENSION)) {
                 fileCounter++;
                 savedGamesList.put(fileCounter, file.getName());
-//                }
             }
         }
 

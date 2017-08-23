@@ -8,7 +8,6 @@ import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 public abstract class AbstractShip extends GameObject {
     private int length;
     private int hitsRemainingUntilSunk;
-    // TODO make the enum direction abstract
     protected eShipDirection direction;
     // TODO implement in exercise 2
     private int score;

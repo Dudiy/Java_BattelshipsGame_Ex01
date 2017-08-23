@@ -54,7 +54,6 @@ public class Board implements Cloneable, Serializable {
         return minesAvailable;
     }
 
-    // TODO hide
     public BoardCell[][] getBoard() {
         return board;
     }
@@ -66,7 +65,6 @@ public class Board implements Cloneable, Serializable {
     private BoardCell getCellByOffset(BoardCell srcCell, eBoardDirection direction, int offset) throws CellNotOnBoardException {
         BoardCell res;
         BoardCoordinates requiredCoordinates = new BoardCoordinates(srcCell.getPosition());
-
         switch (direction) {
             case DOWN:
                 requiredCoordinates.OffsetRow(offset);
@@ -209,23 +207,3 @@ public class Board implements Cloneable, Serializable {
         return getBoardCellAtCoordinates(coordinatesToAttack).attack();
     }
 }
-
-
-//     TODO delete
-//    @Override
-//    protected Object clone() throws CloneNotSupportedException {
-//        Board copiedBoard = new Board(boardSize);
-//
-//        for (BoardCell[] row : board) {
-//            for (BoardCell cell : row) {
-//                BoardCoordinates position = cell.getPosition();
-//                try {
-//                    copiedBoard.setCellValue(position, (GameObject) cell.getCellValue().clone());
-//                } catch (Exception e) {
-//                    throw new CloneNotSupportedException("Error while cloning board");
-//                }
-//            }
-//        }
-//
-//        return copiedBoard;
-//    }

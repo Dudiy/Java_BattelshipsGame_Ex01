@@ -120,6 +120,12 @@ public class GameSettings implements Serializable {
 
         // set shipTypes
         for (BattleShipGame.ShipTypes.ShipType shipType : objectImported.getShipTypes().getShipType()) {
+            if (shipType.getLength() <= 0){
+                throw new Exception("Ship type \"" + shipType.getId() + "\" has a negative length");
+            }
+            if (gameSettings.shipTypes.containsKey(shipType.getId())){
+                throw new Exception("Ship type with the ID \"" + shipType.getId() + "\" exists more than once");
+            }
             gameSettings.shipTypes.put(shipType.getId(), shipType);
             gameSettings.numShipsPerBoard.put(shipType, shipType.getAmount());
         }

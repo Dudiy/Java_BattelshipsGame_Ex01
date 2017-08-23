@@ -48,7 +48,6 @@ public class BoardCell implements Serializable {
         }
     }
 
-    // TODO board attack
     public eAttackResult attack() {
         eAttackResult attackResult;
         if (!wasAttacked) {

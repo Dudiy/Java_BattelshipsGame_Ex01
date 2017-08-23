@@ -58,7 +58,6 @@ public class ComputerPlayer extends Player {
     public void setMyBoard(Board board) {
         this.myBoard = board;
         boardSize = board.getBoardSize();
-        //TODO verify init to false
         knownCellStateBoard = new boolean[boardSize][boardSize];
         initOptionalMoves();
     }
