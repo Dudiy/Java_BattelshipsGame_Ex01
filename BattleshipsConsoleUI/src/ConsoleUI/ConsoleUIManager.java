@@ -95,7 +95,7 @@ public class ConsoleUIManager {
         try {
             // TODO - delete...important!!!
             // test bad files, delete before submission
-            {
+            /*{
                 File directory = new File("C:/Test Folder");
                 for (File file : directory.listFiles(File::isFile)) {
                     try {
@@ -114,10 +114,10 @@ public class ConsoleUIManager {
 
                     }
                 }
-            }
+            }*/
             // TODO get path from user(uncomment)
-//            String path = getFilePathFromUser();
-            String path = "C:/Test Folder/battleShip_5_basic.xml";
+            String path = getFilePathFromUser();
+//            String path = "C:/Test Folder/battleShip_5_basic.xml";
             if (path != null) {
                 activeGame = gamesManager.loadGameFile(path);
                 System.out.println("Game loaded");
@@ -125,9 +125,9 @@ public class ConsoleUIManager {
         } catch (LoadException e) {
             System.out.println("Error while loading game: " + e.getMessage() + ". Please try again.");
         } //TODO uncomment
-//        catch (UserSelectedCancelException e) {
-//            System.out.println(e.getMessage());
-//        }
+        catch (UserSelectedCancelException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private String getFilePathFromUser() throws UserSelectedCancelException {
@@ -136,7 +136,7 @@ public class ConsoleUIManager {
         boolean endOfInput = false;
 
         do {
-            path = getInputFromUser("Please enter an XML path file (0 to return to main menu):");
+            path = getInputFromUser("Please enter an XML path file");
 
             if (path != null) {
                 file = openFileFromPath(path);
