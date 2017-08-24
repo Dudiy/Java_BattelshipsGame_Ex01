@@ -19,9 +19,9 @@ public class ConsoleUIManager {
     private GamesManager gamesManager = new GamesManager();
     // console application may have only 1 game
     private Game activeGame;
+    private Menu menu = new Menu();
     private BoardPrinter boardPrinter = new BoardPrinter();
     private Scanner scanner = new Scanner(System.in);
-    private Menu menu = new Menu();
     private boolean exitGameSelected = false;
     private int computerPlayerIndex = 0;
 
@@ -116,8 +116,8 @@ public class ConsoleUIManager {
 //                }
 //            }
             // TODO get path from user(uncomment)
-            //String path = getFilePathFromUser();
-            String path = "C:/Test Folder/shipOutOfBounds.xml";
+            String path = getFilePathFromUser();
+//            String path = "C:/Test Folder/battleShip_5_basic.xml";
             if (path != null) {
                 activeGame = gamesManager.loadGameFile(path);
                 System.out.println("Game loaded");
@@ -125,9 +125,9 @@ public class ConsoleUIManager {
         } catch (LoadException e) {
             System.out.println("Error while loading game: " + e.getMessage() + ". Please try again.");
         } //TODO uncomment
-//        catch (UserSelectedCancelException e) {
-//            System.out.println(e.getMessage());
-//        }
+        catch (UserSelectedCancelException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private String getFilePathFromUser() throws UserSelectedCancelException {

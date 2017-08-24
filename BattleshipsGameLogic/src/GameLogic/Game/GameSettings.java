@@ -100,9 +100,9 @@ public class GameSettings implements Serializable {
     }
 
     private static void validateGameSettings(GameSettings gameSettings) throws Exception {
-        BattleShipGame objectImported = gameSettings.gameLoadedFromXml;
         validateBoardSize(gameSettings);
-        validateGameType(gameSettings);
+        //TODO delete
+//        validateGameType(gameSettings);
         setShipType(gameSettings);
     }
 
@@ -114,17 +114,18 @@ public class GameSettings implements Serializable {
         }
     }
 
-    private static void validateGameType(GameSettings gameSettings) throws Exception {
-        BattleShipGame objectImported = gameSettings.gameLoadedFromXml;
-        String gameTypeStr = objectImported.getGameType();
-        if (gameTypeStr.toUpperCase().equals("BASIC")) {
-            gameSettings.gameType = eGameType.BASIC;
-        } else if (gameTypeStr.toUpperCase().equals("ADVANCE")) {
-            gameSettings.gameType = eGameType.ADVANCED;
-        } else {
-            throw new Exception("Invalid game type");
-        }
-    }
+    //TODO delete
+//    private static void validateGameType(GameSettings gameSettings) throws Exception {
+//        BattleShipGame objectImported = gameSettings.gameLoadedFromXml;
+//        String gameTypeStr = objectImported.getGameType();
+//        if (gameTypeStr.toUpperCase().equals("BASIC")) {
+//            gameSettings.gameType = eGameType.BASIC;
+//        } else if (gameTypeStr.toUpperCase().equals("ADVANCE")) {
+//            gameSettings.gameType = eGameType.ADVANCED;
+//        } else {
+//            throw new Exception("Invalid game type");
+//        }
+//    }
 
     private static void setShipType(GameSettings gameSettings) throws Exception {
         BattleShipGame objectImported = gameSettings.gameLoadedFromXml;

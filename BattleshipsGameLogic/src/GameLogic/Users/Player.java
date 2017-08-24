@@ -13,7 +13,7 @@ import GameLogic.Game.eAttackResult;
 import java.io.Serializable;
 import java.time.Duration;
 
-public class Player implements Serializable {
+public class Player implements User, Serializable {
     private String ID;
     private String name;
     protected Board myBoard;

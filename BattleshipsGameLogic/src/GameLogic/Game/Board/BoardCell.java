@@ -1,10 +1,10 @@
 package GameLogic.Game.Board;
 
-import java.io.Serializable;
-import GameLogic.Exceptions.InvalidGameObjectPlacementException;
-import GameLogic.Game.GameObjects.GameObject;
-import GameLogic.Game.GameObjects.Water;
-import GameLogic.Game.eAttackResult;
+        import java.io.Serializable;
+        import GameLogic.Exceptions.InvalidGameObjectPlacementException;
+        import GameLogic.Game.GameObjects.GameObject;
+        import GameLogic.Game.GameObjects.Water;
+        import GameLogic.Game.eAttackResult;
 
 public class BoardCell implements Serializable {
     private BoardCoordinates position;
@@ -48,7 +48,7 @@ public class BoardCell implements Serializable {
         }
     }
 
-    public eAttackResult attack() {
+    eAttackResult attack() {
         eAttackResult attackResult;
         if (!wasAttacked) {
             attackResult = cellValue.attack();
