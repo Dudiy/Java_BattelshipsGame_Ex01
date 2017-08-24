@@ -95,29 +95,29 @@ public class ConsoleUIManager {
         try {
             // TODO - delete...important!!!
             // test bad files, delete before submission
-            /*{
-                File directory = new File("C:/Test Folder");
-                for (File file : directory.listFiles(File::isFile)) {
-                    try {
-                        System.out.println("===========started test===============\n");
-                        System.out.println("Loading " + file.getName());
-                        activeGame = gamesManager.loadGameFile(file.getPath());
-                        startGame();
-                        if (activeGame.getGameState() == eGameState.STARTED){
-                                System.out.println("Successfully loaded");
-                        }
-                        activeGame = null;
-                        System.out.println("\n===========finished test===============\n\n");
-                    } catch (Exception e1) {
-                        System.out.println(e1.getMessage());
-                        System.out.println("\n===========finished test===============\n\n");
-
-                    }
-                }
-            }*/
+//            {
+//                File directory = new File("C:/Test Folder");
+//                for (File file : directory.listFiles(File::isFile)) {
+//                    try {
+//                        System.out.println("===========started test===============\n");
+//                        System.out.println("Loading " + file.getName());
+//                        activeGame = gamesManager.loadGameFile(file.getPath());
+//                        startGame();
+//                        if (activeGame.getGameState() == eGameState.STARTED){
+//                                System.out.println("Successfully loaded");
+//                        }
+//                        activeGame = null;
+//                        System.out.println("\n===========finished test===============\n\n");
+//                    } catch (Exception e1) {
+//                        System.out.println(e1.getMessage());
+//                        System.out.println("\n===========finished test===============\n\n");
+//
+//                    }
+//                }
+//            }
             // TODO get path from user(uncomment)
-            String path = getFilePathFromUser();
-//            String path = "C:/Test Folder/battleShip_5_basic.xml";
+            //String path = getFilePathFromUser();
+            String path = "C:/Test Folder/shipOutOfBounds.xml";
             if (path != null) {
                 activeGame = gamesManager.loadGameFile(path);
                 System.out.println("Game loaded");
@@ -125,9 +125,9 @@ public class ConsoleUIManager {
         } catch (LoadException e) {
             System.out.println("Error while loading game: " + e.getMessage() + ". Please try again.");
         } //TODO uncomment
-        catch (UserSelectedCancelException e) {
-            System.out.println(e.getMessage());
-        }
+//        catch (UserSelectedCancelException e) {
+//            System.out.println(e.getMessage());
+//        }
     }
 
     private String getFilePathFromUser() throws UserSelectedCancelException {
@@ -425,13 +425,13 @@ public class ConsoleUIManager {
         File savedGamesDir = new File(GameSettings.SAVED_GAME_DIR);
         int fileCounter = 0;
 
-        if (!savedGamesDir.exists()) {
-            throw new LoadException("No \"Saved Games\" directory found");
-        } else {
+        if (savedGamesDir.exists()) {
             for (File file : savedGamesDir.listFiles(File::isFile)) {
                 fileCounter++;
                 savedGamesList.put(fileCounter, file.getName());
             }
+        } else {
+            throw new LoadException("No \"Saved Games\" directory found");
         }
 
         if (fileCounter == 0) {

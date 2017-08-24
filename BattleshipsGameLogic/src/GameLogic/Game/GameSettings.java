@@ -101,14 +101,21 @@ public class GameSettings implements Serializable {
 
     private static void validateGameSettings(GameSettings gameSettings) throws Exception {
         BattleShipGame objectImported = gameSettings.gameLoadedFromXml;
+        validateBoardSize(gameSettings);
+        validateGameType(gameSettings);
+        setShipType(gameSettings);
+    }
 
-        // validate board size
+    private static void validateBoardSize(GameSettings gameSettings) throws Exception {
+        BattleShipGame objectImported = gameSettings.gameLoadedFromXml;
         gameSettings.boardSize = objectImported.getBoardSize();
         if (gameSettings.boardSize < MIN_BOARD_SIZE || gameSettings.boardSize > MAX_BOARD_SIZE) {
             throw new Exception("Invalid board size, the size must be between " + MIN_BOARD_SIZE + " and " + MAX_BOARD_SIZE);
         }
+    }
 
-        // validate game type
+    private static void validateGameType(GameSettings gameSettings) throws Exception {
+        BattleShipGame objectImported = gameSettings.gameLoadedFromXml;
         String gameTypeStr = objectImported.getGameType();
         if (gameTypeStr.toUpperCase().equals("BASIC")) {
             gameSettings.gameType = eGameType.BASIC;
@@ -117,11 +124,20 @@ public class GameSettings implements Serializable {
         } else {
             throw new Exception("Invalid game type");
         }
+    }
 
-        // set shipTypes
+    private static void setShipType(GameSettings gameSettings) throws Exception {
+        BattleShipGame objectImported = gameSettings.gameLoadedFromXml;
+        List<BattleShipGame.ShipTypes.ShipType> shipTypeList = objectImported.getShipTypes().getShipType();
+        if(shipTypeList.isEmpty()){
+            throw new Exception("There is no ship type in file");
+        }
         for (BattleShipGame.ShipTypes.ShipType shipType : objectImported.getShipTypes().getShipType()) {
             if (shipType.getLength() <= 0){
                 throw new Exception("Ship type \"" + shipType.getId() + "\" has a negative length");
+            }
+            if (shipType.getScore() <= 0){
+                throw new Exception("Ship type \"" + shipType.getId() + "\" has a negative score");
             }
             if (gameSettings.shipTypes.containsKey(shipType.getId())){
                 throw new Exception("Ship type with the ID \"" + shipType.getId() + "\" exists more than once");

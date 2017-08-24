@@ -53,8 +53,7 @@ public class ComputerPlayer extends Player {
         }
     }
 
-    // ============================================ Setters ============================================
-
+    // ============================================ setters ============================================
     public void setMyBoard(Board board) {
         this.myBoard = board;
         boardSize = board.getBoardSize();
@@ -67,12 +66,12 @@ public class ComputerPlayer extends Player {
         movesLog.add("Computer attack results log:");
     }
 
-    // ============================================ Getters ============================================
+    // ============================================ getters ============================================
     public List<String> getMovesLog() {
         return movesLog;
     }
 
-    // ============================================ Next Move ============================================
+    // ============================================ next Move ============================================
     public BoardCoordinates getNextPositionToAttack() throws ComputerPlayerException {
         Point nextPositionToAttack;
         boolean foundCellToCheck = false;
