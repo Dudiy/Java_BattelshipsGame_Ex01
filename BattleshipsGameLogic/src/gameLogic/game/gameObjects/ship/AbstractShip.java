@@ -8,21 +8,18 @@ import gameLogic.game.eAttackResult;
 public abstract class AbstractShip extends GameObject {
     private int length;
     private int hitsRemainingUntilSunk;
-    protected eShipDirection direction;
+    eShipDirection direction;
     // TODO implement in exercise 2
     private int score;
 
-    public AbstractShip(int length, BoardCoordinates position, eShipDirection direction, int score) {
-        super("ship", position, !VISIBLE);
+    AbstractShip(int length, BoardCoordinates position, eShipDirection direction, int score) {
+        super(position, !VISIBLE);
         this.length = length;
         this.hitsRemainingUntilSunk = length;
         this.direction = direction;
         this.score = score;
     }
 
-    // ======================================= setters =======================================
-
-    public abstract void setDirection(String direction) throws Exception;
     // ======================================= getters =======================================
 
     public int getLength() {

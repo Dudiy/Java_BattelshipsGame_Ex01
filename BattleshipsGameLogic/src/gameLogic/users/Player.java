@@ -13,15 +13,15 @@ import gameLogic.game.eAttackResult;
 
 
 public class Player implements User, Serializable {
-    private String ID;
+    private final String ID;
     private String name;
-    protected Board myBoard;
-    protected Board opponentBoard;
     private int score = 0;
     private int timesMissed = 0;
     // duration of a turn is from the time the user selects make move until he enters the cell to attack
     private Duration totalTurnsDuration = Duration.ZERO;
     private int numTurnsPlayed = 0;
+    protected Board myBoard;
+    protected Board opponentBoard;
 
     public Player(String playerID, String name) {
         this.ID = playerID;
@@ -113,7 +113,7 @@ public class Player implements User, Serializable {
         }
 
         if (cellToPlantMine.wasAttacked()){
-            throw new InvalidGameObjectPlacementException(Mine.getObjectTypeSimpleName(), position, "Cannot place mine on a cell that was attacked");
+            throw new InvalidGameObjectPlacementException(Mine.class.getSimpleName(), position, "Cannot place mine on a cell that was attacked");
         }
 
         if (myBoard.allSurroundingCellsClear(cellToPlantMine, null)) {

@@ -73,7 +73,7 @@ public class ComputerPlayer extends Player {
     // ============================================ next Move ============================================
     public BoardCoordinates getNextPositionToAttack() throws ComputerPlayerException {
         Point nextPositionToAttack;
-        boolean foundCellToCheck = false;
+        boolean foundCellToCheck;
 
         do {
             nextPositionToAttack = getNextMove();
@@ -144,7 +144,7 @@ public class ComputerPlayer extends Player {
                     removePointFromSuspectedShipPositionsListIfExists(tempPoint);
                     knownCellStateBoard[tempPoint.x][tempPoint.y] = true;
                 } else {
-                    if (knownCellStateBoard[tempPoint.x][tempPoint.y] == false) {
+                    if (!knownCellStateBoard[tempPoint.x][tempPoint.y]) {
                         addPointToSuspectedShipPositionsListIfDoesNotExist(tempPoint);
                     }
                 }

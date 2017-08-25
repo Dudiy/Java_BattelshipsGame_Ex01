@@ -148,14 +148,4 @@ public class GameSettings implements Serializable {
         Unmarshaller u = jc.createUnmarshaller();
         return (BattleShipGame) u.unmarshal(in);
     }
-
-    // TODO delete?
-    public void shipAddedToBoard(BattleShipGame.ShipTypes.ShipType shipType) throws Exception {
-        int shipsRemainingToAdd = numShipsPerBoard.get(shipType);
-        if (shipsRemainingToAdd <= 0) {
-            throw new Exception("Cannot add more ships of type " + shipType.getId() + " to the board");
-        } else {
-            numShipsPerBoard.put(shipType, numShipsPerBoard.get(shipType) - 1);
-        }
-    }
 }

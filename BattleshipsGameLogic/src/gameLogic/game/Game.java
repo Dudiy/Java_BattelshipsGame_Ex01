@@ -4,6 +4,7 @@ import java.io.*;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+
 import javafx.fxml.LoadException;
 import jaxb.generated.BattleShipGame;
 import gameLogic.users.*;
@@ -14,10 +15,9 @@ import gameLogic.game.gameObjects.*;
 
 public class Game implements Serializable {
     private static int IDGenerator = 1000;
-    private int ID;
+    private final int ID;
     private int activePlayerIndex;
     private int movesCounter;
-    private boolean gameIsSet = false;
     private Player winner;
     private Player[] players = new Player[2];
     private Instant gameStartTime;
@@ -105,8 +105,6 @@ public class Game implements Serializable {
                 currentBoardIndex++;
             }
         }
-
-        gameIsSet = true;
     }
 
     private Board addAllShipsToBoard(Player currentPlayer, BattleShipGame.Boards.Board board) throws Exception {
@@ -123,7 +121,7 @@ public class Game implements Serializable {
             } catch (InvalidGameObjectPlacementException e) {
                 throw e;
             } catch (Exception e) {
-                String message = String.format("Error while initializing " + currentPlayer.getName() + "'s board, inner exception: " + e.getMessage());
+                String message = "Error while initializing " + currentPlayer.getName() + "'s board, inner exception: " + e.getMessage();
                 throw new Exception(message);
             }
         }
@@ -157,7 +155,7 @@ public class Game implements Serializable {
             getOtherPlayer().incrementScore();
 
             BoardCell myCell = getActivePlayer().getMyBoard().getBoardCellAtCoordinates(position);
-            if (myCell.getCellValue() instanceof Mine){
+            if (myCell.getCellValue() instanceof Mine) {
                 myCell.removeGameObjectFromCell();
             }
         }
@@ -187,7 +185,7 @@ public class Game implements Serializable {
         swapPlayers();
     }
 
-    public boolean activePlayerSunkAllShips() {
+    private boolean activePlayerSunkAllShips() {
         return getActivePlayer().getOpponentBoard().allShipsWereSunk();
     }
 
@@ -196,7 +194,7 @@ public class Game implements Serializable {
         gameState = eGameState.PLAYER_QUIT;
     }
 
-    public void activePlayerWon() {
+    private void activePlayerWon() {
         winner = getActivePlayer();
         gameState = eGameState.PLAYER_WON;
     }

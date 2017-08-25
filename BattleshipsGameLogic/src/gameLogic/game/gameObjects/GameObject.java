@@ -7,20 +7,14 @@ import gameLogic.game.eAttackResult;
 public abstract class GameObject implements Serializable {
     protected static final boolean VISIBLE = true;
     private BoardCoordinates position;
-    private static String objectTypeSimpleName;
     private boolean isVisible;
 
-    public GameObject(String objectTypeSimpleName, BoardCoordinates position, boolean isVisible) {
-        this.objectTypeSimpleName = objectTypeSimpleName;
+    protected GameObject(BoardCoordinates position, boolean isVisible) {
         this.position = position;
         this.isVisible = isVisible;
     }
 
     // ======================================= setters =======================================
-    public void setPosition(BoardCoordinates position) {
-        this.position = position;
-    }
-
     public void setVisible(boolean visible) {
         isVisible = visible;
     }
@@ -28,10 +22,6 @@ public abstract class GameObject implements Serializable {
     // ======================================= getters =======================================
     public BoardCoordinates getPosition() {
         return position;
-    }
-
-    public static String getObjectTypeSimpleName() {
-        return objectTypeSimpleName;
     }
 
     public boolean isVisible() {
@@ -44,5 +34,5 @@ public abstract class GameObject implements Serializable {
         return getAttackResult();
     }
 
-    public abstract eAttackResult getAttackResult();
+    protected abstract eAttackResult getAttackResult();
 }

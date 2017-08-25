@@ -5,7 +5,7 @@ import gameLogic.game.eGameState;
 
 import java.util.Scanner;
 
-public class Menu {
+class Menu {
     private final String MENU_TOP = "\n╔═══════════════════════ Menu ═══════════════════════╗";
     private final String MENU_BOTTOM = "╚════════════════════════════════════════════════════╝";
     private final String MENU_VERTICAL = "║";
@@ -20,9 +20,8 @@ public class Menu {
                 (game == null || game.getActivePlayer() == null) ?
                         "" :
                         game.getActivePlayer().getName();
-        eMenuOption userSelection = getUserSelection(activePlayerName);
 
-        return userSelection;
+        return getUserSelection(activePlayerName);
     }
 
     private void printMenu() {

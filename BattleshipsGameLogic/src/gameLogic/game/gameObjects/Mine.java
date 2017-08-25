@@ -4,10 +4,10 @@ import gameLogic.game.board.BoardCoordinates;
 import gameLogic.game.eAttackResult;
 
 public class Mine extends GameObject {
-    eAttackResult explosionResult;
+    private eAttackResult explosionResult;
 
     public Mine(BoardCoordinates position) {
-        super("Mine", position, !VISIBLE);
+        super(position, !VISIBLE);
     }
 
     // ======================================= setters =======================================

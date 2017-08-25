@@ -32,9 +32,8 @@ public class BoardCoordinates implements Serializable {
 
     public static BoardCoordinates convertFromXmlToBoard(int row, int col) {
         // input from xml starts from 1,1 but board starts from 0,0
-        int tempRow = row;
         char tempCol = (char) ('A' + col - 1);
-        return new BoardCoordinates(tempCol, tempRow);
+        return new BoardCoordinates(tempCol, row);
     }
 
     // ======================================= methods =======================================
@@ -58,7 +57,7 @@ public class BoardCoordinates implements Serializable {
                 upperChar = Character.toUpperCase(secondCharInString);
                 digit = secondCharInString - '0';
             } else {
-                throw new IllegalArgumentException(String.format("Input string must be a digit (greater than 0) and a char (in any order), for example: \"A1\" or \"1A\""));
+                throw new IllegalArgumentException("Input string must be a digit (greater than 0) and a char (in any order), for example: \"A1\" or \"1A\"");
             }
 
             res = new BoardCoordinates(upperChar, digit);
@@ -67,7 +66,7 @@ public class BoardCoordinates implements Serializable {
         return res;
     }
 
-    // converts two indices strting at 0,0 to boardCoordinates
+    // converts two indices starting at 0,0 to boardCoordinates
     public static BoardCoordinates Parse(int row, int col) {
         return new BoardCoordinates((char) ('A' + col), row + 1);
     }

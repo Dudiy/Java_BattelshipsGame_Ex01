@@ -37,12 +37,12 @@ public class Board implements Cloneable, Serializable {
         try {
             BoardCell cell = getBoardCellAtCoordinates(position);
             if (value instanceof AbstractShip && !allSurroundingCellsClear(cell, value)) {
-                throw new InvalidGameObjectPlacementException(value.getObjectTypeSimpleName(), position, "Surrounding cells are not clear.");
+                throw new InvalidGameObjectPlacementException(value.getClass().getSimpleName(), position, "Surrounding cells are not clear.");
             } else {
                 cell.SetCellValue(value);
             }
         } catch (CellNotOnBoardException cellNotOnBoardException) {
-            throw new InvalidGameObjectPlacementException(value.getObjectTypeSimpleName(), position, "cannot place object on the cell because the cell is not on the board");
+            throw new InvalidGameObjectPlacementException(value.getClass().getSimpleName(), position, "cannot place object on the cell because the cell is not on the board");
         }
     }
 
@@ -64,8 +64,8 @@ public class Board implements Cloneable, Serializable {
     }
 
     private BoardCell getCellByOffset(BoardCell srcCell, eBoardDirection direction, int offset) throws CellNotOnBoardException {
-        BoardCell res;
         BoardCoordinates requiredCoordinates = new BoardCoordinates(srcCell.getPosition());
+
         switch (direction) {
             case DOWN:
                 requiredCoordinates.OffsetRow(offset);

@@ -6,7 +6,6 @@ import gameLogic.game.board.BoardCoordinates;
 public class InvalidGameObjectPlacementException extends Exception {
     private BoardCoordinates coordinates;
     private String reason;
-
     private String gameObjectType;
 
     public InvalidGameObjectPlacementException(String gameObjectType, BoardCoordinates coordinates, String reason) {
@@ -17,7 +16,7 @@ public class InvalidGameObjectPlacementException extends Exception {
 
     @Override
     public String getMessage() {
-        return String.format("game object cannot be placed at " + coordinates + ". " + reason);
+        return "Game object of type " + gameObjectType + " cannot be placed at " + coordinates + ". " + reason;
     }
 
     public BoardCoordinates GetCoordinates() {

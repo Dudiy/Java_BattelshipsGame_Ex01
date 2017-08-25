@@ -16,7 +16,7 @@ public class GamesManager implements IGamesLogic {
     private Map<String, Player> allPlayers = new HashMap<>();
     private Map<Integer, Game> allGames = new HashMap<>();
 
-    public void addPlayers(Player[] players) {
+    private void addPlayers(Player[] players) {
         allPlayers.put(players[0].getID(), players[0]);
         allPlayers.put(players[1].getID(), players[1]);
     }

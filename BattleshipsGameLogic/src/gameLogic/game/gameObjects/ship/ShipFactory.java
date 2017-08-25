@@ -18,14 +18,19 @@ public class ShipFactory implements Serializable {
         AbstractShip shipObject;
         BoardCoordinates coordinates = BoardCoordinates.convertFromXmlToBoard(ship.getPosition().getX(), ship.getPosition().getY());
 
-        if (shipCategory.equals("REGULAR")) {
-            eShipDirection direction = eShipDirection.valueOf(ship.getDirection());
-            shipObject = new RegularShip(shipType.getLength(), coordinates, direction, shipType.getScore());
-        } else if (shipCategory.equals("L_SHAPE")) {
-            eShipDirection direction = eShipDirection.valueOf((ship.getDirection()));
-            shipObject = new LShapeShip(shipType.getLength(), coordinates, direction, shipType.getScore());
-        } else {
-            throw new Exception("ship factory error - invalid ship category");
+        switch (shipCategory) {
+            case "REGULAR": {
+                eShipDirection direction = eShipDirection.valueOf(ship.getDirection());
+                shipObject = new RegularShip(shipType.getLength(), coordinates, direction, shipType.getScore());
+                break;
+            }
+            case "L_SHAPE": {
+                eShipDirection direction = eShipDirection.valueOf((ship.getDirection()));
+                shipObject = new LShapeShip(shipType.getLength(), coordinates, direction, shipType.getScore());
+                break;
+            }
+            default:
+                throw new Exception("ship factory error - invalid ship category");
         }
 
         return shipObject;

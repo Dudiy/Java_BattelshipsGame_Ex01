@@ -8,6 +8,8 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+
+import gameLogic.IGamesLogic;
 import javafx.fxml.LoadException;
 import gameLogic.exceptions.*;
 import gameLogic.game.*;
@@ -16,7 +18,7 @@ import gameLogic.game.board.BoardCoordinates;
 import gameLogic.GamesManager;
 
 public class ConsoleUIManager {
-    private GamesManager gamesManager = new GamesManager();
+    private IGamesLogic gamesManager = new GamesManager();
     // console application may have only 1 game
     private Game activeGame;
     private Menu menu = new Menu();
@@ -203,9 +205,9 @@ public class ConsoleUIManager {
             showGameState();
             System.out.println("game started");
         } catch (InvalidGameObjectPlacementException e) {
-            String message = String.format("\nError while initializing board.\n" +
+            String message = "\nError while initializing board.\n" +
                     "Cannot place a given " + e.getGameObjectType() + " at position " + e.GetCoordinates() + ".\n" +
-                    "reason: " + e.getReason()) + "\n";
+                    "reason: " + e.getReason() + "\n";
             System.out.println(message);
             errorWhileStartingGame();
         } catch (Exception e) {
@@ -234,7 +236,7 @@ public class ConsoleUIManager {
     // ======================================= Make Move =======================================
     private void makeMove() {
         Instant startTime = Instant.now();
-        BoardCoordinates positionToAttack = null;
+        BoardCoordinates positionToAttack;
         eAttackResult attackResult = null;
         boolean moveEnded = false;
         boolean printGameState = true;
@@ -292,7 +294,7 @@ public class ConsoleUIManager {
         computerPlayer.clearMovesLog();
     }
 
-    public BoardCoordinates getPositionFromUser() {
+    private BoardCoordinates getPositionFromUser() {
         BoardCoordinates userSelection = null;
         boolean isValidSelection = false;
 
@@ -361,7 +363,7 @@ public class ConsoleUIManager {
     // ======================================= Plant mine =======================================
     private void plantMine() {
         boolean minePlantedOrNotAvailable = false;
-        BoardCoordinates position = null;
+        BoardCoordinates position;
         printPlayerBoard(activeGame.getActivePlayer(), !BoardPrinter.PRINT_SINGLE_BOARD);
 
         while (!minePlantedOrNotAvailable) {
@@ -370,9 +372,7 @@ public class ConsoleUIManager {
                 gamesManager.plantMine(activeGame, position);
                 minePlantedOrNotAvailable = true;
                 System.out.println("You have successfully planted a mine at position " + position.toString() + " ;)");
-            } catch (CellNotOnBoardException e) {
-                System.out.println(e.getMessage());
-            } catch (InvalidGameObjectPlacementException e) {
+            } catch (CellNotOnBoardException | InvalidGameObjectPlacementException e) {
                 System.out.println(e.getMessage());
             } catch (NoMinesAvailableException e) {
                 minePlantedOrNotAvailable = true;
@@ -499,7 +499,7 @@ public class ConsoleUIManager {
         return inputFromUser;
     }
 
-    public void printWelcomeScreen() {
+    private void printWelcomeScreen() {
         System.out.println(" ~~~~~ WELCOME TO THE MOST AMAZING BATTLESHIP GAME OF ALL! ~~~~~\n\n");
         System.out.println("                      ,:',:`,:'");
         System.out.println("                   __||_||_||_||__");
@@ -515,7 +515,7 @@ public class ConsoleUIManager {
 */
     }
 
-    public void printGoodbyeScreen() {
+    private void printGoodbyeScreen() {
         System.out.println("Thank you for playing, goodbye!\n");
         System.out.println("                  /\\/\\,\\,\\ ,");
         System.out.println("                 /        ` \\'\\,");
@@ -570,7 +570,7 @@ public class ConsoleUIManager {
         System.out.println();
     }
 
-    public void setComputerPlayer() {
+    private void setComputerPlayer() {
         boolean isValidSelection = false;
 
         do {

@@ -5,7 +5,7 @@ import gameLogic.game.gameObjects.*;
 import gameLogic.game.gameObjects.ship.AbstractShip;
 import gameLogic.users.Player;
 
-public class BoardPrinter {
+class BoardPrinter {
     // border symbol
     private final char BOARD_HORIZONTAL = '═';
     private final char BOARD_VERTICAL = '║';
