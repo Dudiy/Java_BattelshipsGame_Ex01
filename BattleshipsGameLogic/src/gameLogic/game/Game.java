@@ -159,7 +159,6 @@ public class Game implements Serializable {
                 myCell.removeGameObjectFromCell();
             }
         }
-        // TODO check when we need to increment the move counter? every time players swap or every attack?
         if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED) {
             movesCounter++;
         }

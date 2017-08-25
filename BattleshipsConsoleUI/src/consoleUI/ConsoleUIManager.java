@@ -95,37 +95,14 @@ public class ConsoleUIManager {
     // ======================================= Load game =======================================
     private void loadGame() {
         try {
-            // TODO - delete...important!!!
-            // test bad files, delete before submission
-//            {
-//                File directory = new File("C:/Test Folder");
-//                for (File file : directory.listFiles(File::isFile)) {
-//                    try {
-//                        System.out.println("===========started test===============\n");
-//                        System.out.println("Loading " + file.getName());
-//                        activeGame = gamesManager.loadGameFile(file.getPath());
-//                        startGame();
-//                        if (activeGame.getGameState() == eGameState.STARTED){
-//                                System.out.println("Successfully loaded");
-//                        }
-//                        activeGame = null;
-//                    } catch (Exception e1) {
-//                        System.out.println(e1.getMessage());
-//                        System.out.println("\n===========finished test===============\n\n");
-//
-//                    }
-//                }
-//            }
-            // TODO get path from user(uncomment)
             String path = getFilePathFromUser();
-//            String path = "C:/Test Folder/battleShip_5_basic.xml";
             if (path != null) {
                 activeGame = gamesManager.loadGameFile(path);
                 System.out.println("game loaded");
             }
         } catch (LoadException e) {
             System.out.println("Error while loading game: " + e.getMessage() + ". Please try again.");
-        } //TODO uncomment
+        }
         catch (UserSelectedCancelException e) {
             System.out.println(e.getMessage());
         }

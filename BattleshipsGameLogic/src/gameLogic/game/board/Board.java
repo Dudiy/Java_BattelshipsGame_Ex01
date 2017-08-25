@@ -12,7 +12,6 @@ public class Board implements Cloneable, Serializable {
     private BoardCell[][] board;
     private final int BOARD_SIZE;
     private LinkedList<AbstractShip> shipsOnBoard = new LinkedList<>();
-    // TODO del ?
     private int minesAvailable;
 
     public Board(int boardSize) {

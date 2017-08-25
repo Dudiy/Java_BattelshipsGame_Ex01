@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+
 import javafx.fxml.LoadException;
 import jaxb.generated.BattleShipGame;
 
@@ -62,12 +63,12 @@ public class GameSettings implements Serializable {
         return shipTypesAmount;
     }
 
-    public int getMinimalShipSize(){
+    public int getMinimalShipSize() {
         //there must be at least a ship that is longer than 1
         int minimalSize = shipTypes.values().iterator().next().getLength();
 
-        for (BattleShipGame.ShipTypes.ShipType shipType : shipTypes.values()){
-            if (shipType.getLength() < minimalSize){
+        for (BattleShipGame.ShipTypes.ShipType shipType : shipTypes.values()) {
+            if (shipType.getLength() < minimalSize) {
                 minimalSize = shipType.getLength();
             }
         }
@@ -96,8 +97,6 @@ public class GameSettings implements Serializable {
 
     private static void validateGameSettings(GameSettings gameSettings) throws Exception {
         validateBoardSize(gameSettings);
-        //TODO delete
-//        validateGameType(gameSettings);
         setShipType(gameSettings);
     }
 
@@ -109,33 +108,20 @@ public class GameSettings implements Serializable {
         }
     }
 
-    //TODO delete
-//    private static void validateGameType(GameSettings gameSettings) throws Exception {
-//        BattleShipGame objectImported = gameSettings.gameLoadedFromXml;
-//        String gameTypeStr = objectImported.getGameType();
-//        if (gameTypeStr.toUpperCase().equals("BASIC")) {
-//            gameSettings.gameType = eGameType.BASIC;
-//        } else if (gameTypeStr.toUpperCase().equals("ADVANCE")) {
-//            gameSettings.gameType = eGameType.ADVANCED;
-//        } else {
-//            throw new Exception("Invalid game type");
-//        }
-//    }
-
     private static void setShipType(GameSettings gameSettings) throws Exception {
         BattleShipGame objectImported = gameSettings.gameLoadedFromXml;
         List<BattleShipGame.ShipTypes.ShipType> shipTypeList = objectImported.getShipTypes().getShipType();
-        if(shipTypeList.isEmpty()){
+        if (shipTypeList.isEmpty()) {
             throw new Exception("There is no ship type in file");
         }
         for (BattleShipGame.ShipTypes.ShipType shipType : objectImported.getShipTypes().getShipType()) {
-            if (shipType.getLength() <= 0){
+            if (shipType.getLength() <= 0) {
                 throw new Exception("ship type \"" + shipType.getId() + "\" has a negative length");
             }
-            if (shipType.getScore() <= 0){
+            if (shipType.getScore() <= 0) {
                 throw new Exception("ship type \"" + shipType.getId() + "\" has a negative score");
             }
-            if (gameSettings.shipTypes.containsKey(shipType.getId())){
+            if (gameSettings.shipTypes.containsKey(shipType.getId())) {
                 throw new Exception("ship type with the ID \"" + shipType.getId() + "\" exists more than once");
             }
             gameSettings.shipTypes.put(shipType.getId(), shipType);
