@@ -16,7 +16,7 @@ public class Game implements Serializable {
     private static int IDGenerator = 1000;
     private int ID;
     private int activePlayerIndex;
-    private int movesCounter = 0;
+    private int movesCounter;
     private boolean gameIsSet = false;
     private Player winner;
     private Player[] players = new Player[2];
@@ -37,7 +37,11 @@ public class Game implements Serializable {
         this.gameState = gameState;
     }
 
+    public void setGameStartTime(Instant startTime) {
+        this.gameStartTime = startTime;
+    }
     // ======================================= getters =======================================
+
     public int getID() {
         return ID;
     }
@@ -78,6 +82,7 @@ public class Game implements Serializable {
         }
 
         activePlayerIndex = 0;
+        movesCounter = 0;
         players[0] = player1;
         players[1] = player2;
         initBoards();
@@ -157,17 +162,16 @@ public class Game implements Serializable {
             }
         }
         // TODO check when we need to increment the move counter? every time players swap or every attack?
-//        if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED) {
-//        }
+        if (attackResult != eAttackResult.CELL_ALREADY_ATTACKED) {
+            movesCounter++;
+        }
 
         if (attackResult == eAttackResult.HIT_AND_SUNK_SHIP) {
-            movesCounter++;
             if (activePlayerSunkAllShips()) {
                 activePlayerWon();
             }
         } else if (attackResult.moveEnded()) {
             swapPlayers();
-            movesCounter++;
         }
 
 

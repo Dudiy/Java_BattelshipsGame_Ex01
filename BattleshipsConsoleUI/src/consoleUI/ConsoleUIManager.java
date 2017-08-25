@@ -318,6 +318,7 @@ public class ConsoleUIManager {
         Duration gameDuration = gamesManager.getGameDuration(activeGame);
         String durationStr = String.format("%d:%02d", gameDuration.toMinutes(), gameDuration.getSeconds() % 60);
         System.out.println("\tTotal game time: " + durationStr);
+        System.out.println("\t* If a saved game was loaded, then time since the game was loaded *");
         // player info
         System.out.println("\n\t***** Player statistics *****");
         showPlayerStatistics(activeGame.getActivePlayer());
@@ -411,6 +412,7 @@ public class ConsoleUIManager {
             HashMap<Integer, String> savedGamesList = getSavedGamesList();
             fileName = getGameToLoadFromUser(savedGamesList);
             activeGame = gamesManager.loadSavedGameFromFile(fileName);
+            activeGame.setGameStartTime(Instant.now());
             System.out.println("game loaded from file!");
         } catch (UserSelectedCancelException e) {
             System.out.println(e.getMessage());
