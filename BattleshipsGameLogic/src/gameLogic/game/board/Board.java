@@ -1,12 +1,12 @@
 package gameLogic.game.board;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import java.io.Serializable;
+import java.util.LinkedList;
 import gameLogic.exceptions.*;
 import gameLogic.game.gameObjects.*;
 import gameLogic.game.gameObjects.ship.*;
 import gameLogic.game.eAttackResult;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import java.io.Serializable;
-import java.util.LinkedList;
 
 public class Board implements Cloneable, Serializable {
     private BoardCell[][] board;

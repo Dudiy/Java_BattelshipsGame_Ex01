@@ -1,5 +1,7 @@
 package gameLogic.users;
 
+import java.time.Duration;
+import java.io.Serializable;
 import gameLogic.exceptions.CellNotOnBoardException;
 import gameLogic.exceptions.InvalidGameObjectPlacementException;
 import gameLogic.exceptions.NoMinesAvailableException;
@@ -9,8 +11,6 @@ import gameLogic.game.board.BoardCoordinates;
 import gameLogic.game.gameObjects.Mine;
 import gameLogic.game.eAttackResult;
 
-import java.io.Serializable;
-import java.time.Duration;
 
 public class Player implements User, Serializable {
     private String ID;

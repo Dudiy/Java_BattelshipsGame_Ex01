@@ -1,9 +1,8 @@
 package gameLogic.game.gameObjects;
 
+import java.io.Serializable;
 import gameLogic.game.board.BoardCoordinates;
 import gameLogic.game.eAttackResult;
-
-import java.io.Serializable;
 
 public abstract class GameObject implements Serializable {
     protected static final boolean VISIBLE = true;

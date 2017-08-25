@@ -1,11 +1,5 @@
 package consoleUI;
 
-import gameLogic.exceptions.*;
-import gameLogic.game.board.BoardCoordinates;
-import gameLogic.game.*;
-import gameLogic.GamesManager;
-import gameLogic.users.*;
-import javafx.fxml.LoadException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,6 +8,12 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import javafx.fxml.LoadException;
+import gameLogic.exceptions.*;
+import gameLogic.game.*;
+import gameLogic.users.*;
+import gameLogic.game.board.BoardCoordinates;
+import gameLogic.GamesManager;
 
 public class ConsoleUIManager {
     private GamesManager gamesManager = new GamesManager();

@@ -1,7 +1,6 @@
 package consoleUI;
 
 import gameLogic.game.eGameState;
-
 import java.util.EnumSet;
 
 public enum eMenuOption {

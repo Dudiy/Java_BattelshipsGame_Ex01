@@ -8,7 +8,6 @@ import gameLogic.game.Game;
 import gameLogic.users.Player;
 import gameLogic.game.eAttackResult;
 import javafx.fxml.LoadException;
-
 import java.time.Duration;
 
 public interface IGamesLogic {

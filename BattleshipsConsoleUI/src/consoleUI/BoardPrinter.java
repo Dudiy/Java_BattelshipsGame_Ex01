@@ -1,14 +1,11 @@
 package consoleUI;
 
 import gameLogic.game.board.BoardCell;
-import gameLogic.game.gameObjects.GameObject;
-import gameLogic.game.gameObjects.Mine;
+import gameLogic.game.gameObjects.*;
 import gameLogic.game.gameObjects.ship.AbstractShip;
-import gameLogic.game.gameObjects.Water;
 import gameLogic.users.Player;
 
 public class BoardPrinter {
-    private static final boolean HIDE_NON_VISIBLE = true;
     // border symbol
     private final char BOARD_HORIZONTAL = '═';
     private final char BOARD_VERTICAL = '║';
@@ -181,10 +178,5 @@ public class BoardPrinter {
         }
 
         return cellChar;
-//                eAttackResult mineExplosionResult = ((Mine) cellValue).getExplosionResult();
-//                if (mineExplosionResult == eAttackResult.HIT_WATER) {
-//                    cellChar = MISS;
-//                } else if (mineExplosionResult == )
-//                    cellChar = HIT;
     }
 }

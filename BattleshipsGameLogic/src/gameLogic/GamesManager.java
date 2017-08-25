@@ -1,19 +1,16 @@
 package gameLogic;
 
-import gameLogic.exceptions.CellNotOnBoardException;
-import gameLogic.exceptions.InvalidGameObjectPlacementException;
-import gameLogic.exceptions.NoMinesAvailableException;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import javafx.fxml.LoadException;
+import gameLogic.exceptions.*;
 import gameLogic.game.board.BoardCoordinates;
 import gameLogic.game.Game;
 import gameLogic.game.GameSettings;
 import gameLogic.game.eGameState;
 import gameLogic.users.Player;
 import gameLogic.game.eAttackResult;
-import javafx.fxml.LoadException;
-
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
 
 public class GamesManager implements IGamesLogic {
     private Map<String, Player> allPlayers = new HashMap<>();

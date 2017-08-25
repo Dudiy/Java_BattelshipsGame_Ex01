@@ -1,14 +1,13 @@
 package gameLogic.users;
 
+import java.awt.*;
+import java.util.LinkedList;
+import java.util.List;
 import gameLogic.exceptions.CellNotOnBoardException;
 import gameLogic.exceptions.ComputerPlayerException;
 import gameLogic.game.board.Board;
 import gameLogic.game.board.BoardCoordinates;
 import gameLogic.game.eAttackResult;
-
-import java.awt.*;
-import java.util.LinkedList;
-import java.util.List;
 
 public class ComputerPlayer extends Player {
     private int boardSize;

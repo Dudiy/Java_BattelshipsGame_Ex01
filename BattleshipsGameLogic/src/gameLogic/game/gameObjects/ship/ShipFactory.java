@@ -1,7 +1,6 @@
 package gameLogic.game.gameObjects.ship;
 
 import java.io.Serializable;
-
 import jaxb.generated.BattleShipGame;
 import gameLogic.game.board.BoardCoordinates;
 import gameLogic.game.GameSettings;

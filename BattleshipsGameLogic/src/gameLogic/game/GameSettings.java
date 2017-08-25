@@ -1,15 +1,14 @@
 package gameLogic.game;
 
-import javafx.fxml.LoadException;
-import jaxb.generated.BattleShipGame;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javafx.fxml.LoadException;
+import jaxb.generated.BattleShipGame;
 
 public class GameSettings implements Serializable {
     private final static String JAXB_XML_GAME_PACKAGE_NAME = "jaxb.generated";

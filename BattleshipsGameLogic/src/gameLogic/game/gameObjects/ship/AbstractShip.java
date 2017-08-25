@@ -1,9 +1,9 @@
 package gameLogic.game.gameObjects.ship;
 
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import gameLogic.game.board.BoardCoordinates;
 import gameLogic.game.gameObjects.GameObject;
 import gameLogic.game.eAttackResult;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 
 public abstract class AbstractShip extends GameObject {
     private int length;

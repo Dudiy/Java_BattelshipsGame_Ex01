@@ -1,10 +1,10 @@
 package gameLogic.game.board;
 
-        import java.io.Serializable;
-        import gameLogic.exceptions.InvalidGameObjectPlacementException;
-        import gameLogic.game.gameObjects.GameObject;
-        import gameLogic.game.gameObjects.Water;
-        import gameLogic.game.eAttackResult;
+import java.io.Serializable;
+import gameLogic.exceptions.InvalidGameObjectPlacementException;
+import gameLogic.game.gameObjects.GameObject;
+import gameLogic.game.gameObjects.Water;
+import gameLogic.game.eAttackResult;
 
 public class BoardCell implements Serializable {
     private BoardCoordinates position;

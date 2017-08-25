@@ -4,17 +4,13 @@ import java.io.*;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
-
-import gameLogic.game.board.BoardCell;
-import gameLogic.game.gameObjects.Mine;
 import javafx.fxml.LoadException;
 import jaxb.generated.BattleShipGame;
 import gameLogic.users.*;
 import gameLogic.exceptions.*;
-import gameLogic.game.board.Board;
-import gameLogic.game.board.BoardCoordinates;
+import gameLogic.game.board.*;
 import gameLogic.game.gameObjects.ship.*;
-import gameLogic.game.gameObjects.Water;
+import gameLogic.game.gameObjects.*;
 
 public class Game implements Serializable {
     private static int IDGenerator = 1000;
