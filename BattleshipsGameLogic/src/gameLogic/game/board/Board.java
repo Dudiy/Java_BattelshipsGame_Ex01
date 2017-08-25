@@ -10,20 +10,20 @@ import gameLogic.game.eAttackResult;
 
 public class Board implements Cloneable, Serializable {
     private BoardCell[][] board;
-    private final int boardSize;
+    private final int BOARD_SIZE;
     private LinkedList<AbstractShip> shipsOnBoard = new LinkedList<>();
     // TODO del ?
     private int minesAvailable;
 
     public Board(int boardSize) {
-        this.boardSize = boardSize;
+        this.BOARD_SIZE = boardSize;
         initBoard();
     }
 
     private void initBoard() {
-        board = new BoardCell[boardSize][boardSize];
-        for (int row = 0; row < boardSize; row++) {
-            for (int col = 0; col < boardSize; col++) {
+        board = new BoardCell[BOARD_SIZE][BOARD_SIZE];
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
                 //ctor of new BoardCell points to a new "Water" object by default
                 board[row][col] = new BoardCell((char) ('A' + col), row + 1);
             }
@@ -60,7 +60,7 @@ public class Board implements Cloneable, Serializable {
     }
 
     public int getBoardSize() {
-        return boardSize;
+        return BOARD_SIZE;
     }
 
     private BoardCell getCellByOffset(BoardCell srcCell, eBoardDirection direction, int offset) throws CellNotOnBoardException {
@@ -197,7 +197,7 @@ public class Board implements Cloneable, Serializable {
     private boolean coordinatesAreOnBoard(BoardCoordinates coordinates) {
         int col = coordinates.getColIndexInMemory();
         int row = coordinates.getRowIndexInMemory();
-        return ((0 <= col && col <= boardSize - 1) && (0 <= row && row <= boardSize - 1));
+        return ((0 <= col && col <= BOARD_SIZE - 1) && (0 <= row && row <= BOARD_SIZE - 1));
     }
 
     public void minePlanted() {

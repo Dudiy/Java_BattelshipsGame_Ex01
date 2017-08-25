@@ -9,7 +9,7 @@ public class Menu {
     private final String MENU_TOP = "\n╔═══════════════════════ Menu ═══════════════════════╗";
     private final String MENU_BOTTOM = "╚════════════════════════════════════════════════════╝";
     private final String MENU_VERTICAL = "║";
-    private final int menuWidth = MENU_BOTTOM.length();
+    private final int MENU_WIDTH = MENU_BOTTOM.length();
     private eGameState gameState;
 
     public eMenuOption display(Game game) {
@@ -30,7 +30,7 @@ public class Menu {
 
         for (eMenuOption menuOption : eMenuOption.values()) {
             if (menuOption.isVisibleAtGameState(gameState)) {
-                int numSpaces = menuWidth - menuOption.toString().length() - 2;
+                int numSpaces = MENU_WIDTH - menuOption.toString().length() - 2;
                 String spacesAfter = String.format("%" + numSpaces + "s", " ");
                 System.out.println(MENU_VERTICAL + menuOption + spacesAfter + MENU_VERTICAL);
             }

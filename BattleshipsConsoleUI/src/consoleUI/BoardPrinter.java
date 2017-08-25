@@ -20,8 +20,8 @@ public class BoardPrinter {
     private final char BOARD_RIGHT_VERTICAL_ROW_SEPARATOR = '╣';
     private final char BOARD_PLUS_ROW_SEPARATOR = '╬';
     // indices
-    private final char startColIndex = 'A';
-    private final byte startRowIndex = 1;
+    private final char START_COL_INDEX = 'A';
+    private final byte START_ROW_INDEX = 1;
     private final String PADDING_FROM_LEFT = "    ";
     // cell char values
     private final String HIT = "X";
@@ -40,7 +40,7 @@ public class BoardPrinter {
     public void printBoards(Player activePlayer, boolean printSingleBoard) {
         this.boardSize = activePlayer.getMyBoard().getBoardSize();
         numBoardsToPrint = printSingleBoard ? 1 : 2;
-        currRowIndex = startRowIndex;
+        currRowIndex = START_ROW_INDEX;
 
         if (printSingleBoard) {
             System.out.println("Current board state:\n");
@@ -86,7 +86,7 @@ public class BoardPrinter {
         System.out.print(PADDING_FROM_LEFT);
         for (int i = 0; i < numBoardsToPrint; i++) {
             System.out.print("\\ ");
-            localColIndex = startColIndex;
+            localColIndex = START_COL_INDEX;
             for (int j = 0; j < boardSize; j++) {
                 System.out.print(localColIndex + " ");
                 localColIndex++;
