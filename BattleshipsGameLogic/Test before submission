@@ -1,9 +1,0 @@
-TODO Mine testing:
-    - plant mine on already attacked cell
-    - plant mine not on the board
-    - plant mine when no mines left
-    - attack mine that hits a ship
-    - attack mine that hits water
-    - attack mine that hits another mine
-
-TODO remove unused "imports"

@@ -20,6 +20,8 @@ public abstract class AbstractShip extends GameObject {
         this.score = score;
     }
 
+    protected abstract void setDirection(String direction) throws Exception;
+
     // ======================================= getters =======================================
 
     public int getLength() {
